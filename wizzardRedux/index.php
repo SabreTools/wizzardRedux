@@ -10,7 +10,7 @@
 
 include_once("css/style.php");
 
-if ($_GET["page"] && file_exists("pages/".$_GET["page"].".php"))
+if ($_GET["page"] && file_exists("pages/".str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
 {
 	include_once "pages/".$_GET["page"].".php";
 }

@@ -5,3 +5,5 @@ This project is the continuation of the work done by RomShepherd board member Wi
 This is in the severely early stages since it is a complete rewrite of the internal tool that WoD originally used.
 
 Any suggestions are accepted.
+
+<b>Note:</b> Because of the complexity of the code so far, this is a one-man project. No pull requests will be accepted for the time being. 

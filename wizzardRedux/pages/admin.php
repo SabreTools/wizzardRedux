@@ -14,7 +14,7 @@ echo "<h1>Admin Page</h1>
 	<li>Edit a game (Should we add parenting? This might be able to create a MEGAMERGED set...)</li>
 	<li>Add a game</li>
 	<li>Remove a game</li>
-	<li><a href=\"scripts/import.php\">Bulk add from DAT</a></li>
+	<li><a href=\"?page=import\">Bulk add from DAT</a></li>
 </ol>";
 
 ?>
