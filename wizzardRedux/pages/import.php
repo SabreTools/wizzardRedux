@@ -5,7 +5,8 @@ Import an existing DAT into the system
 Requires:
 	filename	File name in the format of "Manufacturer - SystemName (Source .*)\.dat"
 	
-Note: The only works with the XML formatted DATs. Older WoD-style ones are not imported by this. Create a separate import for that one...
+Note: Need to auto-rename files if the name in the set already exists (but not the same size/crc/md5/sha1):
+	e.g. Agi.bin -> Agi (crc32).bin
 -->
 
 <?php
