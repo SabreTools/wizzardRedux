@@ -210,10 +210,59 @@ $footer = "\r\n</datafile>";
 if ($_GET["old"] == "1")
 {
 	fwrite($handle, $header_old);
+	foreach ($roms as $rom)
+	{
+		$state = "";
+		if ($lastgame != "" && $lastgame != $rom["game"])
+		{
+			$state = $state + ")\r\n";
+		}
+		if ($lastgame != $rom["game"])
+		{
+			$state = $state + "game (\r\n
+						\t name \"".$rom["game"]."\"";
+		}
+		$state = $state + "\t".$rom["type"]." ( name \"".$rom["name"]."\"".
+				($rom["size"] != "" ? " size ".$rom["size"] : "").
+				($rom["crc"] != "" ? " crc ".$rom["crc"] : "").
+				($rom["md5"] != "" ? " md5 ".$rom["md5"] : "").
+				($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
+				" )";
+		
+				$lastgame = $rom["game"];
+		
+				fwrite($handle, $state);
+	}
+	fwrite($handle, ")");
 }
 else
 {
 	fwrite($handle, $header);
+	$lastgame = "";
+	foreach ($roms as $rom)
+	{
+		$state = "";
+		if ($lastgame != "" && $lastgame != $rom["game"])
+		{
+			$state = $state + "\t</machine>\r\n";
+		}
+		if ($lastgame != $rom["game"])
+		{
+			$state = $state + "\t<machine name=\"".$rom["game"].">\r\n
+				\t\t<description>".$rom["game"]."</description>";
+		}
+		$state = $state + "\t\t\t<".$rom["type"]." name=\"".$rom["name"]."\"".
+			($rom["size"] != "" ? " size=\"".$rom["size"]."\"" : "").
+			($rom["crc"] != "" ? " crc=\"".$rom["crc"]."\"" : "").
+			($rom["md5"] != "" ? " md5=\"".$rom["md5"]."\"" : "").
+			($rom["sha1"] != "" ? " sha1=\"".$rom["sha1"]."\"" : "").
+			"/>";
+		
+		$lastgame = $rom["game"];
+		
+		fwrite($handle, $state);
+	}
+	fwrite($handle, "\t</machine>\r\n");
 	fwrite($handle, $footer);
 }
 fclose($handle);
