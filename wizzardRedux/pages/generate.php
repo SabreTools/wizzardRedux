@@ -15,6 +15,7 @@ FROM systems
 JOIN games ON systems.id=games.system
 JOIN sources ON games.source=sources.id
 
+TODO: Currently, the merged DAT doesn't actually merge anything. Add the logic to dedupe the files that go into the dat.
 -->
 
 <?php
