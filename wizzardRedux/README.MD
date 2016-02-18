@@ -14,43 +14,43 @@ Any suggestions are accepted.
 
 NOTE: The format that WoD used was a VERY old format which is described first
 
-clrmamepro (
-	name "DATNAME"
-	description "DESCRIPTION"
-	version "VERSION"
-	comment "COMMENT"
-	author "The Wizard of DATz"
+clrmamepro (<br/>
+	name "DATNAME"<br/>
+	description "DESCRIPTION"<br/>
+	version "VERSION"<br/>
+	comment "COMMENT"<br/>
+	author "The Wizard of DATz"<br/>
 )
 
-game (
-	name "NAME"
-	rom ( name "ROMNAME" size SIZE crc CRC md5 MD5 sha1 SHA1 )
-	disk ( name "DISKNAME" sha1 SHA1 )
+game (<br/>
+	name "NAME"<br/>
+	rom ( name "ROMNAME" size SIZE crc CRC md5 MD5 sha1 SHA1 )<br/>
+	disk ( name "DISKNAME" sha1 SHA1 )<br/>
 )
 
 The modern datfile output format:
 
-&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd"&gt;
-
-&lt;datafile&gt;
-	&lt;header&gt;
-		&lt;name&gt;DATNAME&lt;/name&gt;
-		&lt;description&gt;DESCRIPTION&lt;/description&gt;
-		&lt;category&gt;CATEGORY&lt;/category&gt;
-		&lt;version&gt;VERSION&lt;/version&gt;
-		&lt;date&gt;DATE&lt;/date&gt;
-		&lt;author&gt;The Wizard of DATz&lt;/author&gt;
-		&lt;email&gt;EMAIL&lt;/email&gt;
-		&lt;homepage&gt;HOMEPAGE&lt;/homepage&gt;
-		&lt;url&gt;URL&lt;/url&gt;
-		&lt;comment&gt;COMMENT&lt;/comment&gt;
-		&lt;clrmamepro/&gt;
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;<br/>
+&lt;!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd"&gt;<br/>
+<br/>
+&lt;datafile&gt;<br/>
+	&lt;header&gt;<br/>
+		&lt;name&gt;DATNAME&lt;/name&gt;<br/>
+		&lt;description&gt;DESCRIPTION&lt;/description&gt;<br/>
+		&lt;category&gt;CATEGORY&lt;/category&gt;<br/>
+		&lt;version&gt;VERSION&lt;/version&gt;<br/>
+		&lt;date&gt;DATE&lt;/date&gt;<br/>
+		&lt;author&gt;The Wizard of DATz&lt;/author&gt;<br/>
+		&lt;email&gt;EMAIL&lt;/email&gt;<br/>
+		&lt;homepage&gt;HOMEPAGE&lt;/homepage&gt;<br/>
+		&lt;url&gt;URL&lt;/url&gt;<br/>
+		&lt;comment&gt;COMMENT&lt;/comment&gt;<br/>
+		&lt;clrmamepro/&gt;<br/>
 	&lt;/header&gt;
-	&lt;machine name="NAME" romof="PARENT"&gt;
-		&lt;description&gt;ROMDESC&lt;/description&gt;
-		&lt;rom name="ROMNAME" size="SIZE" crc="CRC" md5="MD5" sha1="SHA1"/&gt;
-		&lt;disk name="DISKNAME" md5="MD5" sha1="SHA1" /&gt;
-	&lt;/machine&gt;
-&lt;/datafile&gt;
+	&lt;machine name="NAME" romof="PARENT"&gt;<br/>
+		&lt;description&gt;ROMDESC&lt;/description&gt;<br/>
+		&lt;rom name="ROMNAME" size="SIZE" crc="CRC" md5="MD5" sha1="SHA1"/&gt;<br/>
+		&lt;disk name="DISKNAME" md5="MD5" sha1="SHA1" /&gt;<br/>
+	&lt;/machine&gt;<br/>
+&lt;/datafile&gt;<br/>
  
