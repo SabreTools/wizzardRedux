@@ -14,10 +14,6 @@ SELECT systems.id AS sysid, systems.manufacturer AS manufacturer, systems.system
 FROM systems
 JOIN games ON systems.id=games.system
 JOIN sources ON games.source=sources.id
-
-TODO: Currently, the merged DAT doesn't actually merge anything. Add the logic to dedupe the files that go into the dat.
-	http://stackoverflow.com/questions/11145393/sorting-a-php-array-of-arrays-by-custom-order
-	sort by crc and sourceid, then loop through and if prev.crc = current.crc, skip it
 -->
 
 <?php
@@ -119,6 +115,12 @@ if (sizeof($roms) == 0)
 	die();
 }
 
+// If creating a merged DAT, remove all duplicates and then sort back again
+if ($mode == "merged")
+{
+	$roms = merge_roms($roms);
+}
+
 echo "<table border='1'>
 	<tr><th>Source</th><th>Set</th><th>Name</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>";
 
@@ -166,12 +168,13 @@ END;
 
 $footer = "\r\n</datafile>";
 
+$lastgame = "";
 if ($_GET["old"] == "1")
 {
 	fwrite($handle, $header_old);
 	foreach ($roms as $rom)
 	{
-		$state = "";
+		$state = "";		
 		if ($lastgame != "" && $lastgame != $rom["game"])
 		{
 			$state = $state + ")\r\n";
@@ -187,20 +190,20 @@ if ($_GET["old"] == "1")
 				($rom["md5"] != "" ? " md5 ".$rom["md5"] : "").
 				($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
 				" )";
+
+		$lastgame = $rom["game"];
 		
-				$lastgame = $rom["game"];
-		
-				fwrite($handle, $state);
+		fwrite($handle, $state);
 	}
 	fwrite($handle, ")");
 }
 else
 {
 	fwrite($handle, $header);
-	$lastgame = "";
 	foreach ($roms as $rom)
 	{
 		$state = "";
+		
 		if ($lastgame != "" && $lastgame != $rom["game"])
 		{
 			$state = $state + "\t</machine>\r\n";
@@ -227,5 +230,108 @@ else
 fclose($handle);
 
 mysqli_close($link);
+
+// Functions
+function merge_roms($roms)
+{
+	// First sort all roms by name and crc (or md5 or sha1)
+	usort($roms, function ($a, $b)
+	{
+		$crc_a = strtolower($a["crc"]);
+		$md5_a = strtolower($a["md5"]);
+		$sha1_a = strtolower($a["sha1"]);
+		$source_a = $a["source"];
+		$crc_b = strtolower($b["crc"]);
+		$md5_b = strtolower($b["md5"]);
+		$sha1_b = strtolower($b["sha1"]);
+		$source_b = $b["source"];
+		
+		if ($crc_a == "" || $crc_b == "")
+		{
+			if ($md5_a == "" || $md5_b == "")
+			{
+				if ($sha1_a == "" || $sha1_b == "")
+				{
+					return $source_a - $source_b;
+				}
+				return strcomp($sha1_a, $sha1_b);
+			}
+			return strcomp($md5_a, $md5_b);
+		}
+		return strcomp($crc_a, $crc_b);
+	});
+		
+	// Then, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
+	$lastsize = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lasttype = "";
+	$newroms = Array();
+	foreach ($roms as $rom)
+	{
+		if ($lastsize == "")
+		{
+			$lastsize = $rom["size"];
+			$lastcrc = $rom["crc"];
+			$lastmd5 = $rom["md5"];
+			$lastsha1 = $rom["sha1"];
+			$lasttype = $rom["type"];
+			array_push($newroms, $rom);
+		}
+		else
+		{
+			// Determine which matching criteria is available and match on them
+			$samesize = false; $samecrc = false; $samemd5 = false; $samesha1 = false;
+			if ($rom["size"] != "")
+			{
+				$samesize = ($lastsize == $rom["size"]);
+			}
+			if ($rom["crc"] != "")
+			{
+				$samecrc = ($lastcrc == $rom["crc"]);
+			}
+			if ($rom["md5"] != "")
+			{
+				$samemd5 = ($lastmd5 == $rom["md5"]);
+			}
+			if ($rom["sha1"] != "")
+			{
+				$samesha1 = ($lastsha1 == $rom["sha1"]);
+			}
+			
+			// If we have a rom, we need at least the size and one criteria to match
+			if ($rom["type"] == "rom")
+			{
+				if (!($samesize && ($samecrc || $samemd5 || $samesha1)))
+				{
+					array_push($newroms, $rom);
+				}
+			}
+			// If we have a disk, it generally only has an md5 or sha1
+			else
+			{
+				if (!($samemd5 || $samesha1))
+				{
+					array_push($newroms, $rom);
+				}
+			}
+				
+			$lastsize = $rom["size"];
+			$lastcrc = $rom["crc"];
+			$lastmd5 = $rom["md5"];
+			$lastsha1 = $rom["sha1"];
+			$lasttype = $rom["type"];
+		}
+	}
+	
+	// Once it's pruned, revert the order of the files by sorting by game
+	usort($roms, function ($a, $b)
+	{
+		$game_a = strtolower($a["game"]);
+		$game_b = strtolower($b["game"]);
+		
+		return strcomp($game_a, $game_b);
+	});
+	
+	// Finally, change the pointer of $roms to the new array
+	return $newroms;
+}
 
 ?>
