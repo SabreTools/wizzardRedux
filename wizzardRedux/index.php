@@ -10,6 +10,12 @@
 
 include_once("css/style.php");
 
+// Ensure the temp folder exists
+if (!file_exists("temp/"))
+{
+	mkdir("temp");
+}
+
 if ($_GET["page"] && file_exists("pages/".str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
 {
 	include_once "pages/".$_GET["page"].".php";
