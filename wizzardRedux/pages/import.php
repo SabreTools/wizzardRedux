@@ -18,7 +18,7 @@ $datpattern = "/^(\S+) - (\S+) \((\S+) .*\)\.dat$/";
 
 $path_to_root = (getcwd() == "/wod/" ? "" : "..");
 
-if (!$_GET["filename"])
+if (!isset($_GET["filename"]))
 {
 	echo "<b>You must supply a filename as a URL parameter! (filename=xxx)</b><br/>";
 	echo "<a href='".$path_to_root."/index.php'>Return to home</a>";

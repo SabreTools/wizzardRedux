@@ -24,7 +24,7 @@ $mode = "lame";
 $path_to_root = (getcwd() == "/wod/" ? "" : "..");
 
 // Check the output mode first
-if ($_GET["mode"] == "custom" && $_GET["source"] && $_GET["system"])
+if (isset($_GET["mode"]) && $_GET["mode"] == "custom" && isset($_GET["source"]) && isset($_GET["system"]))
 {
 	$mode = "custom";
 	$source = $_GET["source"];
