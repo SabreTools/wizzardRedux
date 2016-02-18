@@ -297,7 +297,6 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 		VALUES (".$gameid.",
 		'".$name."',
 		'".$romtype."')";
-		echo "Query string: ".$query."<br/>";
 		$result = mysqli_query($link, $query);
 
 		if (gettype($result)=="boolean" && $result)
@@ -311,7 +310,6 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 				'".$crc."',
 				'".$md5."',
 				'".$sha1."')";
-			echo "Query string: ".$query."<br/>";
 			$result = mysqli_query($link, $query);
 
 			if (gettype($result)=="boolean" && $result)
