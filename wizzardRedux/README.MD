@@ -14,6 +14,8 @@ Any suggestions are accepted.
 
 <b>Old Format</b>
 
+WoD originally created all DATs in this format so they would be compatable with RomVault. RV has since been updated (I think), so it should no longer be needed. It is included in the code base as import and export for now.
+
 <pre>
 clrmamepro (
 	name "DATNAME"
