@@ -118,69 +118,24 @@ if (sizeof($roms) == 0)
 echo "<table border='1'>
 	<tr><th>Source</th><th>Set</th><th>Name</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>";
 
-$machine = ""; // To help figure out when we hit a new game, check for the set name to change
-
 foreach ($roms as $rom)
 {
 	echo "<tr><td>".$rom["source"]."</td><td>".$rom["game"]."</td><td>".$rom["name"]."</td><td>".$rom["size"]."</td><td>".$rom["crc"]."</td><td>".$rom["md5"]."</td><td>".$rom["sha1"]."</td></tr>";
 }
 echo "</table>";
 
-/*
-
-NOTE: The format that WoD used was a VERY old format which is described first
-
-clrmamepro (
-	name "DATNAME"
-	description "DESCRIPTION"
-	version "VERSION"
-	comment "COMMENT"
-	author "The Wizard of DATz"
-)
-
-game (
-	name "NAME"
-	rom ( name "ROMNAME" size SIZE crc CRC md5 MD5 sha1 SHA1 )
-	disk ( name "DISKNAME" sha1 SHA1 )
-)
-
-The modern datfile output format:
-
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
-
-<datafile>
-	<header>
-		<name>DATNAME</name>
-		<description>DESCRIPTION</description>
-		<category>CATEGORY</category>
-		<version>VERSION</version>
-		<date>DATE</date>
-		<author>The Wizard of DATz</author>
-		<email>EMAIL</email>
-		<homepage>HOMEPAGE</homepage>
-		<url>URL</url>
-		<comment>COMMENT</comment>
-		<clrmamepro/>
-	</header>
-	<machine name="NAME" romof="PARENT">
-		<description>ROMDESC</description>
-		<rom name="ROMNAME" size="SIZE" crc="CRC" md5="MD5" sha1="SHA1"/>
-		<disk name="DISKNAME" md5="MD5" sha1="SHA1" />
-	</machine>
-</datafile>
-
-*/
+$version = date("YmdHis");
+$datname = $roms[0]["manufacturer"]." - ".$roms[0]["system"]." (".($mode == "custom" ? $source : "merged")." ".$version.")";
 
 // Create and open an output file for writing (currently uses current time, change to "last updated time"
-$handle = fopen($path_to_root."/temp/".$system." (".($mode == "custom" ? $source : "merged")." ".date("YmdHis").").dat", "w");
+$handle = fopen($path_to_root."/temp/".$datname.".dat", "w");
 
 $header_old = <<<END
 clrmamepro (
-	name "DATNAME"
-	description "DESCRIPTION"
-	version "VERSION"
-	comment "COMMENT"
+	name "$datname"
+	description "$datname"
+	version "$version"
+	comment ""
 	author "The Wizard of DATz"
 )
 END;
@@ -191,16 +146,16 @@ $header = <<<END
 
 <datafile>
 	<header>
-		<name>DATNAME</name>
-		<description>DESCRIPTION</description>
-		<category>CATEGORY</category>
-		<version>VERSION</version>
-		<date>DATE</date>
+		<name>$datname</name>
+		<description>$datfile</description>
+		<category>The Wizard of DATz $mode</category>
+		<version>$version</version>
+		<date>$version</date>
 		<author>The Wizard of DATz</author>
-		<email>EMAIL</email>
-		<homepage>HOMEPAGE</homepage>
-		<url>URL</url>
-		<comment>COMMENT</comment>
+		<email></email>
+		<homepage></homepage>
+		<url></url>
+		<comment></comment>
 		<clrmamepro/>
 	</header>
 END;
