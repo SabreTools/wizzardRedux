@@ -270,6 +270,19 @@ function add_rom_helper($link, $romtype, $name, $size, $crc, $md5, $sha1)
 	if (gettype($result)=="boolean" || mysqli_num_rows($result) == 0)
 	{
 		echo "ROM not found. Creating new ROM.<br/>";
+		
+		$query = "SELECT files.id FROM files WHERE files.name='".$name."'";
+		$result = mysqli_query($link, $query);
+		
+		// See if there's any ROMs with the same name. If so, add a delimiter on the end of the name.
+		if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+		{
+			$name = preg_replace("/^(.*)(\..*)/", "\1 (".
+					($crc != "" ? $crc :
+							($md5 != "" ? $md5 :
+									($sha1 != "" ? $sha1 : "Alt"))).
+					")\2", $name);
+		}
 
 		$query = "INSERT INTO files (setid, name, type)
 		VALUES ($gameid,

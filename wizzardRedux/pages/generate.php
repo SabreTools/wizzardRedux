@@ -15,10 +15,6 @@ FROM systems
 JOIN games ON systems.id=games.system
 JOIN sources ON games.source=sources.id
 
-Note: This DAT currently "blindly" adds ROMs to the DAT. It is unclear with the original WoD creation
-	if roms are suffixed by (CRC32) automatically or manually. Ideally, this would be automatic, but at
-	what stage should it be changed? Should it be changed on import? Or changed on export? Import sounds
-	more logical but it raises its own implications.
 -->
 
 <?php
