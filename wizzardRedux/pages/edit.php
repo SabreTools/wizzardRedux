@@ -11,6 +11,7 @@ Persistent have Add System and Add Source buttons
 Conditional Edit System, Remove System, Edit Source, Remove Source if a valid (non-0) source is selected
 Persistent Add Game button
 Conditional Edit Game, Remove Game buttons if a valid (non-0) source is selected
+Search boxes?
 -->
 
 <?php

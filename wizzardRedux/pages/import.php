@@ -16,26 +16,33 @@ echo "<h2>Import From Datfile</h2>";
 // First, get the pattern of the file name. This is required for organization.
 $datpattern = "/^(\S+) - (\S+) \((\S+) .*\)\.dat$/";
 
-$path_to_root = (getcwd() == "/wod/" ? "" : "..");
-
 if (!isset($_GET["filename"]))
 {
-	echo "<b>You must supply a filename as a URL parameter! (filename=xxx)</b><br/>";
-	echo "<a href='".$path_to_root."/index.php'>Return to home</a>";
+	// List all files, auto-generate links to proper pages
+	$files = scandir("temp/");
+	foreach ($files as $file)
+	{
+		if (preg_match("/^.*\.dat$/", $file))
+		{
+			echo "<a href=\"?page=import&filename=".$file."&debug=1\">".htmlspecialchars($file)."</a><br/>";
+		}
+	}
+	
+	echo "<br/><a href='".$path_to_root."/index.php'>Return to home</a>";
 	
 	die();
 }
-if (!file_exists($path_to_root."/temp/".$_GET["filename"]))
+elseif (!file_exists("temp/".$_GET["filename"]))
 {
-	echo "<b>The file you supply must be in ".$_SERVER["DOCUMENT_ROOT"]."/wod/temp/</b><br/>";
+	echo "<b>The file you supply must be in /wod/temp/</b><br/>";
 	echo "<a href='".$path_to_root."/index.php'>Return to home</a>";
 	
 	die();
 }
-if (!preg_match($datpattern, $_GET["filename"]))
+elseif (!preg_match($datpattern, $_GET["filename"]))
 {
 	echo "<b>DAT not in the proper pattern! (Manufacturer - SystemName (Source .*)\.dat)</b><br/>";
-	echo "<a href='".$path_to_root."/index.php'>Return to home</a>";
+	echo "<a href='/index.php'>Return to home</a>";
 	
 	die();
 }
@@ -83,7 +90,7 @@ if (!$sourceid)
 }
 
 // Then, parse the file and read in the information. Echo it out for safekeeping for now.
-$handle = fopen($path_to_root."/temp/".$_GET["filename"], "r");
+$handle = fopen("temp/".$_GET["filename"], "r");
 if ($handle)
 {
 	$old = false;
@@ -109,11 +116,11 @@ if ($handle)
 		}
 		elseif (strpos($line, "<rom") !== false && $machinefound && !$old)
 		{
-			add_rom($line, $link, "rom");
+			add_rom($line, $link, "rom", $gameid);
 		}
 		elseif (strpos($line, "<disk") !== false && $machinefound && !$old)
 		{
-			add_rom($line, $link, "disk");
+			add_rom($line, $link, "disk", $gameid);
 		}
 		elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false) && !$old)
 		{			
@@ -130,19 +137,20 @@ if ($handle)
 		{
 			$old = true;
 		}
-		elseif (strpos($line, "name") && $old)
-		{
-			$machinefound = true;
-			$machinename = preg_replace("/^name \".*\"$/", "\1", trim($line));
-			$gameid = add_game($sysid, $machinename, $sourceid, $link);
-		}
 		elseif (strpos($line, "rom (") !== false && $machinefound && $old)
 		{
-			add_rom_old($line, $link, "rom");
+			add_rom_old($line, $link, "rom", $gameid);
 		}
 		elseif (strpos($line, "disk (") !== false && $machinefound && $old)
 		{
-			add_rom_old($line, $link, "disk");
+			add_rom_old($line, $link, "disk", $gameid);
+		}
+		elseif (strpos($line, "name") !== false && $old)
+		{
+			$machinefound = true;
+			preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
+			$machinename = $machinename[1];
+			$gameid = add_game($sysid, $machinename, $sourceid, $link);
 		}
 		elseif (strpos($line, ")") !== false && $old)
 		{
@@ -157,7 +165,7 @@ if ($handle)
 		// Print out all lines only in debug
 		elseif ($_GET["debug"] == 1)
 		{
-			echo htmlspecialchars($line)."<br/><br/>";
+			echo htmlspecialchars($line)."<br/>";
 		}
 	}
 	echo "<br/>";
@@ -203,22 +211,24 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	return $gameid;
 }
 
-function add_rom ($line, $link, $romtype)
+function add_rom ($line, $link, $romtype, $gameid)
 {
 	$xml = simplexml_load_string($line);
-	add_rom_helper($link, $romtype, $xml->attributes()["name"], $xml->attributes()["size"],
+	add_rom_helper($link, $romtype, $gameid, $xml->attributes()["name"], $xml->attributes()["size"],
 			$xml->attributes()["crc"], $xml->attributes()["md5"], $xml->attributes()["sha1"]);
 }
 	
-function add_rom_old($line, $link, $romtype)
+function add_rom_old($line, $link, $romtype, $gameid)
 {
+	preg_match("/name \"(.*)\"/", $line, $name);
+	$name = $name[1];
 	$rominfo = explode(" ", $line);
-	$name = ""; $size = ""; $crc = ""; $md5 = ""; $sha1 = ""; 
+	$size = ""; $crc = ""; $md5 = ""; $sha1 = ""; 
 	
 	$next = "";
 	foreach ($rominfo as $info)
 	{
-		if ($info == "name" || $info == "size" || $info == "crc" || $info == "md5" || $info == "sha1")
+		if ($info == "size" || $info == "crc" || $info == "md5" || $info == "sha1")
 		{
 			$next = $info;
 		}
@@ -226,7 +236,6 @@ function add_rom_old($line, $link, $romtype)
 		{
 			switch ($next)
 			{
-				case "name": $name = trim($info, "\""); break;
 				case "size": $size = $info; break;
 				case "crc": $crc = $info; break;
 				case "md5": $md5 = $info; break;
@@ -237,10 +246,10 @@ function add_rom_old($line, $link, $romtype)
 		}
 	}
 	
-	add_rom_helper($link, $romtype, $name, $size, $crc, $md5, $sha1);
+	add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha1);
 }
 	
-function add_rom_helper($link, $romtype, $name, $size, $crc, $md5, $sha1)
+function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha1)
 {
 	if ($romtype != "rom" && $romtype != "disk")
 	{
@@ -285,26 +294,29 @@ function add_rom_helper($link, $romtype, $name, $size, $crc, $md5, $sha1)
 		}
 
 		$query = "INSERT INTO files (setid, name, type)
-		VALUES ($gameid,
+		VALUES (".$gameid.",
 		'".$name."',
-		'$romtype')";
+		'".$romtype."')";
+		echo "Query string: ".$query."<br/>";
 		$result = mysqli_query($link, $query);
 
 		if (gettype($result)=="boolean" && $result)
 		{
 			echo "ROM created. Adding checksums<br/>";
+			$romid = mysqli_insert_id($link);
 
 			$query = "INSERT INTO checksums (file, size, crc, md5, sha1)
-		VALUES (".mysqli_insert_id($link).",
+		VALUES (".$romid.",
 				".$size.",
 				'".$crc."',
 				'".$md5."',
 				'".$sha1."')";
+			echo "Query string: ".$query."<br/>";
 			$result = mysqli_query($link, $query);
 
 			if (gettype($result)=="boolean" && $result)
 			{
-				echo "Checksums added!";
+				echo "Checksums added!<br/>";
 			}
 			else
 			{
