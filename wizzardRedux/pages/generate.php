@@ -16,6 +16,8 @@ JOIN games ON systems.id=games.system
 JOIN sources ON games.source=sources.id
 
 TODO: Currently, the merged DAT doesn't actually merge anything. Add the logic to dedupe the files that go into the dat.
+	http://stackoverflow.com/questions/11145393/sorting-a-php-array-of-arrays-by-custom-order
+	sort by crc and sourceid, then loop through and if prev.crc = current.crc, skip it
 -->
 
 <?php
