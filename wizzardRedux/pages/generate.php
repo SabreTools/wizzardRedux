@@ -1,14 +1,17 @@
-<!-- 
+<?php
 
+/* ------------------------------------------------------------------------------------
 Create a DAT from the database
 
 Requires:
-	source		[Required by mode=custom] ID of the source as it appears in the database to create a DAT from
+	source		[Required by mode=custom] ID of the source as it appears in the database
+				to create a DAT from
 	system		ID of the system that is to be polled
 	old			[Optional] set this to 1 for the old style output
--->
-
-<?php
+	
+TODO: Create an "auto-generate all available"? Would it need to filter on things like
+		TOSEC or Redump? Harder than just clicking links?
+ ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
 

@@ -1,12 +1,13 @@
-<!-- 
+<?php
 
+/* ------------------------------------------------------------------------------------
 Import an existing DAT into the system
 
 Requires:
 	filename	File name in the format of "Manufacturer - SystemName (Source .*)\.dat"
--->
 
-<?php
+TODO: Auto-generate DATs affected by import (merged and custom)?
+------------------------------------------------------------------------------------ */
 
 echo "<h2>Import From Datfile</h2>";
 

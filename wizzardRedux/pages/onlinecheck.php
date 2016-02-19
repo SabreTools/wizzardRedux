@@ -1,4 +1,6 @@
-<!--
+<?php
+
+/*
 Check for new downloadable ROMs from all available sites
 
 Note: This is the most tedious one of all. All of the checks should be named as "sites/<sitename>.php".
@@ -11,8 +13,6 @@ TODO: Figure out where the id files should be stored (temp/ids/?, sites/ids/?)
 TODO: Retool existing onlinecheck.php files to follow the new format
 TODO: Add a way to figure out if a site is dead based on the original list that WoD created
 TODO: Figure out more todos
--->
-
-<?php
+*/
 
 ?>

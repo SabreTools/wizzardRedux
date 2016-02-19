@@ -1,4 +1,6 @@
-<!-- 
+<?php
+
+/* ------------------------------------------------------------------------------------
 Add, edit, and remove data from the database manually.
 
 Requires:
@@ -6,22 +8,15 @@ Requires:
 	
 NOTE: Is it necessary to have a switch on the type? Can't everything be on the same page?
 
-Flow: Choose System / Source from auto-populated dropdowns -> Game dropdown appears, filtered
+Flow: Choose System / Source from auto-populated dropdowns -> Game dropdown appears,
+	filtered
 Persistent have Add System and Add Source buttons
-Conditional Edit System, Remove System, Edit Source, Remove Source if a valid (non-0) source is selected
+Conditional Edit System, Remove System, Edit Source, Remove Source if a valid (non-0)
+	source is selected
 Persistent Add Game button
 Conditional Edit Game, Remove Game buttons if a valid (non-0) source is selected
 Search boxes?
-
-Note: Can we automatically figure out what systems are related to what sources? We can!
-
-SELECT systems.id AS sysid, systems.manufacturer AS manufacturer, systems.system AS system, sources.id AS sourceid, sources.name AS source
-FROM systems
-JOIN games ON systems.id=games.system
-JOIN sources ON games.source=sources.id
--->
-
-<?php
+ ------------------------------------------------------------------------------------ */
 
 $path_to_root = (getcwd() == "/wod/" ? "" : "..");
 
