@@ -12,6 +12,13 @@ Conditional Edit System, Remove System, Edit Source, Remove Source if a valid (n
 Persistent Add Game button
 Conditional Edit Game, Remove Game buttons if a valid (non-0) source is selected
 Search boxes?
+
+Note: Can we automatically figure out what systems are related to what sources? We can!
+
+SELECT systems.id AS sysid, systems.manufacturer AS manufacturer, systems.system AS system, sources.id AS sourceid, sources.name AS source
+FROM systems
+JOIN games ON systems.id=games.system
+JOIN sources ON games.source=sources.id
 -->
 
 <?php

@@ -7,13 +7,6 @@ Requires:
 	source		[Required by mode=custom] ID of the source as it appears in the database to create a DAT from
 	system		ID of the system that is to be polled
 	old			[Optional] set this to 1 for the old style output
-	
-Note: Can we automatically figure out what systems are related to what sources? We can!
-
-SELECT systems.id AS sysid, systems.manufacturer AS manufacturer, systems.system AS system, sources.id AS sourceid, sources.name AS source
-FROM systems
-JOIN games ON systems.id=games.system
-JOIN sources ON games.source=sources.id
 -->
 
 <?php
@@ -329,6 +322,12 @@ function merge_roms($roms)
 		
 		return strcomp($game_a, $game_b);
 	});
+	
+	// Then rename the sets to include the proper source
+	foreach ($roms as $rom)
+	{
+		$rom["game"] = $rom["game"]." [".$rom["source"]."]";
+	}
 	
 	// Finally, change the pointer of $roms to the new array
 	return $newroms;
