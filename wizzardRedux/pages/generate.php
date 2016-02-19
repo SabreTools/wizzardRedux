@@ -235,7 +235,7 @@ mysqli_close($link);
 // Functions
 function merge_roms($roms)
 {	
-	// First sort all roms by name and crc (or md5 or sha1)	
+	// First sort all roms by name and crc (or md5 or sha1)
 	usort($roms, function ($a, $b)
 	{
 		$crc_a = strtolower($a["crc"]);
@@ -255,11 +255,11 @@ function merge_roms($roms)
 				{
 					return $source_a - $source_b;
 				}
-				return strcomp($sha1_a, $sha1_b);
+				return strcmp($sha1_a, $sha1_b);
 			}
-			return strcomp($md5_a, $md5_b);
+			return strcmp($md5_a, $md5_b);
 		}
-		return strcomp($crc_a, $crc_b);
+		return strcmp($crc_a, $crc_b);
 	});
 		
 	// Then, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
@@ -322,22 +322,20 @@ function merge_roms($roms)
 		}
 	}
 	
+	// Then rename the sets to include the proper source
+	foreach ($newroms as &$rom)
+	{
+		$rom["game"] = $rom["game"]." [".$rom["source"]."]";
+	}
+	
 	// Once it's pruned, revert the order of the files by sorting by game
 	usort($newroms, function ($a, $b)
 	{		
 		$game_a = strtolower($a["game"]);
 		$game_b = strtolower($b["game"]);
 		
-		var_dump($a);
-		
-		return strcomp($game_a, $game_b);
+		return strcmp($game_a, $game_b);
 	});
-	
-	// Then rename the sets to include the proper source
-	foreach ($newroms as $rom)
-	{
-		$rom["game"] = $rom["game"]." [".$rom["source"]."]";
-	}
 	
 	// Finally, change the pointer of $roms to the new array
 	return $newroms;
