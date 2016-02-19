@@ -127,7 +127,7 @@ $version = date("YmdHis");
 $datname = $roms[0]["manufacturer"]." - ".$roms[0]["system"]." (".($mode == "custom" ? $source : "merged")." ".$version.")";
 
 // Create and open an output file for writing (currently uses current time, change to "last updated time"
-$handle = fopen($path_to_root."/temp/".$datname.".dat", "w");
+$handle = fopen($path_to_root."/temp/output/".$datname.".dat", "w");
 
 $header_old = <<<END
 clrmamepro (
