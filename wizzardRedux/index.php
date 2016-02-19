@@ -40,7 +40,8 @@ Here, the following functions will be implemented:
 	<li><a href=\"?page=generate\">Creating and downloading DATs</a><ul>
 		<li>Merged dats based on multiple sources</li>
 		<li>Custom dats based on a single source</li>
-	</li>
+	</ul></li>
+	<li><a href=\"?page=import\">Importing data from existing DATs</a></li>
 </ul>
 </p>";
 }
