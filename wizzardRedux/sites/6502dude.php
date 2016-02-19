@@ -1,5 +1,7 @@
 <?php
 
+// Original code: The Wizard of DATz
+
 echo "<h2>Loading pages and links...</h2>";
 
 $r_query = file("sites/".$_GET["source"].".txt");
@@ -14,9 +16,9 @@ while (list($k, $v) = each($r_query))
 $r_query = $s_query;
 unset($s_query);
 
-$base_dl_url="http://armas.cbm8bit.com/tapescans/victaps/";
+$base_dl_url = "http://armas.cbm8bit.com/tapescans/victaps/";
 
-$pages=Array(
+$pages = Array(
 		'http://armas.cbm8bit.com/0to9taps.html',
 		'http://armas.cbm8bit.com/ataps.html',
 		'http://armas.cbm8bit.com/btaps.html',
@@ -50,42 +52,42 @@ $found = Array();
 
 foreach($pages as $newfile)
 {
-	$query=implode ('', file ($newfile));
-	$query=preg_replace('/(\s+)/',' ', $query); // Remove all whitespace
-	$query=preg_replace('/(href=)("?)(\S+?)("?)(>)/','\1"\3"\5', $query); // Make sure all hrefs are quoted properly
-	$query=explode ('<tr ',$query);
-	$query[0]=null;
+	$query = implode ('', file ($newfile));
+	$query = preg_replace('/(\s+)/',' ', $query); // Remove all whitespace
+	$query = preg_replace('/(href=)("?)(\S+?)("?)(>)/','\1"\3"\5', $query); // Make sure all hrefs are quoted properly
+	$query = explode ('<tr ',$query);
+	$query[0] = null;
 
-	$old=0;
-	$new=0;
+	$old = 0;
+	$new = 0;
 
 	foreach($query as $row)
 	{
-		if($row)
+		if($row != "")
 		{
-			$row=explode('<td', $row);
-			$title=trim(str_replace(" ( NO SCAN YET )", "", strip_tags('<td'.$row[1])));
-			$info=trim(strip_tags('<td'.$row[2]));
-			$dls=explode ('tapescans/victaps/', $row[3]);
-			$dls[0]=null;
+			$row = explode('<td', $row);
+			$title = trim(str_replace(" ( NO SCAN YET )", "", strip_tags('<td'.$row[1])));
+			$info = trim(strip_tags('<td'.$row[2]));
+			$dls = explode ('tapescans/victaps/', $row[3]);
+			$dls[0] = null;
 
 			foreach($dls as $dl)
 			{
-				if($dl)
+				if($dl != "")
 				{
-					$dl=explode ('"', $dl);
-					$dl=$dl[0];
+					$dl = explode ('"', $dl);
+					$dl = $dl[0];
 						
-					$ext=explode ('.', $dl);
-					$ext=$ext[count($ext)-1];
+					$ext = explode ('.', $dl);
+					$ext = $ext[count($ext)-1];
 
-					if($r_query[$dl])
+					if($r_query[$dl] != "")
 					{
 						$old++;
 					}
 					else
 					{
-						$found[]=Array($dl,$title." (".$info.").".$ext);
+						$found[] = Array($dl,$title." (".$info.").".$ext);
 						$new++;
 					}
 				}
