@@ -300,7 +300,7 @@ function merge_roms($roms)
 	// Then, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
 	$lastsize = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lasttype = "";
 	$newroms = Array();
-	foreach($roms as $rom)
+	foreach ($roms as $rom)
 	{
 		if ($lastsize == "")
 		{

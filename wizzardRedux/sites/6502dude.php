@@ -2,20 +2,6 @@
 
 // Original code: The Wizard of DATz
 
-echo "<h2>Loading pages and links...</h2>";
-
-$r_query = file("sites/".$_GET["source"].".txt");
-$r_query = array_flip($r_query);
-
-// There is the case that all keys will contain a whitespace character at the end
-$s_query = Array();
-while (list($k, $v) = each($r_query))
-{
-	$s_query[trim($k)] = $r_query[$k];
-}
-$r_query = $s_query;
-unset($s_query);
-
 $base_dl_url = "http://armas.cbm8bit.com/tapescans/victaps/";
 
 $pages = Array(
@@ -48,9 +34,7 @@ $pages = Array(
 		'http://armas.cbm8bit.com/ztaps.html',
 		);
 
-$found = Array();
-
-foreach($pages as $newfile)
+foreach ($pages as $newfile)
 {
 	$query = implode ('', file ($newfile));
 	$query = preg_replace('/(\s+)/',' ', $query); // Remove all whitespace
@@ -61,7 +45,7 @@ foreach($pages as $newfile)
 	$old = 0;
 	$new = 0;
 
-	foreach($query as $row)
+	foreach ($query as $row)
 	{
 		if($row != "")
 		{
@@ -71,7 +55,7 @@ foreach($pages as $newfile)
 			$dls = explode ('tapescans/victaps/', $row[3]);
 			$dls[0] = null;
 
-			foreach($dls as $dl)
+			foreach ($dls as $dl)
 			{
 				if($dl != "")
 				{
@@ -101,7 +85,7 @@ foreach($pages as $newfile)
 
 echo "<h2>New files:</h2>";
 
-foreach($found as $row)
+foreach ($found as $row)
 {
 	echo "<a href='".$base_dl_url.$row[0]."'>".$row[0]."</a><br/>";
 }
