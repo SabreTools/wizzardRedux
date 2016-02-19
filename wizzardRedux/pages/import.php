@@ -61,7 +61,10 @@ if (!$link)
 	die('Error: Could not connect: ' . mysqli_error($link));
 }
 
-echo "Connection established!<br/>";
+if ($debug)
+{
+	echo "Connection established!<br/>";
+}
 
 $query = "SELECT id
 	FROM systems
@@ -101,7 +104,10 @@ if ($handle)
 	$gameid = 0;
 	$query = "";
 	
-	if ($_GET["debug"]=="1") echo "<h3>File Printout:</h3>";
+	if ($debug)
+	{
+		echo "<h3>File Printout:</h3>";
+	}
 	while (($line = fgets($handle)) !== false)
 	{
 		// If a machine or game tag is found, check to see if it's in the database
@@ -164,7 +170,7 @@ if ($handle)
 		}
 		
 		// Print out all lines only in debug
-		elseif ($_GET["debug"] == 1)
+		elseif ($debug)
 		{
 			echo htmlspecialchars($line)."<br/>";
 		}

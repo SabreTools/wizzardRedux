@@ -27,15 +27,6 @@ elseif (isset($_GET["system"]))
 	$system = $_GET["system"];
 }
 
-if ($mode == "lame")
-{
-	echo "<b>You must have the following parameters:<br/>
-		system (must be the number), mode (optional), source (required with mode=custom)</b><br/><br/>";
-	echo "<a href=\"index.php\">Return to home</a>";
-	
-	die();
-}
-
 echo "The mode is ".$mode."<br/>";
 
 // Check if the given values for source and system are actually valid
@@ -46,6 +37,47 @@ if (!$link)
 }
 
 echo "Connection established!<br/>";
+
+if ($mode == "lame")
+{
+	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
+		FROM systems
+		JOIN games
+			ON systems.id=games.system";
+	$result = mysqli_query($link, $query);
+	
+	echo "<h3>Available Systems</h3>";
+	
+	$systems = Array();
+	while($system = mysqli_fetch_assoc($result))
+	{
+		array_push($systems, $system);
+	}
+	
+	foreach ($systems as $system)
+	{
+		echo "<a href=\"?page=generate&system=".$system["id"]."\">".$system["manufacturer"]." - ".$system["system"]."</a><ul>";
+		
+		$query = "SELECT DISTINCT sources.id, sources.name
+			FROM systems
+			JOIN games
+				ON systems.id=games.system
+			JOIN sources
+				ON games.source=sources.id
+			WHERE systems.id=".$system["id"];
+		$result = mysqli_query($link, $query);
+		
+		while($source = mysqli_fetch_assoc($result))
+		{
+			echo "<li><a href=\"?page=generate&system=".$system["id"]."&source=".$source["id"]."\">".$source["name"]."</a></li>";
+		}
+		echo "</ul>";
+	}
+	
+	echo "<br/><a href=\"index.php\">Return to home</a>";
+	
+	die();
+}
 
 $query = "SELECT *
 FROM systems
@@ -116,7 +148,7 @@ if ($mode == "merged")
 	$roms = merge_roms($roms);
 }
 
-if (isset($_GET["debug"]) && $_GET["debug"] == "1")
+if ($debug)
 {
 	echo "<table border='1'>
 		<tr><th>Source</th><th>Set</th><th>Name</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>";

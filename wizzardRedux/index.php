@@ -10,6 +10,13 @@
 
 include_once("css/style.php");
 
+// Check for debug mode and pass it along
+$debug = false;
+if (isset($_GET["debug"]) && $_GET["debug"]=="1")
+{
+	$debug = true;
+}
+
 // Ensure the temp folder exists
 if (!file_exists("temp/"))
 {
