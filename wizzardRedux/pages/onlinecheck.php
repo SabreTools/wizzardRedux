@@ -25,7 +25,8 @@ if (!isset($_GET["source"]))
 	{
 		if (preg_match("/^.*\.php$/", $file))
 		{
-			echo "<a href=\"?page=onlinecheck&source=".chop($file, ".php")."&debug=1\">".htmlspecialchars($file)."</a><br/>";
+			$file = substr($file, 0, sizeof($file) - 5);
+			echo "<a href=\"?page=onlinecheck&source=".$file."&debug=1\">".htmlspecialchars($file)."</a><br/>";
 		}
 	}
 

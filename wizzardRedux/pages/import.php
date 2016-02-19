@@ -7,11 +7,13 @@ Requires:
 	filename	File name in the format of "Manufacturer - SystemName (Source .*)\.dat"
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
+TODO: Add lastupdated when import is finished? 
+TODO: Change lastupdated from sources.lastupdated to games.lastupdated?
 ------------------------------------------------------------------------------------ */
 
 echo "<h2>Import From Datfile</h2>";
 
-ini_set('max_execution_time', 300); // Set the execution time higher because DATs can be big
+ini_set('max_execution_time', 3000); // Set the execution time higher because DATs can be big
 
 // First, get the pattern of the file name. This is required for organization.
 $datpattern = "/^(.+?) - (.+?) \((\S+) .*\)\.dat$/";
@@ -28,7 +30,7 @@ if (!isset($_GET["filename"]))
 		}
 	}
 	
-	echo "<br/><a href='".$path_to_root."/index.php'>Return to home</a>";
+	echo "<br/><a href=\"?page=\">Return to home</a>";
 	
 	die();
 }
@@ -206,7 +208,7 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 		echo "No games found by that name. Creating new game.<br/>";
 	
 		$query = "INSERT INTO games (system, name, source)
-		VALUES ($sysid, '$machinename', $sourceid)";
+		VALUES (".$sysid.", '".htmlspecialchars($machinename)."', ".$sourceid.")";
 		$result = mysqli_query($link, $query);
 		$gameid = mysqli_insert_id($link);
 	}
@@ -279,7 +281,7 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 	FROM files
 	JOIN checksums
 	ON files.id=checksums.file
-	WHERE files.name='".$name."'
+	WHERE files.name='".addslashes($name)."'
 		AND files.type='".$romtype."'
 		AND files.setid=".$gameid."
 		AND checksums.size=".$size."
@@ -291,7 +293,7 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 	{
 		echo "ROM not found. Creating new ROM.<br/>";
 		
-		$query = "SELECT files.id FROM files WHERE files.name='".$name."'";
+		$query = "SELECT files.id FROM files WHERE files.name='".addslashes($name)."'";
 		$result = mysqli_query($link, $query);
 		
 		// See if there's any ROMs with the same name. If so, add a delimiter on the end of the name.
@@ -307,7 +309,7 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 
 		$query = "INSERT INTO files (setid, name, type)
 		VALUES (".$gameid.",
-		'".$name."',
+		'".addslashes($name)."',
 		'".$romtype."')";
 		$result = mysqli_query($link, $query);
 

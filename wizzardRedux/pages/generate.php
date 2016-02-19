@@ -17,14 +17,24 @@ echo "<h2>Export to Datfile</h2>";
 
 $mode = "lame";
 
+// Handle the POST case first since we had a dropdown (CAN'T TEST BECAUSE OF LOCAL ISSUES)
+if (isset($_POST["dats"]))
+{
+	$post = explode("-", $_POST["dats"]);
+	$system = $post[0];
+	$source = $post[1];
+	header("Location: ?page=generate&system=".$system."&source=".$source);
+	exit;
+}
+
 // Check the output mode first
-if (isset($_GET["source"]) && isset($_GET["system"]))
+if (isset($_GET["source"]) && $_GET["source"] != "" && isset($_GET["system"]) && $_GET["system"] != "")
 {
 	$mode = "custom";
 	$source = $_GET["source"];
 	$system = $_GET["system"];
 }
-elseif (isset($_GET["system"]))
+elseif (isset($_GET["system"]) && $_GET["system"] != "")
 {
 	$mode = "merged";
 	$system = $_GET["system"];
@@ -39,7 +49,7 @@ if (!$link)
 	die('Error: Could not connect: ' . mysqli_error($link));
 }
 
-echo "Connection established!<br/>";
+echo "Connection established!<br/>\n";
 
 if ($mode == "lame")
 {
@@ -49,7 +59,7 @@ if ($mode == "lame")
 			ON systems.id=games.system";
 	$result = mysqli_query($link, $query);
 	
-	echo "<h3>Available Systems</h3>";
+	echo "<h3>Available Systems</h3>\n";
 	
 	$systems = Array();
 	while($system = mysqli_fetch_assoc($result))
@@ -57,9 +67,12 @@ if ($mode == "lame")
 		array_push($systems, $system);
 	}
 	
+	echo "<select name='dats' id='dats'>\n";
+	echo "<option value=' ' selected='selected'>Choose a DAT</option>\n";
 	foreach ($systems as $system)
 	{
-		echo "<a href=\"?page=generate&system=".$system["id"]."\">".$system["manufacturer"]." - ".$system["system"]."</a><ul>";
+		//echo "<a href=\"?page=generate&system=".$system["id"]."\">".$system["manufacturer"]." - ".$system["system"]."</a><ul>";
+		echo "<option value='".$system["id"]."-0'>".$system["manufacturer"]." - ".$system["system"]." (merged)</option>\n";
 		
 		$query = "SELECT DISTINCT sources.id, sources.name
 			FROM systems
@@ -72,10 +85,13 @@ if ($mode == "lame")
 		
 		while($source = mysqli_fetch_assoc($result))
 		{
-			echo "<li><a href=\"?page=generate&system=".$system["id"]."&source=".$source["id"]."\">".$source["name"]."</a></li>";
+			//echo "<li><a href=\"?page=generate&system=".$system["id"]."&source=".$source["id"]."\">".$source["name"]."</a></li>";
+			echo "<option value='".$system["id"]."-".$source["id"]."'>".$system["manufacturer"]." - ".$system["system"]." (".$source["name"].")</option>\n";
 		}
-		echo "</ul>";
+		//echo "</ul>";
 	}
+	echo "</select><br/>\n";
+	echo "<input type='submit'>\n";
 	
 	echo "<br/><a href=\"index.php\">Return to home</a>";
 	
