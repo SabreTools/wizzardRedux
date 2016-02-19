@@ -37,7 +37,7 @@ Here, the following functions will be implemented:
 	<li><a href=\"?page=admin\">Adding and removing files from the DATs</a></li>
 	<li><a href=\"?page=admin\">Adding and removing systems</a></li>
 	<li><a href=\"?page=admin\">Adding and removing sources</a></li>
-	<li><a href=\"?page=dats\">Creating and downloading DATs</a><ul>
+	<li><a href=\"?page=generate\">Creating and downloading DATs</a><ul>
 		<li>Merged dats based on multiple sources</li>
 		<li>Custom dats based on a single source</li>
 	</li>
