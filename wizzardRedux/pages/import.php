@@ -10,8 +10,10 @@ Requires:
 
 echo "<h2>Import From Datfile</h2>";
 
+ini_set('max_execution_time', 300); // Set the execution time higher because DATs can be big
+
 // First, get the pattern of the file name. This is required for organization.
-$datpattern = "/^(\S+) - (\S+) \((\S+) .*\)\.dat$/";
+$datpattern = "/^(.+?) - (.+?) \((\S+) .*\)\.dat$/";
 
 if (!isset($_GET["filename"]))
 {
@@ -66,25 +68,27 @@ $query = "SELECT id
 	WHERE manufacturer='$manufacturer'
 		AND system='$system'";
 $result = mysqli_query($link, $query);
-$sysid = mysqli_fetch_all($result)[0];
-mysqli_free_result($result);
 
-if (!$sysid)
+if (!gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 {
 	die('Error: No suitable system found! Please add the system and then try again');
 }
 
+$sysid = mysqli_fetch_assoc($result);
+$sysid = $sysid["id"];
+
 $query = "SELECT id
 	FROM sources
-	WHERE name='$source'";
+	WHERE name='".$source."'";
 $result = mysqli_query($link, $query);
-$sourceid = mysqli_fetch_all($result)[0];
-mysqli_free_result($result);
 
-if (!$sourceid)
+if (!gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 {
 	die('Error: No suitable source found! Please add the source and then try again');
 }
+
+$sourceid = mysqli_fetch_assoc($result);
+$sourceid = $sourceid["id"];
 
 // Then, parse the file and read in the information. Echo it out for safekeeping for now.
 $handle = fopen("temp/".$_GET["filename"], "r");
@@ -185,11 +189,12 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	
 	$query = "SELECT id
 	FROM games
-	WHERE system='$sysid'
-	AND name='$machinename'
-	AND source=$sourceid";
+	WHERE system=".$sysid."
+	AND name='".$machinename."'
+	AND source=".$sourceid;
+	
 	$result = mysqli_query($link, $query);
-	if (mysqli_num_rows($result) == 0)
+	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
 		echo "No games found by that name. Creating new game.<br/>";
 	
@@ -202,7 +207,8 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	{
 		echo "Game found!<br/>";
 	
-		$gameid = mysqli_fetch_all($result)[0];
+		$gameid = mysqli_fetch_assoc($result);
+		$gameid = $gameid["id"];
 	}
 	
 	return $gameid;
@@ -268,6 +274,7 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 	ON files.id=checksums.file
 	WHERE files.name='".$name."'
 		AND files.type='".$romtype."'
+		AND files.setid=".$gameid."
 		AND checksums.size=".$size."
 		AND checksums.crc='".$crc."'
 		AND checksums.md5='".$md5."'
@@ -281,14 +288,15 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 		$result = mysqli_query($link, $query);
 		
 		// See if there's any ROMs with the same name. If so, add a delimiter on the end of the name.
-		if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
-		{
-			$name = preg_replace("/^(.*)(\..*)/", "\1 (".
-					($crc != "" ? $crc :
-							($md5 != "" ? $md5 :
-									($sha1 != "" ? $sha1 : "Alt"))).
-					")\2", $name);
-		}
+		/// THIS HAS TO BE DONE IN GENERATE, FSCK
+		//if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+		//{
+		//	$name = preg_replace("/^(.*)(\..*)/", "\1 (".
+		//			($crc != "" ? $crc :
+		//					($md5 != "" ? $md5 :
+		//							($sha1 != "" ? $sha1 : "Alt"))).
+		//			")\2", $name);
+		//}
 
 		$query = "INSERT INTO files (setid, name, type)
 		VALUES (".$gameid.",
