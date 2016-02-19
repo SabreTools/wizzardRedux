@@ -66,7 +66,7 @@ $query = "SELECT id
 	WHERE manufacturer='$manufacturer'
 		AND system='$system'";
 $result = mysqli_query($link, $query);
-$sysid = mysqli_fetch_array($result)[0];
+$sysid = mysqli_fetch_all($result)[0];
 mysqli_free_result($result);
 
 if (!$sysid)
@@ -78,7 +78,7 @@ $query = "SELECT id
 	FROM sources
 	WHERE name='$source'";
 $result = mysqli_query($link, $query);
-$sourceid = mysqli_fetch_array($result)[0];
+$sourceid = mysqli_fetch_all($result)[0];
 mysqli_free_result($result);
 
 if (!$sourceid)
@@ -202,7 +202,7 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	{
 		echo "Game found!<br/>";
 	
-		$gameid = mysqli_fetch_array($result)[0];
+		$gameid = mysqli_fetch_all($result)[0];
 	}
 	
 	return $gameid;

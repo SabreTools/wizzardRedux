@@ -3,7 +3,6 @@
 Create a DAT from the database
 
 Requires:
-	mode		[Optional, defaults to merged] Either custom or merged dats, if custom, requires second param
 	source		[Required by mode=custom] ID of the source as it appears in the database to create a DAT from
 	system		ID of the system that is to be polled
 	old			[Optional] set this to 1 for the old style output
@@ -14,16 +13,15 @@ Requires:
 echo "<h2>Export to Datfile</h2>";
 
 $mode = "lame";
-$path_to_root = (getcwd() == "/wod/" ? "" : "..");
 
 // Check the output mode first
-if (isset($_GET["mode"]) && $_GET["mode"] == "custom" && isset($_GET["source"]) && isset($_GET["system"]))
+if (isset($_GET["source"]) && isset($_GET["system"]))
 {
 	$mode = "custom";
 	$source = $_GET["source"];
 	$system = $_GET["system"];
 }
-elseif (gettype($_GET["system"])=="integer")
+elseif (isset($_GET["system"]))
 {
 	$mode = "merged";
 	$system = $_GET["system"];
@@ -33,7 +31,7 @@ if ($mode == "lame")
 {
 	echo "<b>You must have the following parameters:<br/>
 		system (must be the number), mode (optional), source (required with mode=custom)</b><br/><br/>";
-	echo "<a href=\"".$path_to_root."/index.php\">Return to home</a>";
+	echo "<a href=\"index.php\">Return to home</a>";
 	
 	die();
 }
@@ -56,7 +54,7 @@ $result = mysqli_query($link, $query);
 if (gettype($result)=="boolean" || mysqli_num_rows($result) == 0)
 {
 	echo "<b>The system number provided was not valid, please check your code and try again</b><br/><br/>";
-	echo "<a href=\"".$path_to_root."/index.php\">Return to home</a>";
+	echo "<a href=\"index.php\">Return to home</a>";
 	
 	die();
 }
@@ -70,7 +68,7 @@ if ($mode == "custom")
 	if (gettype($result)=="boolean" || mysqli_num_rows($result) == 0)
 	{
 		echo "<b>The source number provided was not valid, please check your code and try again</b><br/><br/>";
-		echo "<a href=\"".$path_to_root."/index.php\">Return to home</a>";
+		echo "<a href=\"index.php\">Return to home</a>";
 	
 		die();
 	}
@@ -89,9 +87,9 @@ $query = "SELECT systems.manufacturer AS manufacturer, systems.system AS system,
 				ON games.id=files.setid
 			JOIN checksums
 				ON files.id=checksums.file
-			WHERE systems.id=$system".
+			WHERE systems.id=".$system.
 				($mode == "custom" ? " AND sources.id=$source" : "");
-
+				
 $result = mysqli_query($link, $query);
 
 if (gettype($result)=="boolean" && !$result)
@@ -100,12 +98,16 @@ if (gettype($result)=="boolean" && !$result)
 	die();
 }
 
-$roms = mysqli_fetch_array($result);
-
-if (sizeof($roms) == 0)
+if (mysqli_num_rows($result) == 0)
 {
 	echo "There are no roms found for these inputs. Please try again<br/>";
 	die();
+}
+
+$roms = Array();
+while($rom = mysqli_fetch_assoc($result))
+{
+	array_push($roms, $rom);
 }
 
 // If creating a merged DAT, remove all duplicates and then sort back again
@@ -114,20 +116,26 @@ if ($mode == "merged")
 	$roms = merge_roms($roms);
 }
 
-echo "<table border='1'>
-	<tr><th>Source</th><th>Set</th><th>Name</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>";
-
-foreach ($roms as $rom)
+if (isset($_GET["debug"]) && $_GET["debug"] == "1")
 {
-	echo "<tr><td>".$rom["source"]."</td><td>".$rom["game"]."</td><td>".$rom["name"]."</td><td>".$rom["size"]."</td><td>".$rom["crc"]."</td><td>".$rom["md5"]."</td><td>".$rom["sha1"]."</td></tr>";
+	echo "<table border='1'>
+		<tr><th>Source</th><th>Set</th><th>Name</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>";
+	
+	foreach ($roms as $rom)
+	{
+		echo "<tr><td>".$rom["source"]."</td><td>".$rom["game"]."</td><td>".$rom["name"]."</td><td>".$rom["size"]."</td><td>".$rom["crc"]."</td><td>".$rom["md5"]."</td><td>".$rom["sha1"]."</td></tr>";
+	}
+	
+	echo "</table>";
 }
-echo "</table>";
 
 $version = date("YmdHis");
-$datname = $roms[0]["manufacturer"]." - ".$roms[0]["system"]." (".($mode == "custom" ? $source : "merged")." ".$version.")";
+$datname = $roms[0]["manufacturer"]." - ".$roms[0]["system"]." (".($mode == "custom" ? $roms[0]["source"] : "merged")." ".$version.")";
+
+$old = (isset($_GET["old"]) && $_GET["old"] == "1");
 
 // Create and open an output file for writing (currently uses current time, change to "last updated time"
-$handle = fopen($path_to_root."/temp/output/".$datname.".dat", "w");
+$handle = fopen("temp/output/".$datname.($old ? ".dat" : ".xml"), "w");
 
 $header_old = <<<END
 clrmamepro (
@@ -136,7 +144,7 @@ clrmamepro (
 	version "$version"
 	comment ""
 	author "The Wizard of DATz"
-)
+)\n
 END;
 
 $header = <<<END
@@ -156,13 +164,13 @@ $header = <<<END
 		<url></url>
 		<comment></comment>
 		<clrmamepro/>
-	</header>
+	</header>\n
 END;
 
-$footer = "\r\n</datafile>";
+$footer = "\n</datafile>";
 
 $lastgame = "";
-if ($_GET["old"] == "1")
+if ($old)
 {
 	fwrite($handle, $header_old);
 	foreach ($roms as $rom)
@@ -170,19 +178,19 @@ if ($_GET["old"] == "1")
 		$state = "";		
 		if ($lastgame != "" && $lastgame != $rom["game"])
 		{
-			$state = $state + ")\r\n";
+			$state = $state.")\n";
 		}
 		if ($lastgame != $rom["game"])
 		{
-			$state = $state + "game (\r\n
-						\t name \"".$rom["game"]."\"";
+			$state = $state."game (\n".
+						"\t name \"".$rom["game"]."\"\n";
 		}
-		$state = $state + "\t".$rom["type"]." ( name \"".$rom["name"]."\"".
+		$state = $state."\t".$rom["type"]." ( name \"".$rom["name"]."\"".
 				($rom["size"] != "" ? " size ".$rom["size"] : "").
 				($rom["crc"] != "" ? " crc ".$rom["crc"] : "").
 				($rom["md5"] != "" ? " md5 ".$rom["md5"] : "").
 				($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
-				" )";
+				" )\n";
 
 		$lastgame = $rom["game"];
 		
@@ -199,25 +207,25 @@ else
 		
 		if ($lastgame != "" && $lastgame != $rom["game"])
 		{
-			$state = $state + "\t</machine>\r\n";
+			$state = $state."\t</machine>\n";
 		}
 		if ($lastgame != $rom["game"])
 		{
-			$state = $state + "\t<machine name=\"".$rom["game"].">\r\n
-				\t\t<description>".$rom["game"]."</description>";
+			$state = $state."\t<machine name=\"".$rom["game"]."\">\n".
+				"\t\t<description>".$rom["game"]."</description>\n";
 		}
-		$state = $state + "\t\t\t<".$rom["type"]." name=\"".$rom["name"]."\"".
+		$state = $state."\t\t<".$rom["type"]." name=\"".$rom["name"]."\"".
 			($rom["size"] != "" ? " size=\"".$rom["size"]."\"" : "").
 			($rom["crc"] != "" ? " crc=\"".$rom["crc"]."\"" : "").
 			($rom["md5"] != "" ? " md5=\"".$rom["md5"]."\"" : "").
 			($rom["sha1"] != "" ? " sha1=\"".$rom["sha1"]."\"" : "").
-			"/>";
-		
+			" />\n";
+			
 		$lastgame = $rom["game"];
 		
 		fwrite($handle, $state);
 	}
-	fwrite($handle, "\t</machine>\r\n");
+	fwrite($handle, "\t</machine>");
 	fwrite($handle, $footer);
 }
 fclose($handle);
@@ -226,8 +234,8 @@ mysqli_close($link);
 
 // Functions
 function merge_roms($roms)
-{
-	// First sort all roms by name and crc (or md5 or sha1)
+{	
+	// First sort all roms by name and crc (or md5 or sha1)	
 	usort($roms, function ($a, $b)
 	{
 		$crc_a = strtolower($a["crc"]);
@@ -257,7 +265,7 @@ function merge_roms($roms)
 	// Then, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
 	$lastsize = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lasttype = "";
 	$newroms = Array();
-	foreach ($roms as $rom)
+	foreach($roms as $rom)
 	{
 		if ($lastsize == "")
 		{
@@ -315,16 +323,18 @@ function merge_roms($roms)
 	}
 	
 	// Once it's pruned, revert the order of the files by sorting by game
-	usort($roms, function ($a, $b)
-	{
+	usort($newroms, function ($a, $b)
+	{		
 		$game_a = strtolower($a["game"]);
 		$game_b = strtolower($b["game"]);
+		
+		var_dump($a);
 		
 		return strcomp($game_a, $game_b);
 	});
 	
 	// Then rename the sets to include the proper source
-	foreach ($roms as $rom)
+	foreach ($newroms as $rom)
 	{
 		$rom["game"] = $rom["game"]." [".$rom["source"]."]";
 	}
