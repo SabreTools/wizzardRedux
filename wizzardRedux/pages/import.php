@@ -8,8 +8,7 @@ Requires:
 	sourceid	Source ID for importing sets that don't have the source in the filename
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
-TODO: Add lastupdated when import is finished? 
-TODO: Change lastupdated from sources.lastupdated to games.lastupdated?
+TODO: Add lastupdated to each rom if added
 TODO: sourceid now allows for subfolders with auto-generated links
 		e.g. temp/redump/ can have the id for Redump autoappended so they don't have to be renamed
 	  opens the possibility for custom patterns for all possible sets, including having a matching
@@ -19,7 +18,7 @@ TODO: sourceid now allows for subfolders with auto-generated links
 
 echo "<h2>Import From Datfile</h2>";
 
-ini_set('max_execution_time', 3000); // Set the execution time higher because DATs can be big
+ini_set('max_execution_time', 6000); // Set the execution time higher because DATs can be big
 
 // First, get the pattern of the file name. This is required for organization.
 $datpattern = "/^(.+?) - (.+?) \((\S+) .*\)\.dat$/";

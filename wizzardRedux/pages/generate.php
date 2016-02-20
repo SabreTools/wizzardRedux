@@ -11,6 +11,13 @@ Requires:
 	
 TODO: Create an "auto-generate all available"? Would it need to filter on things like
 		TOSEC or Redump? Harder than just clicking links?
+TODO: Allow for DAT creation flexibility
+		As per conversations with emuload here's the list of possible DATs
+		if (!system && !source) => ALL (ALL).dat
+		if (!system && source) => ALL (Source).dat
+		if (system && !source) => System (merged).dat
+		if (system && source) => System (Souce).dat
+TODO: Add parenting to the database and to the edit page.
  ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
