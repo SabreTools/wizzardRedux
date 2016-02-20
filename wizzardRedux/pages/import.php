@@ -186,6 +186,9 @@ if ($handle)
 	echo "<br/>";
 	
 	fclose($handle);
+	rename("temp/".$_GET["filename"], "temp/imported/".$_GET["filename"]);
+	header("Location: ?page=import");
+	exit;
 }
 else
 {
@@ -337,12 +340,12 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 			}
 			else
 			{
-				echo "MYSQL Error! ".mysqli_error($link)."<br/>";
+				die("MYSQL Error! ".mysqli_error($link)."<br/>");
 			}
 		}
 		else
 		{
-			echo "MYSQL Error! ".mysqli_error($link)."<br/>";
+			die("MYSQL Error! ".mysqli_error($link)."<br/>");
 		}
 	}
 }

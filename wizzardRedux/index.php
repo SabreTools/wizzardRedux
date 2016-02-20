@@ -17,10 +17,14 @@ if (isset($_GET["debug"]) && $_GET["debug"]=="1")
 	$debug = true;
 }
 
-// Ensure the temp folder exists
-if (!file_exists("temp/"))
+// Ensure the temp folder exists with the right subfolders
+if (!file_exists("temp/imported/"))
 {
-	mkdir("temp");
+	mkdir("temp/imported", "0777", true);
+}
+if (!file_exists("temp/output/"))
+{
+	mkdir("temp/output", "0777", true);
 }
 
 if ($_GET["page"] && file_exists("pages/".str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
