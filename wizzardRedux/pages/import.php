@@ -5,10 +5,16 @@ Import an existing DAT into the system
 
 Requires:
 	filename	File name in the format of "Manufacturer - SystemName (Source .*)\.dat"
+	sourceid	Source ID for importing sets that don't have the source in the filename
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
 TODO: Add lastupdated when import is finished? 
 TODO: Change lastupdated from sources.lastupdated to games.lastupdated?
+TODO: sourceid now allows for subfolders with auto-generated links
+		e.g. temp/redump/ can have the id for Redump autoappended so they don't have to be renamed
+	  opens the possibility for custom patterns for all possible sets, including having a matching
+	  	array for MAME softlists. Array should go in separate include file, or in style.php with
+	  	other such arrays
 ------------------------------------------------------------------------------------ */
 
 echo "<h2>Import From Datfile</h2>";
@@ -17,6 +23,8 @@ ini_set('max_execution_time', 3000); // Set the execution time higher because DA
 
 // First, get the pattern of the file name. This is required for organization.
 $datpattern = "/^(.+?) - (.+?) \((\S+) .*\)\.dat$/";
+$unsourcedp = "/^(.+?) - (.+?) \(.*\)\.dat$/";
+$sourceid = "";
 
 if (!isset($_GET["filename"]))
 {
@@ -26,7 +34,7 @@ if (!isset($_GET["filename"]))
 	{
 		if (preg_match("/^.*\.dat$/", $file))
 		{
-			echo "<a href=\"?page=import&filename=".$file."&debug=1\">".htmlspecialchars($file)."</a><br/>";
+			echo "<a href=\"?page=import&filename=".$file."\">".htmlspecialchars($file)."</a><br/>\n";
 		}
 	}
 	
@@ -41,22 +49,33 @@ elseif (!file_exists("temp/".$_GET["filename"]))
 	
 	die();
 }
-elseif (!preg_match($datpattern, $_GET["filename"]))
+elseif (!isset($_GET["source"]) && !preg_match($datpattern, $_GET["filename"]))
 {
-	echo "<b>DAT not in the proper pattern! (Manufacturer - SystemName (Source .*)\.dat)</b><br/>";
+	echo "<b>DAT not in the proper pattern! (Manufacturer - SystemName (Source .*)\.dat)</b><br/>\n";
 	echo "<a href='index.php'>Return to home</a>";
 	
 	die();
 }
+elseif (isset($_GET["source"]) && !preg_match($unsourcedp, $_GET["filename"]))
+{
+	echo "<b>DAT not in the proper pattern for known source! (Manufacturer - SystemName (.*)\.dat)</b><br/>\n";
+	echo "<a href='index.php'>Return to home</a>";
+	
+	die();
+}
+elseif (isset($_GET["source"]) && $_GET["source"] != "")
+{
+	$sourceid = $_GET["source"];
+}
 
-echo "<p>The file ".$_GET["filename"]." has a proper pattern!</p>";
+echo "<p>The file ".$_GET["filename"]." has a proper pattern!</p>\n";
 
 // Next, get information from the database on the current machine
 $fileinfo = explode(" - ", $_GET["filename"]);
 $manufacturer = $fileinfo[0];
 $fileinfo = explode(" (", $fileinfo[1]);
 $system = $fileinfo[0];
-$source = explode(" ", $fileinfo[1])[0];
+$source = ($sourceid == "" ? explode(" ", $fileinfo[1])[0] : "");
 
 $link = mysqli_connect('localhost', 'root', '', 'wod');
 if (!$link)
@@ -64,10 +83,7 @@ if (!$link)
 	die('Error: Could not connect: ' . mysqli_error($link));
 }
 
-if ($debug)
-{
-	echo "Connection established!<br/>";
-}
+echo "Connection established!<br/>\n";
 
 $query = "SELECT id
 	FROM systems
@@ -83,18 +99,21 @@ if (!gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 $sysid = mysqli_fetch_assoc($result);
 $sysid = $sysid["id"];
 
-$query = "SELECT id
-	FROM sources
-	WHERE name='".$source."'";
-$result = mysqli_query($link, $query);
-
-if (!gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
+if ($sourceid == "")
 {
-	die('Error: No suitable source found! Please add the source and then try again');
+	$query = "SELECT id
+		FROM sources
+		WHERE name='".$source."'";
+	$result = mysqli_query($link, $query);
+	
+	if (!gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
+	{
+		die('Error: No suitable source found! Please add the source and then try again');
+	}
+	
+	$sourceid = mysqli_fetch_assoc($result);
+	$sourceid = $sourceid["id"];
 }
-
-$sourceid = mysqli_fetch_assoc($result);
-$sourceid = $sourceid["id"];
 
 // Then, parse the file and read in the information. Echo it out for safekeeping for now.
 $handle = fopen("temp/".$_GET["filename"], "r");
@@ -107,10 +126,9 @@ if ($handle)
 	$gameid = 0;
 	$query = "";
 	
-	if ($debug)
-	{
-		echo "<h3>File Printout:</h3>";
-	}
+	echo "<h3>Roms Added:</h3>
+<table border='1'>
+	<tr><th>Machine</th><th>Rom</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>\n";
 	while (($line = fgets($handle)) !== false)
 	{
 		// If a machine or game tag is found, check to see if it's in the database
@@ -130,16 +148,14 @@ if ($handle)
 		}
 		elseif (strpos($line, "<rom") !== false && $machinefound && !$old)
 		{
-			add_rom($line, $link, "rom", $gameid);
+			add_rom($line, $machinename, $link, "rom", $gameid);
 		}
 		elseif (strpos($line, "<disk") !== false && $machinefound && !$old)
 		{
-			add_rom($line, $link, "disk", $gameid);
+			add_rom($line, $machinename, $link, "disk", $gameid);
 		}
 		elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false) && !$old)
 		{			
-			echo "End of machine<br/><br/>";
-			
 			$machinefound = false;
 			$machinename = "";
 			$description = "";
@@ -153,11 +169,11 @@ if ($handle)
 		}
 		elseif (strpos($line, "rom (") !== false && $machinefound && $old)
 		{
-			add_rom_old($line, $link, "rom", $gameid);
+			add_rom_old($line, $machinename, $link, "rom", $gameid);
 		}
 		elseif (strpos($line, "disk (") !== false && $machinefound && $old)
 		{
-			add_rom_old($line, $link, "disk", $gameid);
+			add_rom_old($line, $machinename, $link, "disk", $gameid);
 		}
 		elseif (strpos($line, "name") !== false && $old)
 		{
@@ -169,24 +185,17 @@ if ($handle)
 		}
 		elseif (strpos($line, ")") !== false && $old)
 		{
-			echo "End of machine<br/><br/>";
-				
 			$machinefound = false;
 			$machinename = "";
 			$description = "";
 			$gameid = 0;
 		}
-		
-		// Print out all lines only in debug
-		elseif ($debug)
-		{
-			echo htmlspecialchars($line)."<br/>";
-		}
 	}
-	echo "<br/>";
+	echo "</table><br/>\n";
 	
 	fclose($handle);
 	rename("temp/".$_GET["filename"], "temp/imported/".$_GET["filename"]);
+	
 	echo "<script type='text/javascript'>window.location='?page=import'</script>";
 	exit;
 }
@@ -202,8 +211,6 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	// WoD gets rid of anything past the first "(" as the name, we will do the same
 	$machinename = preg_replace("/^(.*?) (\(|\[).*$/", "\1", $machinename);
 	
-	echo "Machine: ".$machinename."<br/>";
-	
 	$query = "SELECT id
 	FROM games
 	WHERE system=".$sysid."
@@ -213,8 +220,6 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	$result = mysqli_query($link, $query);
 	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
-		echo "No games found by that name. Creating new game.<br/>";
-	
 		$query = "INSERT INTO games (system, name, source)
 		VALUES (".$sysid.", '".htmlspecialchars($machinename)."', ".$sourceid.")";
 		$result = mysqli_query($link, $query);
@@ -222,8 +227,6 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	}
 	else
 	{
-		echo "Game found!<br/>";
-	
 		$gameid = mysqli_fetch_assoc($result);
 		$gameid = $gameid["id"];
 	}
@@ -231,14 +234,14 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	return $gameid;
 }
 
-function add_rom ($line, $link, $romtype, $gameid)
+function add_rom ($line, $machinename, $link, $romtype, $gameid)
 {
 	$xml = simplexml_load_string($line);
-	add_rom_helper($link, $romtype, $gameid, $xml->attributes()["name"], $xml->attributes()["size"],
+	add_rom_helper($machinename, $link, $romtype, $gameid, $xml->attributes()["name"], $xml->attributes()["size"],
 			$xml->attributes()["crc"], $xml->attributes()["md5"], $xml->attributes()["sha1"]);
 }
 	
-function add_rom_old($line, $link, $romtype, $gameid)
+function add_rom_old($line, $machinename, $link, $romtype, $gameid)
 {
 	preg_match("/name \"(.*)\"/", $line, $name);
 	$name = $name[1];
@@ -266,10 +269,10 @@ function add_rom_old($line, $link, $romtype, $gameid)
 		}
 	}
 	
-	add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha1);
+	add_rom_helper($machinename, $link, $romtype, $gameid, $name, $size, $crc, $md5, $sha1);
 }
 	
-function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha1)
+function add_rom_helper($machinename, $link, $romtype, $gameid, $name, $size, $crc, $md5, $sha1)
 {
 	if ($romtype != "rom" && $romtype != "disk")
 	{
@@ -277,14 +280,7 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 	}
 	
 	// Check for the existance of the rom in the given system and game
-	// If it doesn't exist, create the rom with the information provided
-	
-	echo $tab.($romtype=="disk" ? "DiskName:" : "RomName: ").$name."<br/>".
-			$tab."Size (bytes): ".$size."<br/>".
-			$tab."CRC32: ".$crc."<br/>".
-			$tab."MD5 Hash: ".$md5."<br/>".
-			$tab."SHA1 Hash: ".$sha1."<br/><br/>";
-	
+	// If it doesn't exist, create the rom with the information provided	
 	$query = "SELECT files.id
 	FROM files
 	JOIN checksums
@@ -299,21 +295,8 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 	$result = mysqli_query($link, $query);
 	if (gettype($result)=="boolean" || mysqli_num_rows($result) == 0)
 	{
-		echo "ROM not found. Creating new ROM.<br/>";
-		
 		$query = "SELECT files.id FROM files WHERE files.name='".addslashes($name)."'";
 		$result = mysqli_query($link, $query);
-		
-		// See if there's any ROMs with the same name. If so, add a delimiter on the end of the name.
-		/// THIS HAS TO BE DONE IN GENERATE, FSCK
-		//if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
-		//{
-		//	$name = preg_replace("/^(.*)(\..*)/", "\1 (".
-		//			($crc != "" ? $crc :
-		//					($md5 != "" ? $md5 :
-		//							($sha1 != "" ? $sha1 : "Alt"))).
-		//			")\2", $name);
-		//}
 
 		$query = "INSERT INTO files (setid, name, type)
 		VALUES (".$gameid.",
@@ -323,7 +306,6 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 
 		if (gettype($result)=="boolean" && $result)
 		{
-			echo "ROM created. Adding checksums<br/>";
 			$romid = mysqli_insert_id($link);
 
 			$query = "INSERT INTO checksums (file, size, crc, md5, sha1)
@@ -336,7 +318,7 @@ function add_rom_helper($link, $romtype, $gameid, $name, $size, $crc, $md5, $sha
 
 			if (gettype($result)=="boolean" && $result)
 			{
-				echo "Checksums added!<br/>";
+				echo "<tr><td>".$machinename."</td><td>".$name."</td><td>".$size."</td><td>".$crc."</td><td>".$md5."</td><td>".$sha1."</td></tr>\n";
 			}
 			else
 			{

@@ -166,11 +166,8 @@ while($rom = mysqli_fetch_assoc($result))
 	array_push($roms, $rom);
 }
 
-// If creating a merged DAT, remove all duplicates and then sort back again
-if ($mode == "merged")
-{
-	$roms = merge_roms($roms);
-}
+// Process the roms by renaming and, if necessary, merging
+$roms = process_roms($roms, $mode == "merged");
 
 if ($debug)
 {
@@ -292,100 +289,165 @@ echo "File written!<br/>\n";
 
 mysqli_close($link);
 
-// Functions
-function merge_roms($roms)
+// Change duplicate names and remove duplicates (merged only)
+function process_roms($roms, $merge)
 {	
-	// First sort all roms by name and crc (or md5 or sha1)
+	// First sort all roms by name and game
 	usort($roms, function ($a, $b)
 	{
-		$crc_a = strtolower($a["crc"]);
-		$md5_a = strtolower($a["md5"]);
-		$sha1_a = strtolower($a["sha1"]);
-		$source_a = $a["source"];
-		$crc_b = strtolower($b["crc"]);
-		$md5_b = strtolower($b["md5"]);
-		$sha1_b = strtolower($b["sha1"]);
-		$source_b = $b["source"];
-		
-		if ($crc_a == "" || $crc_b == "")
+		$game_a = strtolower($a["game"]);
+		$name_a = strtolower($a["name"]);
+		$game_b = strtolower($b["game"]);
+		$name_b = strtolower($b["name"]);
+	
+		if (strcmp($game_a, $game_b) == 0)
 		{
-			if ($md5_a == "" || $md5_b == "")
-			{
-				if ($sha1_a == "" || $sha1_b == "")
-				{
-					return $source_a - $source_b;
-				}
-				return strcmp($sha1_a, $sha1_b);
-			}
-			return strcmp($md5_a, $md5_b);
+			return strcmp($name_a, $name_b);
 		}
-		return strcmp($crc_a, $crc_b);
+		return strcmp($name_a, $name_b);
 	});
-		
-	// Then, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
-	$lastsize = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lasttype = "";
+	
+	// Next, go through and rename any necessary
+	$lastname = ""; $lastgame = "";
 	$newroms = Array();
 	foreach ($roms as $rom)
 	{
-		if ($lastsize == "")
+		if ($lastname == "")
 		{
-			$lastsize = $rom["size"];
-			$lastcrc = $rom["crc"];
-			$lastmd5 = $rom["md5"];
-			$lastsha1 = $rom["sha1"];
-			$lasttype = $rom["type"];
 			array_push($newroms, $rom);
 		}
 		else
 		{
 			// Determine which matching criteria is available and match on them
-			$samesize = false; $samecrc = false; $samemd5 = false; $samesha1 = false;
-			if ($rom["size"] != "")
+			$samename = false; $samegame = false;
+			if ($rom["name"] != "")
 			{
-				$samesize = ($lastsize == $rom["size"]);
+				$samename = ($lastname == $rom["name"]);
 			}
-			if ($rom["crc"] != "")
+			if ($rom["game"] != "")
 			{
-				$samecrc = ($lastcrc == $rom["crc"]);
-			}
-			if ($rom["md5"] != "")
-			{
-				$samemd5 = ($lastmd5 == $rom["md5"]);
-			}
-			if ($rom["sha1"] != "")
-			{
-				$samesha1 = ($lastsha1 == $rom["sha1"]);
-			}
-			
-			// If we have a rom, we need at least the size and one criteria to match
-			if ($rom["type"] == "rom")
-			{
-				if (!($samesize && ($samecrc || $samemd5 || $samesha1)))
-				{
-					array_push($newroms, $rom);
-				}
-			}
-			// If we have a disk, it generally only has an md5 or sha1
-			else
-			{
-				if (!($samemd5 || $samesha1))
-				{
-					array_push($newroms, $rom);
-				}
+				$samegame = ($lastgame == $rom["game"]);
 			}
 				
-			$lastsize = $rom["size"];
-			$lastcrc = $rom["crc"];
-			$lastmd5 = $rom["md5"];
-			$lastsha1 = $rom["sha1"];
-			$lasttype = $rom["type"];
+			// If the name and set are the same, rename it 
+			if ($samename && $samegame)
+			{
+				$rom["name"] = preg_replace("/^(.*)(\..*)/", "\1 (".
+						($rom["crc"] != "" ? $rom["crc"] :
+							($rom["md5"] != "" ? $rom["md5"] :
+									($rom["sha1"] != "" ? $rom["sha1"] : "Alt"))).
+					")\2", $rom["name"]);
+				array_push($newroms, $rom);
+			}
+			// Otherwise, just add it the way it is
+			else
+			{
+				array_push($newroms, $rom);
+			}
+	
+			$lastname = $rom["name"];
+			$lastgame = $rom["game"];
 		}
 	}
 	
-	// Then rename the sets to include the proper source
-	foreach ($newroms as &$rom)
+	// If we're in merged mode, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
+	if ($merged)
 	{
-		$rom["game"] = $rom["game"]." [".$rom["source"]."]";
+		$roms = $newroms;
+		unset($newroms);
+		
+		// First resort all roms by source and crc (or md5 or sha1)
+		usort($roms, function ($a, $b)
+		{
+			$crc_a = strtolower($a["crc"]);
+			$md5_a = strtolower($a["md5"]);
+			$sha1_a = strtolower($a["sha1"]);
+			$source_a = $a["source"];
+			$crc_b = strtolower($b["crc"]);
+			$md5_b = strtolower($b["md5"]);
+			$sha1_b = strtolower($b["sha1"]);
+			$source_b = $b["source"];
+		
+			if ($crc_a == "" || $crc_b == "")
+			{
+				if ($md5_a == "" || $md5_b == "")
+				{
+					if ($sha1_a == "" || $sha1_b == "")
+					{
+						return $source_a - $source_b;
+					}
+					return strcmp($sha1_a, $sha1_b);
+				}
+				return strcmp($md5_a, $md5_b);
+			}
+			return strcmp($crc_a, $crc_b);
+		});
+		
+		$lastsize = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lasttype = "";
+		$newroms = Array();
+		foreach ($roms as $rom)
+		{
+			if ($lastsize == "")
+			{
+				$lastsize = $rom["size"];
+				$lastcrc = $rom["crc"];
+				$lastmd5 = $rom["md5"];
+				$lastsha1 = $rom["sha1"];
+				$lasttype = $rom["type"];
+				array_push($newroms, $rom);
+			}
+			else
+			{
+				// Determine which matching criteria is available and match on them
+				$samesize = false; $samecrc = false; $samemd5 = false; $samesha1 = false;
+				if ($rom["size"] != "")
+				{
+					$samesize = ($lastsize == $rom["size"]);
+				}
+				if ($rom["crc"] != "")
+				{
+					$samecrc = ($lastcrc == $rom["crc"]);
+				}
+				if ($rom["md5"] != "")
+				{
+					$samemd5 = ($lastmd5 == $rom["md5"]);
+				}
+				if ($rom["sha1"] != "")
+				{
+					$samesha1 = ($lastsha1 == $rom["sha1"]);
+				}
+				
+				// If we have a rom, we need at least the size and one criteria to match
+				if ($rom["type"] == "rom")
+				{
+					if (!($samesize && ($samecrc || $samemd5 || $samesha1)))
+					{
+						array_push($newroms, $rom);
+					}
+				}
+				// If we have a disk, it generally only has an md5 or sha1
+				else
+				{
+					if (!($samemd5 || $samesha1))
+					{
+						array_push($newroms, $rom);
+					}
+				}
+					
+				$lastsize = $rom["size"];
+				$lastcrc = $rom["crc"];
+				$lastmd5 = $rom["md5"];
+				$lastsha1 = $rom["sha1"];
+				$lasttype = $rom["type"];
+			}
+		}
+		
+		
+		// Then rename the sets to include the proper source
+		foreach ($newroms as &$rom)
+		{
+			$rom["game"] = $rom["game"]." [".$rom["source"]."]";
+		}
 	}
 	
 	// Once it's pruned, revert the order of the files by sorting by game
