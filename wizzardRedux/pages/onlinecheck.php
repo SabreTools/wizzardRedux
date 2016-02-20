@@ -48,6 +48,7 @@ $checked = array (
 		"6502dude" => 1,
 		"8BitChip" => 2,
 		"8BitCommodoreItalia" => 3,
+		"AcornPreservation" => 4,
 );
 
 // Do all onlinecheck pages use this?
@@ -68,9 +69,21 @@ if (array_key_exists($source, $checked))
 	unset($s_query);
 	
 	$found = Array();
+	$base_dl_url = "";
 }
 
 // If we get to this point, we assume that it's good
 include_once("sites/".$source.".php");
+
+if (array_key_exists($source, $checked))
+{
+	echo "<h2>New files:</h2>";}
+	
+	foreach ($found as $row)
+	{
+		echo htmlspecialchars($row);
+		echo "<a href='".$base_dl_url.$row[0]."'>".$row[0]."</a><br/>";
+	}
+}
 
 ?>

@@ -83,13 +83,6 @@ foreach ($pages as $newfile)
 	echo "Found new: ".$new.", old: ".$old."<br/>";
 }
 
-echo "<h2>New files:</h2>";
-
-foreach ($found as $row)
-{
-	echo "<a href='".$base_dl_url.$row[0]."'>".$row[0]."</a><br/>";
-}
-
 echo "\n";
 
 ?>
