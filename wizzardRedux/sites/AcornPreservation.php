@@ -1,5 +1,8 @@
 <?php
 
+// Original code: The Wizard of DATz
+
+$base_dl_url = "http://www.8bitchip.info/";
 $pages = Array(
 	"http://www.acornpreservation.org/main_tapes_games.html",
 	"http://www.acornpreservation.org/main_discs_games.html",
@@ -49,6 +52,6 @@ foreach ($pages as $page)
 
 foreach($found as $row)
 {
-	print "<a href=\"http://www.acornpreservation.org/".$row."\" target=_blank>".$row."</a><br/>\n";
+	print "<a href=\"".$base_dl_url.$row."\">".$row."</a><br/>\n";
 }
 ?>

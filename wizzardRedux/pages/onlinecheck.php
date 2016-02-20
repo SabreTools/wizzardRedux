@@ -8,14 +8,29 @@ Requires:
 
 Note: This is the most tedious one of all. All of the checks should be named as "sites/<sitename>.php".
 
-If the page is sent with no param, generate a list of all possible checks. Each check has a
-<sitename>.txt file next to it that designates what files have already been found. Use
-the existing <sitename>/onlinecheck.php files for either reference or wholesale repurposing.
-
 TODO: Retool existing onlinecheck.php files to follow the new format
 TODO: Add a way to figure out if a site is dead based on the original list that WoD created
-TODO: Last site actually processed was 8BitChip. All others are direct imports.
 */
+
+// Site whose checkers have been once-overed
+$checked = array (
+		"6502dude" => 1,
+		"8BitChip" => 2,
+		"8BitCommodoreItalia" => 3,
+		"AcornPreservation" => 4,
+		"ADVAnsCEne" => 5,
+);
+
+// Probably dead sites
+$dead = array (
+		"8BitChip" => 1,
+		"8BitCommodoreItalia" => 2,
+);
+
+// Sites that are purely external
+$external = array (
+		"ADVAnsCEne" => 1,
+);
 
 if (!isset($_GET["source"]))
 {
@@ -44,13 +59,6 @@ elseif (!file_exists("sites/".$_GET["source"].".php"))
 
 $source = $_GET["source"];
 
-$checked = array (
-		"6502dude" => 1,
-		"8BitChip" => 2,
-		"8BitCommodoreItalia" => 3,
-		"AcornPreservation" => 4,
-);
-
 // Do all onlinecheck pages use this?
 if (array_key_exists($source, $checked))
 {
@@ -77,11 +85,11 @@ include_once("sites/".$source.".php");
 
 if (array_key_exists($source, $checked))
 {
-	echo "<h2>New files:</h2>";}
+	echo "<h2>New files:</h2>";
 	
 	foreach ($found as $row)
 	{
-		echo htmlspecialchars($row);
+		echo htmlspecialchars($row)."<br/>";
 		echo "<a href='".$base_dl_url.$row[0]."'>".$row[0]."</a><br/>";
 	}
 }

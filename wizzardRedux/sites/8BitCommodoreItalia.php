@@ -1,7 +1,5 @@
 <?php
 
-// Might be dead
-
 // Original code: The Wizard of DATz
 
 print "<pre>";

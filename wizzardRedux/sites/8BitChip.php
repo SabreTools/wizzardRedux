@@ -1,13 +1,8 @@
 <?php
 
-// Might be dead
-
 // Original code: The Wizard of DATz
 
 $base_dl_url = "http://www.8bitchip.info/";
-
-$found = Array();
-
 $max = 10000;
 
 for ($xpage = 0; $xpage < $max; $xpage++)
