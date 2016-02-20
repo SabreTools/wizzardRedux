@@ -17,6 +17,15 @@ if (isset($_GET["debug"]) && $_GET["debug"]=="1")
 	$debug = true;
 }
 
+// Connect to the database so it doesn't have to be done in every page
+$link = mysqli_connect('localhost', 'root', '', 'wod');
+if (!$link)
+{
+	die('Error: Could not connect: ' . mysqli_error($link));
+}
+
+echo "Connection established!<br/>\n";
+
 // Ensure the temp folder exists with the right subfolders
 if (!file_exists("temp/imported/"))
 {

@@ -77,14 +77,6 @@ $fileinfo = explode(" (", $fileinfo[1]);
 $system = $fileinfo[0];
 $source = ($sourceid == "" ? explode(" ", $fileinfo[1])[0] : "");
 
-$link = mysqli_connect('localhost', 'root', '', 'wod');
-if (!$link)
-{
-	die('Error: Could not connect: ' . mysqli_error($link));
-}
-
-echo "Connection established!<br/>\n";
-
 $query = "SELECT id
 	FROM systems
 	WHERE manufacturer='$manufacturer'

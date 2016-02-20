@@ -1,8 +1,6 @@
 <?php
 
-/*
-TODO: Check if this page is dead
-*/
+// Might be dead
 
 // Original code: The Wizard of DATz
 

@@ -48,14 +48,6 @@ elseif (isset($_GET["system"]) && $_GET["system"] != "")
 echo "The mode is ".$mode."<br/>";
 
 // Check if the given values for source and system are actually valid
-$link = mysqli_connect('localhost', 'root', '', 'wod');
-if (!$link)
-{
-	die('Error: Could not connect: ' . mysqli_error($link));
-}
-
-echo "Connection established!<br/>\n";
-
 if ($mode == "lame")
 {
 	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system

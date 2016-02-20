@@ -44,8 +44,14 @@ elseif (!file_exists("sites/".$_GET["source"].".php"))
 
 $source = $_GET["source"];
 
+$checked = array (
+		"6502dude" => 1,
+		"8BitChip" => 2,
+		"8BitCommodoreItalia" => 3,
+);
+
 // Do all onlinecheck pages use this?
-if ($source == "6502dude" || $source == "8BitChip")
+if (array_key_exists($source, $checked))
 {
 	echo "<h2>Loading pages and links...</h2>";
 	
