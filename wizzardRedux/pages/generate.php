@@ -17,13 +17,18 @@ echo "<h2>Export to Datfile</h2>";
 
 $mode = "lame";
 
-// Handle the POST case first since we had a dropdown (CAN'T TEST BECAUSE OF LOCAL ISSUES)
-if (isset($_POST["dats"]))
+// Handle the Form case first since we had a dropdown
+if (isset($_GET["dats"]))
 {
-	$post = explode("-", $_POST["dats"]);
-	$system = $post[0];
-	$source = $post[1];
-	header("Location: ?page=generate&system=".$system."&source=".$source);
+	if ($_GET["dats"] == "0")
+	{
+		echo "<a href=\"index.php\">Return to home</a>";
+	}
+	$dats = explode("-", $_GET["dats"]);	
+	$system = $dats[0];
+	$source = ($dats[1] == "0" ? "" : $dats[1]);
+	$loc = "?page=generate&system=".$system."&source=".$source.(isset($_GET["old"]) && $_GET["old"] == 1 ? "&old=1" : "");
+	header("Location: ".$loc);
 	exit;
 }
 
@@ -67,11 +72,12 @@ if ($mode == "lame")
 		array_push($systems, $system);
 	}
 	
+	echo "<form action='?page=generate' method='get'>\n";
+	echo "<input type='hidden' name='page' value='generate' />";
 	echo "<select name='dats' id='dats'>\n";
 	echo "<option value=' ' selected='selected'>Choose a DAT</option>\n";
 	foreach ($systems as $system)
 	{
-		//echo "<a href=\"?page=generate&system=".$system["id"]."\">".$system["manufacturer"]." - ".$system["system"]."</a><ul>";
 		echo "<option value='".$system["id"]."-0'>".$system["manufacturer"]." - ".$system["system"]." (merged)</option>\n";
 		
 		$query = "SELECT DISTINCT sources.id, sources.name
@@ -85,15 +91,14 @@ if ($mode == "lame")
 		
 		while($source = mysqli_fetch_assoc($result))
 		{
-			//echo "<li><a href=\"?page=generate&system=".$system["id"]."&source=".$source["id"]."\">".$source["name"]."</a></li>";
 			echo "<option value='".$system["id"]."-".$source["id"]."'>".$system["manufacturer"]." - ".$system["system"]." (".$source["name"].")</option>\n";
 		}
-		//echo "</ul>";
 	}
 	echo "</select><br/>\n";
-	echo "<input type='submit'>\n";
+	echo "<input type='checkbox' name='old' value='1'>Use old DAT format<br/><br/>\n";
+	echo "<input type='submit'>\n</form><br/><br/>\n";
 	
-	echo "<br/><a href=\"index.php\">Return to home</a>";
+	echo "<a href=\"index.php\">Return to home</a>";
 	
 	die();
 }
@@ -186,6 +191,7 @@ $datname = $roms[0]["manufacturer"]." - ".$roms[0]["system"]." (".($mode == "cus
 $old = (isset($_GET["old"]) && $_GET["old"] == "1");
 
 // Create and open an output file for writing (currently uses current time, change to "last updated time"
+echo "Opening file for writing: temp/output/".$datname.($old ? ".dat" : ".xml")."<br/>\n";
 $handle = fopen("temp/output/".$datname.($old ? ".dat" : ".xml"), "w");
 
 $header_old = <<<END
@@ -220,6 +226,7 @@ END;
 
 $footer = "\n</datafile>";
 
+echo "Writing data to file<br/>\n";
 $lastgame = "";
 if ($old)
 {
@@ -234,7 +241,7 @@ if ($old)
 		if ($lastgame != $rom["game"])
 		{
 			$state = $state."game (\n".
-						"\t name \"".$rom["game"]."\"\n";
+						"\tname \"".$rom["game"]."\"\n";
 		}
 		$state = $state."\t".$rom["type"]." ( name \"".$rom["name"]."\"".
 				($rom["size"] != "" ? " size ".$rom["size"] : "").
@@ -280,6 +287,8 @@ else
 	fwrite($handle, $footer);
 }
 fclose($handle);
+
+echo "File written!<br/>\n";
 
 mysqli_close($link);
 
