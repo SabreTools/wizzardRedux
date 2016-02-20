@@ -14,7 +14,7 @@ the existing <sitename>/onlinecheck.php files for either reference or wholesale 
 
 TODO: Retool existing onlinecheck.php files to follow the new format
 TODO: Add a way to figure out if a site is dead based on the original list that WoD created
-TODO: Figure out more todos
+TODO: Last site actually processed was 8BitChip. All others are direct imports.
 */
 
 if (!isset($_GET["source"]))

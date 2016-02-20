@@ -15,6 +15,7 @@ echo "<h1>Admin Page</h1>
 	<li>Add a game</li>
 	<li>Remove a game</li>
 	<li><a href=\"?page=import\">Bulk add from DAT</a></li>
+	<li><a href=\"?page=onlinecheck\">Check for new files online</a></li>
 </ol>";
 
 ?>
