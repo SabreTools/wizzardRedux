@@ -187,7 +187,7 @@ if ($handle)
 	
 	fclose($handle);
 	rename("temp/".$_GET["filename"], "temp/imported/".$_GET["filename"]);
-	header("Location: ?page=import");
+	echo "<script type='text/javascript'>window.location='?page=import'</script>";
 	exit;
 }
 else
