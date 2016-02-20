@@ -112,5 +112,3 @@ $search_pattern = array(
 );
 
 ?>
-
-?>

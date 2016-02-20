@@ -37,14 +37,14 @@ if (!isset($_GET["filename"]))
 elseif (!file_exists("temp/".$_GET["filename"]))
 {
 	echo "<b>The file you supply must be in /wod/temp/</b><br/>";
-	echo "<a href='".$path_to_root."/index.php'>Return to home</a>";
+	echo "<a href='index.php'>Return to home</a>";
 	
 	die();
 }
 elseif (!preg_match($datpattern, $_GET["filename"]))
 {
 	echo "<b>DAT not in the proper pattern! (Manufacturer - SystemName (Source .*)\.dat)</b><br/>";
-	echo "<a href='/index.php'>Return to home</a>";
+	echo "<a href='index.php'>Return to home</a>";
 	
 	die();
 }
