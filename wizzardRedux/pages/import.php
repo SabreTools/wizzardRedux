@@ -116,12 +116,16 @@ if ($handle)
 		// If a machine or game tag is found, check to see if it's in the database
 		// If it's not, add it to the database and then save the gameID
 		
+		// Normalize the whole line, just in case
+		$line = strtr($line, $normalize_chars);
+		
 		// This first block is for XML-derived DATs
 		if ((strpos($line, "<machine") !== false || strpos($line, "<game") !== false) && !$old)
 		{
 			$machinefound = true;
 			$xml = simplexml_load_string($line.(strpos($line, "<machine")?"</machine>":"</game>"));
 			$machinename = $xml->attributes()["name"];
+			$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
 			$gameid = add_game($sysid, $machinename, $sourceid, $link);
 		}
 		elseif (strpos($line, "<rom") !== false && $machinefound && !$old)
@@ -160,6 +164,7 @@ if ($handle)
 			$machinefound = true;
 			preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
 			$machinename = $machinename[1];
+			$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
 			$gameid = add_game($sysid, $machinename, $sourceid, $link);
 		}
 		elseif (strpos($line, ")") !== false && $old)
