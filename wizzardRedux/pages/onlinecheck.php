@@ -19,6 +19,7 @@ $checked = array (
 		"8BitCommodoreItalia" => 3,
 		"AcornPreservation" => 4,
 		"ADVAnsCEne" => 5,
+		"alexvampire" => 6,
 );
 
 // Probably dead sites
