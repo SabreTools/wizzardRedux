@@ -46,6 +46,7 @@ Here, the following functions will be implemented:
 		<li>Custom dats based on a single source</li>
 	</ul></li>
 	<li><a href=\"?page=import\">Importing data from existing DATs</a></li>
+	<li><a href=\"?page=getmamenames\">Generate an array of names for all MAME softlists</a></li>
 </ul>
 </p>";
 }

@@ -52,7 +52,7 @@ $normalize_chars = array(
 );
 
 // Replace special characters and patterns
-$search_pattern = array(
+$search_pattern = array (
 		'EXT' => array (
 				1	=>	'/~/',
 				2	=>	'/_/',
@@ -110,5 +110,10 @@ $search_pattern = array(
 				28	=>	' ',
 		),
 );
+
+if (file_exists("css/mamelist.php"))
+{
+	include_once("css/mamelist.php");
+}
 
 ?>
