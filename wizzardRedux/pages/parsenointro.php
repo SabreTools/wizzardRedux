@@ -2,10 +2,18 @@
 
 /*
 Internal test to see if the No-Intro pages can be traversed reasonably
+
+Requires
+	auto		Set to 1 if a new no-intro mapping needs to be created
+	
+TODO: Make the else block actually traverse a system and get the information directly.
+		This is mostly useless for most systems, but mainly this would be to get things
+		like scene releases for Nintendo DS, 3DS, etc. which we can get as rollbacks.
 */
 
 ini_set('max_execution_time', 6000); // Set the execution time higher because DATs can be big
 
+// auto means create the mapping
 if (isset($_GET["auto"]) && $_GET["auto"] == "1")
 {
 	$query = file("http://datomatic.no-intro.org/?page=download");
@@ -27,6 +35,7 @@ if (isset($_GET["auto"]) && $_GET["auto"] == "1")
 	fwrite($handle, ")\n\n?>");
 	fclose($handle);
 }
+// Try and get rom information direct from the no-intro pages. (Rollback?)
 else
 {
 	echo "<a href='page=parsenointro&auto=1'>Auto-generate no-intro name to system mapping</a><br/><br/>\n";
