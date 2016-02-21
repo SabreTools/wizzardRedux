@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 20, 2016 at 09:34 AM
+-- Generation Time: Feb 21, 2016 at 01:12 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.2
 
@@ -19,8 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `wod`
 --
-CREATE DATABASE IF NOT EXISTS `wod` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `wod`;
 
 -- --------------------------------------------------------
 
@@ -29,13 +27,12 @@ USE `wod`;
 --
 
 DROP TABLE IF EXISTS `checksums`;
-CREATE TABLE IF NOT EXISTS `checksums` (
+CREATE TABLE `checksums` (
   `file` int(11) NOT NULL,
   `size` int(11) NOT NULL,
   `crc` varchar(8) NOT NULL,
   `md5` varchar(32) NOT NULL,
-  `sha1` varchar(40) NOT NULL,
-  PRIMARY KEY (`file`,`size`,`crc`,`md5`,`sha1`)
+  `sha1` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -45,15 +42,13 @@ CREATE TABLE IF NOT EXISTS `checksums` (
 --
 
 DROP TABLE IF EXISTS `files`;
-CREATE TABLE IF NOT EXISTS `files` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `files` (
+  `id` int(11) NOT NULL,
   `setid` int(11) NOT NULL,
   `name` varchar(1024) NOT NULL,
   `type` varchar(1024) NOT NULL DEFAULT 'rom',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`),
-  KEY `FK_games_files_Cascade` (`setid`)
-) ENGINE=InnoDB AUTO_INCREMENT=43291 DEFAULT CHARSET=latin1;
+  `lastupdated` datetime NOT NULL DEFAULT '1970-01-01 00:00:00'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -62,14 +57,25 @@ CREATE TABLE IF NOT EXISTS `files` (
 --
 
 DROP TABLE IF EXISTS `games`;
-CREATE TABLE IF NOT EXISTS `games` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `games` (
+  `id` int(11) NOT NULL,
   `system` int(11) NOT NULL,
   `name` varchar(1024) NOT NULL,
-  `source` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20009 DEFAULT CHARSET=latin1;
+  `parent` int(11) NOT NULL DEFAULT '0',
+  `source` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `parent`
+--
+
+DROP TABLE IF EXISTS `parent`;
+CREATE TABLE `parent` (
+  `id` int(11) NOT NULL,
+  `name` varchar(1024) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -78,17 +84,11 @@ CREATE TABLE IF NOT EXISTS `games` (
 --
 
 DROP TABLE IF EXISTS `sources`;
-CREATE TABLE IF NOT EXISTS `sources` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `sources` (
+  `id` int(11) NOT NULL,
   `name` varchar(767) NOT NULL,
-  `lastupdated` datetime NOT NULL,
-  `url` longtext NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`),
-  UNIQUE KEY `name` (`name`),
-  KEY `name_2` (`name`),
-  KEY `name_3` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=207 DEFAULT CHARSET=latin1;
+  `url` longtext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -97,14 +97,89 @@ CREATE TABLE IF NOT EXISTS `sources` (
 --
 
 DROP TABLE IF EXISTS `systems`;
-CREATE TABLE IF NOT EXISTS `systems` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `systems` (
+  `id` int(11) NOT NULL,
   `manufacturer` varchar(1024) NOT NULL,
-  `system` varchar(1024) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=410 DEFAULT CHARSET=latin1;
+  `system` varchar(1024) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `checksums`
+--
+ALTER TABLE `checksums`
+  ADD PRIMARY KEY (`file`,`size`,`crc`,`md5`,`sha1`);
+
+--
+-- Indexes for table `files`
+--
+ALTER TABLE `files`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `FK_games_files_Cascade` (`setid`);
+
+--
+-- Indexes for table `games`
+--
+ALTER TABLE `games`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `parent`
+--
+ALTER TABLE `parent`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `sources`
+--
+ALTER TABLE `sources`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD UNIQUE KEY `name` (`name`),
+  ADD KEY `name_2` (`name`),
+  ADD KEY `name_3` (`name`);
+
+--
+-- Indexes for table `systems`
+--
+ALTER TABLE `systems`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `files`
+--
+ALTER TABLE `files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84487;
+--
+-- AUTO_INCREMENT for table `games`
+--
+ALTER TABLE `games`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35625;
+--
+-- AUTO_INCREMENT for table `parent`
+--
+ALTER TABLE `parent`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `sources`
+--
+ALTER TABLE `sources`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=207;
+--
+-- AUTO_INCREMENT for table `systems`
+--
+ALTER TABLE `systems`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=410;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
