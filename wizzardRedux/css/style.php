@@ -115,5 +115,9 @@ if (file_exists("css/mamelist.php"))
 {
 	include_once("css/mamelist.php");
 }
+if (file_exists("css/nointro.php"))
+{
+	include_once("css/nointro.php");
+}
 
 ?>
