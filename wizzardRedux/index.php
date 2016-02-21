@@ -62,6 +62,8 @@ Here, the following functions will be implemented:
 
 echo "<a href=\"?page=\">Return to home</a>";
 
+mysqli_close($link);
+
 ?>
 
 </html>
