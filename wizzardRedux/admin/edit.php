@@ -12,9 +12,20 @@ Requires:
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
 TODO: Add POST handling
+	file & !filename => open edit file
+TODO: DO STUFF TO SHOW AND EDIT ROM INFORMATION
+	"<tr><th>Type</th><td><select name='type' id='type'>".
+			"<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>\n".
+			"<option value='disk'".($game_info["type"] == "disk" ? " selected='selected'" : "").">disk</option>\n".
+		"</td></tr>\n".
  ------------------------------------------------------------------------------------ */
 
-var_dump($_POST);
+$getvars = array(
+		"system",			// systems.id
+		"source",			// sources.id
+		"game",				// games.id
+		"page",
+);
 
 $postvars = array(
 		"system",			// systems.id (-1 for new)
@@ -35,9 +46,16 @@ $postvars = array(
 );
 
 //Get the values for all parameters
-$system = (isset($_GET["system"]) && $_GET["system"] != "-1" ? trim($_GET["system"]) : "");
-$source = (isset($_GET["source"]) && $_GET["source"] != "-1" ? trim($_GET["source"]) : "");
-$game = (isset($_GET["game"]) ? trim($_GET["game"]) : "");
+foreach ($getvars as $var)
+{
+	$$var = (isset($_GET[$var]) && $_GET[$var] != "-1" ? trim($_GET[$var]) : "");
+}
+
+//Get thve values for all POST vars ($_GET overrides)
+foreach ($postvars as $var)
+{
+	$$var = (isset($_POST[$var]) ? (isset($$var) ? $$var : $_POST[$var]) : "");
+}
 
 // Set the special check values
 $source_set = $source != "";
@@ -72,12 +90,14 @@ elseif ($game != "")
 		array_push($sources, $row);
 	}
 	
+	// Retrieve the game info
 	$query = "SELECT systems.manufacturer AS manufacturer,
 				systems.system AS system,
 				systems.id AS systemid,
 				sources.name AS source,
 				sources.id AS sourceid,
 				games.name AS game,
+				files.id AS file,
 				files.name AS name,
 				files.type AS type,
 				checksums.size AS size,
@@ -95,48 +115,69 @@ elseif ($game != "")
 				ON files.id=checksums.file
 			WHERE games.id=".$game;
 	$result = mysqli_query($link, $query);
-	$game_info = mysqli_fetch_assoc($result);
+	$roms = mysqli_fetch_all($result);
+	$game_info = $roms[1];
 	
 	echo "<form action='index.php?page=edit' method='post'>
-<input type='hidden' name='game' value='".$game."
+<input type='hidden' name='game' value='".$game."'/>
 <h2>Edit the Game Information Below</h2>
+
 <table>
-<tr><th width='100px'>System</th><td>
-<select name='system' id='system'>";
+<tr>
+	<th width='100px'>System</th>
+	<td><select name='system' id='system'>\n";
 	
 	foreach ($systems as $system)
 	{
-		echo "<option value='".$system["id"]."'".
+		echo "\t\t<option value='".$system["id"]."'".
 			($system["id"] == $game_info["systemid"] ? " selected='selected'" : "").
 			">".$system["manufacturer"]." - ".$system["system"]."</option>\n";
 	}
-	echo <<<END
-</select></td></tr>
-<tr><th>Source</th><td><select name='source' id='source'>
-END;
+	
+	echo "\t</select></td>
+</tr>
+<tr>
+	<th>Source</th>
+	<td><select name='source' id='source'>\n";
+	
 	foreach ($sources as $source)
 	{
-		echo "<option value='".$source["id"]."'".
+		echo "\t\t<option value='".$source["id"]."'".
 			($source["id"] == $game_info["sourceid"] ? " selected='selected'" : "").
 			">".$source["name"]."</option>\n";
-	}	
-	echo "</select></td></tr>\n".
-		"<tr><th>Name</th><td><input type='text' name='gamename' value='".$game_info["game"]."'/></td></tr>\n".
-		"</table><br/>\n".
-		"<input type='submit'>\n</form><br/>\n";
+	}
 	
-	// DO STUFF TO SHOW AND EDIT ROM INFORMATION
-	/*
-	"<tr><th>Type</th><td><select name='type' id='type'>".
-			"<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>\n".
-			"<option value='disk'".($game_info["type"] == "disk" ? " selected='selected'" : "").">disk</option>\n".
-		"</td></tr>\n".
-	*/
+	echo "\t</select></td>
+</tr>
+<tr>
+	<th>Name</th>
+	<td><input type='text' name='gamename' value='".$game_info["game"]."'/></td>
+</tr>
+</table><br/>
+
+<table>
+<tr>
+	<th></th><th>Name</th><th>Type</th><th>Size</th><th>CRC</th><th>MD5</th><th>SHA-1</th>
+</tr>";
 	
-	echo "<a href='?page=edit".
+	foreach ($roms as $rom)
+	{	
+		echo "<tr>
+	<td><input type='radio' name='file' value='".$rom[6]."'/></td>";
+		for ($i = 7; $i < 13; $i++)
+		{
+			echo "<td>".$rom[$i]."</td>";
+		}
+		echo "</tr>\n";
+	}
+	
+	echo "</table>".
+			"<input type='submit'>\n</form><br/>".			
+			"<a href='?page=edit".
 			($source_set ? "&source='".$source : "").
 			($system_set ? "&system='".$system : "").
 			"'>Back to previous page</a><br/>\n";
+			
 }
 else
 {
@@ -156,7 +197,11 @@ else
 	}
 	
 	// Then get all games assocated
-	$query = "SELECT games.name AS name, games.id AS id
+	$query = "SELECT games.name AS name,
+				games.id AS id, 
+				systems.manufacturer AS manufacturer,
+				systems.system AS system,
+				sources.name AS source
 			FROM systems
 			JOIN games
 				ON systems.id=games.system
@@ -165,7 +210,8 @@ else
 			WHERE ".
 				($source_set ? "sources.id=".$source : "").
 				($source_set && $system_set ? " AND " : "").
-				($system_set ? "systems.id=".$system : "");
+				($system_set ? "systems.id=".$system : "").
+			" ORDER BY games.name ASC";
 	$games_result = mysqli_query($link, $query);
 
 	echo "<form action='index.php?page=edit".
@@ -196,7 +242,16 @@ else
 	{
 		while ($game = mysqli_fetch_assoc($games_result))
 		{
-			echo "<a href='?page=edit&game=".$game["id"]."'>".$game["name"]."</a><br/>\n";
+			echo "<a href='?page=edit&game=".$game["id"]."'>".$game["name"];
+			if ($source_set && !$system_set)
+			{
+				echo " (".$game["manufacturer"]." - ".$game["system"].")";
+			}
+			if (!$source_set && $system_set)
+			{
+				echo " (".$game["source"].")";
+			}
+			echo "</a><br/>\n";
 		}
 	}
 	else
@@ -204,8 +259,6 @@ else
 		echo "No games could be found!";
 	}
 	echo "<br/>";
-
-	// DO STUFF TO CHOOSE A FILE
 }
 
 // Requires the mysqli link
