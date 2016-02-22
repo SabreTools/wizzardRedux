@@ -39,11 +39,8 @@ else
 So, this is where all admin functions will be linked from. Currently, that page is /pages/admin.php for testability.<br/>
 This will include:
 <ol>
-	<li>Add/Edit/Remove a system</li>
-	<li>Add/Edit/Remove a source</li>
-	<li>Add/Edit/Remove a parent</li>
-	<li>Add/Edit/Remove a game</li>
-	<li>Add/Edit/Remove a file</li>
+	<li><a href='?page=edit'>Add/Edit/Remove a system/source/game/file</a></li>
+	<li><a href='parenting/index.php'>Add/Edit/Remove a parent</a></li>
 	<li><a href='?page=import'>Bulk add from DAT</a></li>
 	<li><a href='?page=onlinecheck'>Check for new files online</a></li>
 	<li><a href='?page=getmamenames'>Generate an array of names for all MAME softlists</a></li>
