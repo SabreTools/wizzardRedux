@@ -12,7 +12,6 @@ Requires:
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
 TODO: Add code to accept POST handling for updates
-TODO: Clean up multiple echos
  ------------------------------------------------------------------------------------ */
 
 //Get the values for all parameters
@@ -78,34 +77,35 @@ elseif ($game != "")
 	$result = mysqli_query($link, $query);
 	$game_info = mysqli_fetch_assoc($result);
 	
-	echo "<form action='index.php' method='get'>\n";
-	echo "<input type='hidden' name='page' value='edit' />\n";
-	echo "<h2>Edit the Game Information Below</h2>\n";
-	echo "<table>\n";
-	echo "<tr><th width='100px'>System</th><td>";
-	echo "<select name='system' id='system'>\n";
+	echo <<<END
+<form action='index.php' method='get'>\n";
+<input type='hidden' name='page' value='edit' />
+<h2>Edit the Game Information Below</h2>
+<table>
+<tr><th width='100px'>System</th><td>
+<select name='system' id='system'>
+END;
 	foreach ($systems as $system)
 	{
 		echo "<option value='".$system["id"]."'".
 			($system["id"] == $game_info["systemid"] ? " selected='selected'" : "").
 			">".$system["manufacturer"]." - ".$system["system"]."</option>\n";
 	}
-	echo "</select></td></tr>\n";
-	echo "<tr><th>Source</th><td>";
-	echo "<select name='source' id='source'>\n";
+	echo <<<END
+</select></td></tr>
+<tr><th>Source</th><td><select name='source' id='source'>
+END;
 	foreach ($sources as $source)
 	{
 		echo "<option value='".$source["id"]."'".
 			($source["id"] == $game_info["sourceid"] ? " selected='selected'" : "").
 			">".$source["name"]."</option>\n";
 	}
-	echo "</select></td></tr>\n";
-	echo "<tr><th>Name</th><td><input type='text' name='name' value='".$game_info["game"]."'/></td></tr>\n";
-	//Parent
-	echo "<tr><th>Type</th><td><input type='text' name='type' value='".$game_info["type"]."'/></td></tr>\n";
-	
-	echo "</table><br/>\n";
-	echo "<input type='submit'>\n</form><br/>\n";
+	echo "</select></td></tr>\n".
+		"<tr><th>Name</th><td><input type='text' name='name' value='".$game_info["game"]."'/></td></tr>\n".
+		"<tr><th>Type</th><td><input type='text' name='type' value='".$game_info["type"]."'/></td></tr>\n".
+		"</table><br/>\n".
+		"<input type='submit'>\n</form><br/>\n";
 	
 	// DO STUFF TO SHOW AND EDIT ROM INFORMATION
 	// HAVE GO BACK TO SOURCE/SYSTEM LINK IF $source OR $system IS SET
@@ -145,20 +145,20 @@ else
 				($system_set ? "systems.id='".$system."'" : "");
 	$games_result = mysqli_query($link, $query);
 
-	echo "<form action='index.php' method='get'>\n";
-	echo "<input type='hidden' name='page' value='edit' />\n";
+	echo "<form action='index.php' method='get'>\n".
+		"<input type='hidden' name='page' value='edit' />\n";
 	
 	if ($source_set)
 	{
-		echo "<input type='hidden' name='source' value='".$source."' />\n";
-		echo "<input type='text' name='name' value='".$source_info["name"]."' />\n";
-		echo "<input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
+		echo "<input type='hidden' name='source' value='".$source."' />\n".
+			"<input type='text' name='name' value='".$source_info["name"]."' />\n".
+			"<input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
 	}
 	if ($system_set)
 	{
-		echo "<input type='hidden' name='system' value='".$system."' />\n";
-		echo "<input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n";
-		echo "<input type='text' name='system' value='".$system_info["system"]."' /><br/>\n";
+		echo "<input type='hidden' name='system' value='".$system."' />\n".
+			"<input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n".
+			"<input type='text' name='system' value='".$system_info["system"]."' /><br/>\n";
 	}
 	
 	echo "<input type='submit'>\n</form><br/><br/>\n";
@@ -191,38 +191,43 @@ function show_default($link)
 	}
 	
 	// Output the input selection form
-	echo "<form action='index.php' method='get'>\n";
-	echo "<input type='hidden' name='page' value='edit' />";
-	echo "<h2>Select a System or Source</h2>";
-	echo "<select name='system' id='system'>\n";
-	echo "<option value='' selected='selected'>Choose a System</option>\n";
+	echo <<<END
+<form action='index.php' method='get'>
+<input type='hidden' name='page' value='edit' />
+<h2>Select a System or Source</h2>
+<select name='system' id='system'>
+<option value='' selected='selected'>Choose a System</option>
+END;
 	foreach ($systems as $system)
 	{
 		echo "<option value='".$system["id"]."'>".$system["manufacturer"]." - ".$system["system"]."</option>\n";
 	}
-	echo "</select>   \n";
-	echo "<select name='source' id='source'>\n";
-	echo "<option value='' selected='selected'>Choose a Source</option>\n";
+	echo "</select>
+<select name='source' id='source'>
+<option value='' selected='selected'>Choose a Source</option>";
 	foreach ($sources as $source)
 	{
 		echo "<option value='".$source["id"]."'>".$source["name"]."</option>\n";
 	}
-	echo "</select><br/>\n";
-	echo "<input type='submit'>\n</form>\n";
 	
-	echo "<h2>Or Add a New One</h2>";
-	echo "<form action='index.php' method='get'>\n";
-	echo "<input type='hidden' name='page' value='edit' />";
-	echo "<input type='hidden' name='source' value='-1' />\n";
-	echo "<h3>Source Add</h3>\n";
-	echo "<b>Name:</b> <input type='text' name='name' value='".$source_info["name"]."' />\n";
-	echo "<b>URL(s):</b> <input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
-	echo "<input type='hidden' name='system' value='-1' />\n";
-	echo "<h3>System Add</h3>\n";
-	echo "<b>Manufacturer:</b> <input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n";
-	echo "<b>Name:</b> <input type='text' name='system' value='".$system_info["system"]."' /><br/><br/>\n";
-	
-	echo "<input type='submit'>\n</form><br/><br/>\n";
+	echo "</select><br/>
+<input type='submit'>
+</form>
+<h2>Or Add a New One</h2>
+<form action='index.php' method='get'>
+<input type='hidden' name='page' value='edit' />
+			
+<input type='hidden' name='source' value='-1' />
+<h3>Source Add</h3>
+<b>Name:</b> <input type='text' name='name' value='".$source_info["name"]."' />
+<b>URL(s):</b> <input type='text' name='url' value='".$source_info["url"]."' /><br/>
+
+<input type='hidden' name='system' value='-1' />
+<h3>System Add</h3>
+<b>Manufacturer:</b> <input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />
+<b>Name:</b> <input type='text' name='system' value='".$system_info["system"]."' /><br/><br/>
+
+<input type='submit'>\n</form><br/><br/>\n";
 }
 
 ?>
