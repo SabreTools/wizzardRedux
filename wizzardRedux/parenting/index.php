@@ -34,7 +34,7 @@
     cache: false
 	});
 	
-	$("#tbl_parents_db").load("parenting_list_parents.php", function(responseTxt, statusTxt, xhr){
+	$("#tbl_parents_db").load("list_parents.php", function(responseTxt, statusTxt, xhr){
          //if(statusTxt == "success")
              //alert("External content loaded successfully!");
          if(statusTxt == "error")
@@ -42,7 +42,7 @@
 		 });
 	
 	$("#parent_filter").keyup(function(){
-     $("#tbl_parents_db").load("parenting_list_parents.php?name=" + encodeURIComponent($("#parent_filter").val()), function(responseTxt, statusTxt, xhr){
+     $("#tbl_parents_db").load("list_parents.php?name=" + encodeURIComponent($("#parent_filter").val()), function(responseTxt, statusTxt, xhr){
 		 //if(statusTxt == "success")
              //alert("External content loaded successfully!");
          if(statusTxt == "error")
@@ -50,7 +50,7 @@
 		 });
 		 $("#set_name_filter").val($("#parent_filter").val());
 		 
-		 $("#tbl_sets_db").load("parenting_list_sets.php?name=" + encodeURIComponent($("#set_name_filter").val()), function(responseTxt, statusTxt, xhr){
+		 $("#tbl_sets_db").load("list_sets.php?name=" + encodeURIComponent($("#set_name_filter").val()), function(responseTxt, statusTxt, xhr){
 		 //if(statusTxt == "success")
              //alert("External content loaded successfully!");
          if(statusTxt == "error")
@@ -60,7 +60,7 @@
 		});
 	
 	$("#set_name_filter").keyup(function(){
-     $("#tbl_sets_db").load("parenting_list_sets.php?name=" + encodeURIComponent($("#set_name_filter").val()), function(responseTxt, statusTxt, xhr){
+     $("#tbl_sets_db").load("list_sets.php?name=" + encodeURIComponent($("#set_name_filter").val()), function(responseTxt, statusTxt, xhr){
 		 //if(statusTxt == "success")
              //alert("External content loaded successfully!");
          if(statusTxt == "error")

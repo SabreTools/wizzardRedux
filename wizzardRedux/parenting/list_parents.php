@@ -1,31 +1,27 @@
+
+
    <script type="text/javascript">
 	
   //This is where the jQuery magic happens ^_^
   $(function(){
 		
-	$('a.clones').click(function() { 
-		var id = $(this).attr('id');
-		var set_id = id.replace('set_', '');
-		var parent_id = $("#spid_" + id.replace('set_', '')).val();
-		//alert(id.replace('set_', '')); 
-		//alert($("#spid_" + id.replace('set_', '')).val());
-		
-		$("#service").load("parenting_set_parent.php?set_id=" + set_id + "&dad_id=" + parent_id, function(responseTxt, statusTxt, xhr){
-
+	$("#new_parent_add").click(function(){
+		$("#service").load("add_parent_db.php?new=" + encodeURIComponent($("#new_parent_title").val()), function(responseTxt, statusTxt, xhr){
+         location.reload(true);
 		 if(srviatusTxt == "success")
              //alert("External content loaded successfully!");
 			
          if(statusTxt == "error")
              alert("Error: " + xhr.status + ": " + xhr.statusText);
      });
-		
-		return false; 
-	});
+	 
+	 
+       }); 
   
   
   }); 
   </script>
-
+  
 <?php
 	
 	#TODO: Move the connection away from here, use whatever the main system uses globally
@@ -40,10 +36,9 @@
 	<table>
      <thead>
      <tr>
-		<th>Action</th>
         <th>id</th>
-        <th>Parent</th>
-        <th>Set Title</th>
+        <th>Game Family</th>
+        <th>Game Title</th>
      </tr>
      </thead>
      <tbody>";
@@ -56,7 +51,7 @@
 		$filter = "name LIKE \"%".$_GET['name']."%\"";
 	}
 	//Get all existing "parent" table entries
-	$sql = "SELECT id, name, parent FROM games WHERE $filter;";
+	$sql = "SELECT id, name FROM parent WHERE $filter;";
 	$res = mysqli_query($link, $sql) OR die(mysqli_error($link));	
 	
 	if(!$res) 
@@ -70,17 +65,10 @@
 		while ($row = mysqli_fetch_assoc($res))
 		{
 			$found = true;
-			$daddy = getMyParent($row['parent'],$link);
-			
-			if($daddy == "none") {
-				$daddy = "<input type=\"text\" id=\"spid_".$row['id']."\" style=\"border-style:solid; border-color:#000000; width: 4em; border-width: 1px; background-color:white;}\">";
-			}
-			
 			echo "
 	<tr>
-	 <td><a href=\"#\" class=\"clones\" id=\"set_".$row['id']."\"><<< Add</a></td>
      <td>".$row['id']."</td>
-     <td>".$daddy."</td>
+     <td>unsupported</td>
      <td>".$row['name']."</td>
 	</tr>";
 	
@@ -94,37 +82,16 @@
    if (!$found)
    {
    		//No result found, want to add a new parent?
-		echo "<p>No sets found</p>";
+		echo "<p>Parent not found. Add new?</p>";
+		echo "
+		Game Family: <input type=\"text\" id=\"new_parent_family\"><br> 
+		Game Title: <input type=\"text\" id=\"new_parent_title\" value=\"".$_GET['name']."\"><br>
+		<button id=\"new_parent_add\">Add new parent</button>
+		";
     }
 	}
 	
-	function getMyParent($parentID, $link) {
-		
-	#TODO: Move the connection away from here, use whatever the main system uses globally
-
-		
-	$sql = "SELECT name FROM parent WHERE id=$parentID;";
-	$res = mysqli_query($link, $sql) OR die(mysqli_error($link));	
-	
-	if(!$res) 
-	{
-
-	} 
-	else
-	{
-		$row = mysqli_fetch_assoc($res);
-		if (!$row['name'] || $row['name']=="")
-			$name = "none";
-		else
-			$name = $row['name'];
-		
-		return $name;
-		
-	}
-	}
-	
 	mysqli_close($link);
-	
 ?>
 
 <div id="service">
