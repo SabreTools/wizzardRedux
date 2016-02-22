@@ -133,35 +133,54 @@ else
 	}
 	
 	// Then get all games assocated
-	$query = "SELECT games.name AS name
+	$query = "SELECT games.name AS name, games.id AS id
 			FROM systems
 			JOIN games
 				ON systems.id=games.system
 			JOIN sources
 				ON games.source=sources.id
-			WHERE".
-				($source_set ? "source.id='".$source."'" : "").
+			WHERE ".
+				($source_set ? "sources.id=".$source : "").
 				($source_set && $system_set ? " AND " : "").
-				($system_set ? "systems.id='".$system."'" : "");
+				($system_set ? "systems.id=".$system : "");
+	var_dump($query);
 	$games_result = mysqli_query($link, $query);
 
 	echo "<form action='index.php' method='get'>\n".
 		"<input type='hidden' name='page' value='edit' />\n";
 	
+	
 	if ($source_set)
 	{
 		echo "<input type='hidden' name='source' value='".$source."' />\n".
-			"<input type='text' name='name' value='".$source_info["name"]."' />\n".
-			"<input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
+			"<b>Source:</b> <input type='text' name='name' value='".$source_info["name"]."' />\n".
+			"<b>URL(s):</b> <input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
 	}
 	if ($system_set)
 	{
 		echo "<input type='hidden' name='system' value='".$system."' />\n".
-			"<input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n".
-			"<input type='text' name='system' value='".$system_info["system"]."' /><br/>\n";
+			"<b>Manufacturer:</b> <input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n".
+			"<b>Name:</b> <input type='text' name='system' value='".$system_info["system"]."' /><br/>\n";
 	}
 	
-	echo "<input type='submit'>\n</form><br/><br/>\n";
+	echo "<input type='submit'>\n</form><br/>\n";
+	
+	echo "<h2>Games With This ".
+			($source_set ? "Source" : "").
+			($source_set && $system_set ? " And " : "").
+			($system_set ? "System" : "")."</h2>\n";
+	if (gettype($games_result) != "boolean")
+	{
+		while ($game = mysqli_fetch_assoc($games_result))
+		{
+			echo $game["name"]."<br/>\n";
+		}
+	}
+	else
+	{
+		echo "No games could be found!";
+	}
+	echo "<br/>";
 
 	// DO STUFF TO CHOOSE A FILE
 }
