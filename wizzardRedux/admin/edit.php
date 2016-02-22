@@ -11,6 +11,7 @@ Requires:
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
+TODO: Create either helper page or use POST to set values changed
  ------------------------------------------------------------------------------------ */
 
 //Get the values for all parameters
