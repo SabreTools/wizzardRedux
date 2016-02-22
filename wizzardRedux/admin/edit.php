@@ -126,6 +126,14 @@ function show_default($link)
 		echo "<option value='".$source["id"]."'>".$source["name"]."</option>\n";
 	}
 	echo "</select><br/>\n";
+	
+	echo "<input type='hidden' name='source' value='-1' />\n";
+	echo "<input type='text' name='name' value='".$source_info["name"]."' />\n";
+	echo "<input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
+	echo "<input type='hidden' name='system' value='-1' />\n";
+	echo "<input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n";
+	echo "<input type='text' name='system' value='".$system_info["system"]."' /><br/>\n";
+	
 	echo "<input type='submit'>\n</form><br/><br/>\n";
 }
 
