@@ -78,7 +78,7 @@ elseif ($game != "")
 	$game_info = mysqli_fetch_assoc($result);
 	
 	echo <<<END
-<form action='index.php' method='get'>\n";
+<form action='index.php' method='get'>
 <input type='hidden' name='page' value='edit' />
 <h2>Edit the Game Information Below</h2>
 <table>
@@ -100,15 +100,19 @@ END;
 		echo "<option value='".$source["id"]."'".
 			($source["id"] == $game_info["sourceid"] ? " selected='selected'" : "").
 			">".$source["name"]."</option>\n";
-	}
+	}	
 	echo "</select></td></tr>\n".
 		"<tr><th>Name</th><td><input type='text' name='name' value='".$game_info["game"]."'/></td></tr>\n".
-		"<tr><th>Type</th><td><input type='text' name='type' value='".$game_info["type"]."'/></td></tr>\n".
 		"</table><br/>\n".
 		"<input type='submit'>\n</form><br/>\n";
 	
 	// DO STUFF TO SHOW AND EDIT ROM INFORMATION
-	// HAVE GO BACK TO SOURCE/SYSTEM LINK IF $source OR $system IS SET
+	/*
+	"<tr><th>Type</th><td><select name='type' id='type'>".
+			"<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>\n".
+			"<option value='disk'".($game_info["type"] == "disk" ? " selected='selected'" : "").">disk</option>\n".
+		"</td></tr>\n".
+	*/
 	
 	echo "<a href='?page=edit".
 			($source_set ? "&source='".$source : "").
@@ -143,7 +147,6 @@ else
 				($source_set ? "sources.id=".$source : "").
 				($source_set && $system_set ? " AND " : "").
 				($system_set ? "systems.id=".$system : "");
-	var_dump($query);
 	$games_result = mysqli_query($link, $query);
 
 	echo "<form action='index.php' method='get'>\n".
@@ -173,7 +176,7 @@ else
 	{
 		while ($game = mysqli_fetch_assoc($games_result))
 		{
-			echo $game["name"]."<br/>\n";
+			echo "<a href='?page=edit&game=".$game["id"]."'>".$game["name"]."</a><br/>\n";
 		}
 	}
 	else
