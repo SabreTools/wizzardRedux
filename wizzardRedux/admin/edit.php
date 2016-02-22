@@ -54,7 +54,7 @@ foreach ($getvars as $var)
 //Get thve values for all POST vars ($_GET overrides)
 foreach ($postvars as $var)
 {
-	$$var = (isset($_POST[$var]) ? (isset($$var) ? $$var : $_POST[$var]) : "");
+	$$var = (isset($_POST[$var]) ? (isset($$var) && $$var != "" ? $$var : $_POST[$var]) : "");
 }
 
 // Set the special check values
