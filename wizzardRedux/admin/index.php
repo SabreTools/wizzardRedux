@@ -10,13 +10,6 @@
 
 include_once("../css/style.php");
 
-// Check for debug mode and pass it along
-$debug = false;
-if (isset($_GET["debug"]) && $_GET["debug"]=="1")
-{
-	$debug = true;
-}
-
 // Connect to the database so it doesn't have to be done in every page
 $link = mysqli_connect('localhost', 'root', '', 'wod');
 if (!$link)
