@@ -36,7 +36,7 @@ $external = array (
 if (!isset($_GET["source"]))
 {
 	// List all files, auto-generate links to proper pages
-	$files = scandir("sites/");
+	$files = scandir("../sites/");
 	foreach ($files as $file)
 	{
 		if (preg_match("/^.*\.php$/", $file))
@@ -50,7 +50,7 @@ if (!isset($_GET["source"]))
 
 	die();
 }
-elseif (!file_exists("sites/".$_GET["source"].".php"))
+elseif (!file_exists("../sites/".$_GET["source"].".php"))
 {
 	echo "<b>The file you supply must be in /wod/sites/</b><br/>";
 	echo "<a href='index.php'>Return to home</a>";
@@ -82,7 +82,7 @@ if (array_key_exists($source, $checked))
 }
 
 // If we get to this point, we assume that it's good
-include_once("sites/".$source.".php");
+include_once("../sites/".$source.".php");
 
 if (array_key_exists($source, $checked))
 {

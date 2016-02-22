@@ -47,20 +47,17 @@ Welcome to the WoD Revival homepage!
 		
 Here, the following functions will be implemented:
 <ul>
-	<li><a href=\"?page=admin\">Adding and removing files from the DATs</a></li>
-	<li><a href=\"?page=admin\">Adding and removing systems</a></li>
-	<li><a href=\"?page=admin\">Adding and removing sources</a></li>
-	<li><a href=\"?page=generate\">Creating and downloading DATs</a><ul>
+	<li>Viewing system, source, and game data</li>
+	<li><a href='?page=generate'>Creating and downloading DATs</a><ul>
 		<li>Merged dats based on multiple sources</li>
 		<li>Custom dats based on a single source</li>
 	</ul></li>
-	<li><a href=\"?page=import\">Importing data from existing DATs</a></li>
-	<li><a href=\"?page=getmamenames\">Generate an array of names for all MAME softlists</a></li>
 </ul>
-</p>";
+</p>
+<p><a href='admin/'>Access administrative functions</a></p>";
 }
 
-echo "<a href=\"?page=\">Return to home</a>";
+echo "<a href='?page='>Return to home</a>";
 
 mysqli_close($link);
 

@@ -19,35 +19,39 @@ echo "<h2>Import From Datfile</h2>";
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
 
+$auto = isset($_GET["auto"]) && $_GET["auto"] == "1";
+
 if (!isset($_GET["filename"]))
 {
 	// List all files, auto-generate links to proper pages
-	$files = scandir("temp/");
-	foreach ($files as $file)
+	echo "<p><a href='?page=import&auto=1'>Automatically add all DATs</a></p>\n";
+	
+	$files = scandir("../temp/");
+	if (sizeof($files) != 0)
 	{
-		if (preg_match("/^.*\.dat$/", $file))
+		foreach ($files as $file)
 		{
-			// If we want to import everything in the folder...
-			if (isset($_GET["auto"]) && $_GET["auto"] == "1")
+			if (preg_match("/^.*\.dat$/", $file))
 			{
-				import_dat($file, $link);
-				echo "<script type='text/javascript'>window.location='?page=import&auto=1'</script>";
-			}
-			else
-			{
-				echo "<a href=\"?page=import&filename=".$file."\">".htmlspecialchars($file)."</a><br/>\n";
+				// If we want to import everything in the folder...
+				if ($auto)
+				{
+					import_dat($file, $link);
+					echo "<script type='text/javascript'>window.location='?page=import&auto=1'</script>";
+				}
+				else
+				{
+					echo "<a href=\"?page=import&filename=".$file."\">".htmlspecialchars($file)."</a><br/>\n";
+				}
 			}
 		}
 	}
-	
-	echo "<br/><a href=\"?page=\">Return to home</a>";
 }
 else
 {
 	import_dat($_GET["filename"], $link);
+	echo "<script type='text/javascript'>window.location='?page=import'</script>";
 }
-
-echo "<script type='text/javascript'>window.location='?page=import'</script>";
 
 function import_dat($filename, $link)
 {
@@ -57,7 +61,7 @@ function import_dat($filename, $link)
 	$datpattern = "/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/";
 	
 	// Check the file is valid
-	if (!file_exists("temp/".$filename))
+	if (!file_exists("../temp/".$filename))
 	{
 		echo "<b>The file you supply must be in /wod/temp/</b><br/>";
 		echo "<a href='index.php'>Return to home</a>";
@@ -115,7 +119,7 @@ function import_dat($filename, $link)
 	}
 	
 	// Then, parse the file and read in the information. Echo it out for safekeeping for now.
-	$handle = fopen("temp/".$filename, "r");
+	$handle = fopen("../temp/".$filename, "r");
 	if ($handle)
 	{
 		$old = false;
@@ -193,7 +197,7 @@ function import_dat($filename, $link)
 		echo "</table><br/>\n";
 		
 		fclose($handle);
-		rename("temp/".$filename, "temp/imported/".$filename);
+		rename("../temp/".$filename, "../temp/imported/".$filename);
 		
 		return;
 	}
