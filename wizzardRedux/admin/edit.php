@@ -12,6 +12,7 @@ Requires:
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
 TODO: Add code to accept POST handling for updates
+TODO: Clean up multiple echos
  ------------------------------------------------------------------------------------ */
 
 //Get the values for all parameters
@@ -30,9 +31,89 @@ if ($system == "" && $source == "" && $game == "")
 }
 // First and foremost, capture game edit mode. It's exclusive above all others.
 elseif ($game != "")
-{
-	// DO STUFF TO SHOW AND EDIT GAME INFORMATION
+{	
+	// Retrieve the system listing
+	$query = "SELECT id, manufacturer, system FROM systems
+				ORDER BY manufacturer ASC,
+					system ASC";
+	$result = mysqli_query($link, $query);
+	$systems = array();
+	while ($row = mysqli_fetch_assoc($result))
+	{
+		array_push($systems, $row);
+	}
+	
+	// Retrieve the sources listing
+	$query = "SELECT id, name FROM sources
+				ORDER BY name ASC";
+	$result = mysqli_query($link, $query);
+	$sources = array();
+	while ($row = mysqli_fetch_assoc($result))
+	{
+		array_push($sources, $row);
+	}
+	
+	$query = "SELECT systems.manufacturer AS manufacturer,
+				systems.system AS system,
+				systems.id AS systemid,
+				sources.name AS source,
+				sources.id AS sourceid,
+				games.name AS game,
+				files.name AS name,
+				files.type AS type,
+				checksums.size AS size,
+				checksums.crc AS crc,
+				checksums.md5 AS md5,
+				checksums.sha1 AS sha1
+			FROM systems
+			JOIN games
+				ON systems.id=games.system
+			JOIN sources
+				ON games.source=sources.id
+			JOIN files
+				ON games.id=files.setid
+			JOIN checksums
+				ON files.id=checksums.file
+			WHERE games.id=".$game;
+	$result = mysqli_query($link, $query);
+	$game_info = mysqli_fetch_assoc($result);
+	
+	echo "<form action='index.php' method='get'>\n";
+	echo "<input type='hidden' name='page' value='edit' />\n";
+	echo "<h2>Edit the Game Information Below</h2>\n";
+	echo "<table>\n";
+	echo "<tr><th width='100px'>System</th><td>";
+	echo "<select name='system' id='system'>\n";
+	foreach ($systems as $system)
+	{
+		echo "<option value='".$system["id"]."'".
+			($system["id"] == $game_info["systemid"] ? " selected='selected'" : "").
+			">".$system["manufacturer"]." - ".$system["system"]."</option>\n";
+	}
+	echo "</select></td></tr>\n";
+	echo "<tr><th>Source</th><td>";
+	echo "<select name='source' id='source'>\n";
+	foreach ($sources as $source)
+	{
+		echo "<option value='".$source["id"]."'".
+			($source["id"] == $game_info["sourceid"] ? " selected='selected'" : "").
+			">".$source["name"]."</option>\n";
+	}
+	echo "</select></td></tr>\n";
+	echo "<tr><th>Name</th><td><input type='text' name='name' value='".$game_info["game"]."'/></td></tr>\n";
+	//Parent
+	echo "<tr><th>Type</th><td><input type='text' name='type' value='".$game_info["type"]."'/></td></tr>\n";
+	
+	echo "</table><br/>\n";
+	echo "<input type='submit'>\n</form><br/>\n";
+	
+	// DO STUFF TO SHOW AND EDIT ROM INFORMATION
 	// HAVE GO BACK TO SOURCE/SYSTEM LINK IF $source OR $system IS SET
+	
+	echo "<a href='?page=edit".
+			($source_set ? "&source='".$source : "").
+			($system_set ? "&system='".$system : "").
+			"'>Back to previous page</a><br/>\n";
 }
 else
 {
