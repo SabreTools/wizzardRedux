@@ -14,6 +14,26 @@ TODO: Add pagination to game outputs for sources/systems
 TODO: Add POST handling
  ------------------------------------------------------------------------------------ */
 
+var_dump($_POST);
+
+$postvars = array(
+		"system",			// systems.id (-1 for new)
+		"manufacturer",		// systems.manufacturer
+		"systemname",		// systems.system
+		"source",			// sources.id (-1 for new)
+		"sourcename",		// sources.name
+		"url",				// sources.url
+		"game",				// games.id (-1 for new)
+		"gamename",			// games.name
+		"file",				// files.id (-1 for new)
+		"filename",			// files.name
+		"type",				// files.type
+		"size",				// checksums.size
+		"crc",				// checksums.crc
+		"md5",				// checksums.md5
+		"sha1",				// checksums.sha1
+);
+
 //Get the values for all parameters
 $system = (isset($_GET["system"]) && $_GET["system"] != "-1" ? trim($_GET["system"]) : "");
 $source = (isset($_GET["source"]) && $_GET["source"] != "-1" ? trim($_GET["source"]) : "");
@@ -77,13 +97,13 @@ elseif ($game != "")
 	$result = mysqli_query($link, $query);
 	$game_info = mysqli_fetch_assoc($result);
 	
-	echo <<<END
-<form action='index.php?page=edit' method='post'>
+	echo "<form action='index.php?page=edit' method='post'>
+<input type='hidden' name='game' value='".$game."
 <h2>Edit the Game Information Below</h2>
 <table>
 <tr><th width='100px'>System</th><td>
-<select name='system' id='system'>
-END;
+<select name='system' id='system'>";
+	
 	foreach ($systems as $system)
 	{
 		echo "<option value='".$system["id"]."'".
@@ -244,7 +264,7 @@ END;
 
 <h3>System Add</h3>
 <b>Manufacturer:</b> <input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />
-<b>Name:</b> <input type='text' name='system' value='".$system_info["system"]."' /><br/><br/>
+<b>Name:</b> <input type='text' name='systemname' value='".$system_info["system"]."' /><br/><br/>
 
 <input type='submit'>\n</form><br/><br/>\n";
 }
