@@ -51,6 +51,15 @@ elseif ($system == "" && $source != "")
 			WHERE source.id='".$source."'";
 	$games_result = mysqli_query($link, $query);
 	
+	$source_info = mysqli_fetch_assoc($source_result);
+	
+	echo "<form action='index.php' method='get'>\n";
+	echo "<input type='hidden' name='page' value='edit' />\n";
+	echo "<input type='hidden' name='source' value='".$source."' />\n";
+	echo "<input type='text' name='name' value='".$source_info["name"]."' />\n";
+	echo "<input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
+	echo "<input type='submit'>\n</form><br/><br/>\n";
+	
 	// DO STUFF TO SHOW AND EDIT SOURCE INFORMATION OR CHOOSE A FILE
 }
 // If only the system is set, show only the system info and games associated
@@ -66,6 +75,15 @@ elseif ($system != "" && $source == "")
 				ON systems.id=games.system
 			WHERE systems.id='".$system."'";
 	$games_result = mysqli_query($link, $query);
+	
+	$system_info = mysqli_fetch_assoc($system_result);
+	
+	echo "<form action='index.php' method='get'>\n";
+	echo "<input type='hidden' name='page' value='edit' />\n";
+	echo "<input type='hidden' name='system' value='".$system."' />\n";
+	echo "<input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n";
+	echo "<input type='text' name='system' value='".$system_info["system"]."' /><br/>\n";
+	echo "<input type='submit'>\n</form><br/><br/>\n";
 	
 	// DO STUFF TO SHOW AND EDIT SYSTEM INFORMATION OR CHOOSE A FILE
 }
@@ -88,6 +106,19 @@ elseif ($system != "" && $source != "")
 			WHERE source.id='".$source."'
 				AND systems.id='".$system."'";
 	$games_result = mysqli_query($link, $query);
+	
+	$source_info = mysqli_fetch_assoc($source_result);
+	$system_info = mysqli_fetch_assoc($system_result);
+	
+	echo "<form action='index.php' method='get'>\n";
+	echo "<input type='hidden' name='page' value='edit' />\n";
+	echo "<input type='hidden' name='source' value='".$source."' />\n";
+	echo "<input type='hidden' name='system' value='".$system."' />\n";
+	echo "<input type='text' name='name' value='".$source_info["name"]."' />\n";
+	echo "<input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
+	echo "<input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n";
+	echo "<input type='text' name='system' value='".$system_info["system"]."' /><br/>\n";
+	echo "<input type='submit'>\n</form><br/><br/>\n";
 	
 	// DO STUFF TO SHOW AND EDIT SYSTEM AND SOURCE INFORMATION OR CHOOSE A FILE
 }
@@ -125,7 +156,7 @@ function show_default($link)
 	{
 		echo "<option value='".$system["id"]."'>".$system["manufacturer"]." - ".$system["system"]."</option>\n";
 	}
-	echo "</select><br/>\n";
+	echo "</select>   \n";
 	echo "<select name='source' id='source'>\n";
 	echo "<option value='' selected='selected'>Choose a Source</option>\n";
 	foreach ($sources as $source)
