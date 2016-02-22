@@ -11,7 +11,7 @@ Requires:
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
-TODO: Create either helper page or use POST to set values changed
+TODO: Add code to accept POST handling for updates
  ------------------------------------------------------------------------------------ */
 
 //Get the values for all parameters
@@ -109,9 +109,10 @@ function show_default($link)
 		array_push($sources, $row);
 	}
 	
-	// Output the two selection boxes
+	// Output the input selection form
 	echo "<form action='index.php' method='get'>\n";
 	echo "<input type='hidden' name='page' value='edit' />";
+	echo "<h2>Select a System or Source</h2>";
 	echo "<select name='system' id='system'>\n";
 	echo "<option value='' selected='selected'>Choose a System</option>\n";
 	foreach ($systems as $system)
@@ -126,13 +127,19 @@ function show_default($link)
 		echo "<option value='".$source["id"]."'>".$source["name"]."</option>\n";
 	}
 	echo "</select><br/>\n";
+	echo "<input type='submit'>\n</form>\n";
 	
+	echo "<h2>Or Add a New One</h2>";
+	echo "<form action='index.php' method='get'>\n";
+	echo "<input type='hidden' name='page' value='edit' />";
 	echo "<input type='hidden' name='source' value='-1' />\n";
-	echo "<input type='text' name='name' value='".$source_info["name"]."' />\n";
-	echo "<input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
+	echo "<h3>Source Add</h3>\n";
+	echo "<b>Name:</b> <input type='text' name='name' value='".$source_info["name"]."' />\n";
+	echo "<b>URL(s):</b> <input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
 	echo "<input type='hidden' name='system' value='-1' />\n";
-	echo "<input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n";
-	echo "<input type='text' name='system' value='".$system_info["system"]."' /><br/>\n";
+	echo "<h3>System Add</h3>\n";
+	echo "<b>Manufacturer:</b> <input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />\n";
+	echo "<b>Name:</b> <input type='text' name='system' value='".$system_info["system"]."' /><br/><br/>\n";
 	
 	echo "<input type='submit'>\n</form><br/><br/>\n";
 }
