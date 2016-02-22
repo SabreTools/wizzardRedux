@@ -18,13 +18,9 @@ TODO: DO STUFF TO SHOW AND EDIT ROM INFORMATION
 			"<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>\n".
 			"<option value='disk'".($game_info["type"] == "disk" ? " selected='selected'" : "").">disk</option>\n".
 		"</td></tr>\n".
-TODO: Edit requirements (-1 for primary means new)
-	source => source, sourcename, url
-	system => system, manufacturer, systemname
-	game => game, gamename, system, source
-	file => file, filename, type, size (if type=rom), (crc | md5 | sha1), game
  ------------------------------------------------------------------------------------ */
 
+// All possible $_GET variables that we can use (propogate this to other files?)
 $getvars = array(
 		"system",			// systems.id
 		"source",			// sources.id
@@ -32,6 +28,7 @@ $getvars = array(
 		"page",
 );
 
+// All possible $_POST variables that we can use
 $postvars = array(
 		"system",			// systems.id (-1 for new)
 		"manufacturer",		// systems.manufacturer
@@ -66,6 +63,8 @@ foreach ($postvars as $var)
 $source_set = $source != "";
 $system_set = $system != "";
 
+// Handle the POST cases. They do not have to be mutually exclusive
+
 // If a system is being edited or added via POST
 if ($system != "" && $manufacturer != "" && $systemname != "")
 {
@@ -73,29 +72,133 @@ if ($system != "" && $manufacturer != "" && $systemname != "")
 	if ($system == "-1")
 	{
 		echo "Add system<br/>";
+		
+		// Always check if this exact combination is already there. This might have been in error
+		$query = "SELECT * FROM systems WHERE manufacturer='".$manufacturer." AND system='".$systemname."'";
+		$result = mysqli_query($link, $query);
+		
+		// If we find this system, tell the user and don't move forward
+		if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+		{
+			echo "This system has been found. No further action is required<br/>";
+		}
+		// If the system is not found, add it
+		else
+		{
+			$query = "INSERT INTO systems (manufacturer, system) VALUES ('".$manufacturer."', '".$systemname."')";
+			$result = mysqli_query($link, $query);
+			
+			if (gettype($result) == "boolean" && $result)
+			{
+				echo "The system '".$manufacturer." - ".$systemname."' has been added successfully!<br/>";
+			}
+			else
+			{
+				echo "The system '".$manufacturer." - ".$systemname."' could not be added, try again later<br/>";
+			}
+		}
 	}
 	// If the system is being edited
 	else
 	{
 		echo "Edit system<br/>";
+		
+		// Check if the system exists first
+		$query = "SELECT * FROM systems WHERE id=".$system;
+		$restult = mysqli_query($link, $query);
+		
+		// If we don't find the system, don't add it. This might have been in error
+		if (gettype($result) == "boolean" && !$result)
+		{
+			echo "The system with id '".$system."' could not be found, try again later<br/>";
+		}
+		// If we find the system, update with the new information, if not a duplicate of another
+		else
+		{
+			$query = "SELECT * FROM systems WHERE manufacturer='".$manufacturer." AND system='".$systemname."'";
+			$result = mysqli_query($link, $query);
+			
+			// If the system is found or unchanged, don't readd it
+			if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+			{
+				echo "This system has been found. No further action is required<br/>";
+			}
+			// If the system really has changed or is not a duplicate, add it
+			else
+			{
+				
+			}
+		}
 	}
 }
 // If a source is being edited or added via POST
-elseif ($source != "" && $sourcename != "" && $url != "")
+if ($source != "" && $sourcename != "" && $url != "")
 {
 	// If the source is new and being added
 	if ($source == "-1")
 	{
 		echo "Add source<br/>";
+		
+		// Always check if this exact combination is already there. This might have been in error
+		$query = "SELECT * FROM sources WHERE name='".$sourcename."'";
+		$result = mysqli_query($link, $query);
+		
+		// If we find this source, tell the user and don't move forward
+		if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+		{
+			echo "This source has been found. No further action is required<br/>";
+		}
+		// If the source is not found, add it
+		else
+		{
+			$query = "INSERT INTO sources (name, url) VALUES ('".$sourcename."', '".$url."')";
+			$result = mysqli_query($link, $query);
+			
+			if (gettype($result) == "boolean" && $result)
+			{
+				echo "The source '".$sourcename."' has been added successfully!<br/>";
+			}
+			else
+			{
+				echo "The source '".$sourcename."' could not be added, try again later<br/>";
+			}
+		}
 	}
 	// If the source is being edited
 	else
 	{
 		echo "Edit source<br/>";
+		
+		// Check if the source exists first
+		$query = "SELECT * FROM systems WHERE id=".$system;
+		$restult = mysqli_query($link, $query);
+		
+		// If we don't find the source, don't add it. This might have been in error
+		if (gettype($result) == "boolean" && !$result)
+		{
+			echo "The system with id '".$source."' could not be found, try again later<br/>";
+		}
+		// If we find the source, update with the new information, if not a duplicate of another
+		else
+		{
+			$query = "SELECT * FROM sources WHERE name='".$sourcename."'";
+			$result = mysqli_query($link, $query);
+				
+			// If the source is found or unchanged, don't readd it
+			if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+			{
+				echo "This source has been found. No further action is required<br/>";
+			}
+			// If the source really has changed or is not a duplicate, add it
+			else
+			{
+			
+			}
+		}
 	}
 }
 // If a game is being edited or added via POST
-elseif ($game != "" && $gamename != "" && $system != "" && $source != "")
+if ($game != "" && $gamename != "" && $system != "" && $source != "")
 {
 	// If the game is new and being added
 	if ($game == "-1")
@@ -109,7 +212,7 @@ elseif ($game != "" && $gamename != "" && $system != "" && $source != "")
 	}
 }
 // If a file is being edited or added via POST
-elseif ($file != "" && $filename != "" && $type != "" &&
+if ($file != "" && $filename != "" && $type != "" &&
 		(($type == "rom" && $size != "" && ($crc != "" || $md5 != "" || $sha1 != "")) ||
 				($type == "disk" && ($md5 != "" || $sha1 != ""))))
 {
