@@ -18,6 +18,11 @@ TODO: DO STUFF TO SHOW AND EDIT ROM INFORMATION
 			"<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>\n".
 			"<option value='disk'".($game_info["type"] == "disk" ? " selected='selected'" : "").">disk</option>\n".
 		"</td></tr>\n".
+TODO: Edit requirements (-1 for primary means new)
+	source => source, sourcename, url
+	system => system, manufacturer, systemname
+	game => game, gamename, system, source
+	file => file, filename, type, size (if type=rom), (crc | md5 | sha1), game
  ------------------------------------------------------------------------------------ */
 
 $getvars = array(
@@ -61,7 +66,66 @@ foreach ($postvars as $var)
 $source_set = $source != "";
 $system_set = $system != "";
 
-// Assuming there are no relevent params, show the basic page
+// If a system is being edited or added via POST
+if ($system != "" && $manufacturer != "" && $systemname != "")
+{
+	// If the system is new and being added
+	if ($system == "-1")
+	{
+		echo "Add system<br/>";
+	}
+	// If the system is being edited
+	else
+	{
+		echo "Edit system<br/>";
+	}
+}
+// If a source is being edited or added via POST
+elseif ($source != "" && $sourcename != "" && $url != "")
+{
+	// If the source is new and being added
+	if ($source == "-1")
+	{
+		echo "Add source<br/>";
+	}
+	// If the source is being edited
+	else
+	{
+		echo "Edit source<br/>";
+	}
+}
+// If a game is being edited or added via POST
+elseif ($game != "" && $gamename != "" && $system != "" && $source != "")
+{
+	// If the game is new and being added
+	if ($game == "-1")
+	{
+		echo "Add game<br/>";
+	}
+	// If the game is being edited
+	else
+	{
+		echo "Edit game<br/>";
+	}
+}
+// If a file is being edited or added via POST
+elseif ($file != "" && $filename != "" && $type != "" &&
+		(($type == "rom" && $size != "" && ($crc != "" || $md5 != "" || $sha1 != "")) ||
+				($type == "disk" && ($md5 != "" || $sha1 != ""))))
+{
+	// If the file is new and being added
+	if ($file == "-1")
+	{
+		echo "Add file<br/>";
+	}
+	// If the file is being edited
+	else
+	{
+		echo "Edit file<br/>";
+	}
+}
+
+// Assuming there are no relevent params (or processing POST is done), show the basic page
 if ($system == "" && $source == "" && $game == "")
 {
 	show_default($link);
