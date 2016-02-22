@@ -1,0 +1,6 @@
+AuthUserFile C:\xampp\htpasswd
+AuthGroupFile /dev/null
+AuthName EnterPassword
+AuthType Basic
+
+require user admin

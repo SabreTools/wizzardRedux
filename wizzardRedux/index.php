@@ -54,7 +54,7 @@ Here, the following functions will be implemented:
 	</ul></li>
 </ul>
 </p>
-<p><a href='admin/'>Access administrative functions</a></p>";
+<p><a href='admin/'>Access administrative functions (admin/admin)</a></p>";
 }
 
 echo "<a href='?page='>Return to home</a>";
