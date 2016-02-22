@@ -11,13 +11,13 @@ Requires:
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
-TODO: Add code to accept POST handling for updates
+TODO: Add POST handling
  ------------------------------------------------------------------------------------ */
 
 //Get the values for all parameters
-$system = (isset($_GET["system"]) != "" ? trim($_GET["system"]) : "");
-$source = (isset($_GET["source"]) != "" ? trim($_GET["source"]) : "");
-$game = (isset($_GET["game"]) != "" ? trim($_GET["game"]) : "");
+$system = (isset($_GET["system"]) && $_GET["system"] != "-1" ? trim($_GET["system"]) : "");
+$source = (isset($_GET["source"]) && $_GET["source"] != "-1" ? trim($_GET["source"]) : "");
+$game = (isset($_GET["game"]) ? trim($_GET["game"]) : "");
 
 // Set the special check values
 $source_set = $source != "";
@@ -78,8 +78,7 @@ elseif ($game != "")
 	$game_info = mysqli_fetch_assoc($result);
 	
 	echo <<<END
-<form action='index.php' method='get'>
-<input type='hidden' name='page' value='edit' />
+<form action='index.php?page=edit' method='post'>
 <h2>Edit the Game Information Below</h2>
 <table>
 <tr><th width='100px'>System</th><td>
@@ -102,7 +101,7 @@ END;
 			">".$source["name"]."</option>\n";
 	}	
 	echo "</select></td></tr>\n".
-		"<tr><th>Name</th><td><input type='text' name='name' value='".$game_info["game"]."'/></td></tr>\n".
+		"<tr><th>Name</th><td><input type='text' name='gamename' value='".$game_info["game"]."'/></td></tr>\n".
 		"</table><br/>\n".
 		"<input type='submit'>\n</form><br/>\n";
 	
@@ -149,14 +148,15 @@ else
 				($system_set ? "systems.id=".$system : "");
 	$games_result = mysqli_query($link, $query);
 
-	echo "<form action='index.php' method='get'>\n".
-		"<input type='hidden' name='page' value='edit' />\n";
-	
+	echo "<form action='index.php?page=edit".
+			($source_set ? "&source=".$source : "").
+			($system_set ? "&system=".$system : "").
+			"' method='post'>\n";	
 	
 	if ($source_set)
 	{
 		echo "<input type='hidden' name='source' value='".$source."' />\n".
-			"<b>Source:</b> <input type='text' name='name' value='".$source_info["name"]."' />\n".
+			"<b>Source:</b> <input type='text' name='sourcename' value='".$source_info["name"]."' />\n".
 			"<b>URL(s):</b> <input type='text' name='url' value='".$source_info["url"]."' /><br/>\n";
 	}
 	if ($system_set)
@@ -236,15 +236,12 @@ END;
 <input type='submit'>
 </form>
 <h2>Or Add a New One</h2>
-<form action='index.php' method='get'>
-<input type='hidden' name='page' value='edit' />
+<form action='index.php?page=edit&source=-1&system=-1' method='post'>
 			
-<input type='hidden' name='source' value='-1' />
 <h3>Source Add</h3>
-<b>Name:</b> <input type='text' name='name' value='".$source_info["name"]."' />
+<b>Name:</b> <input type='text' name='sourcename' value='".$source_info["name"]."' />
 <b>URL(s):</b> <input type='text' name='url' value='".$source_info["url"]."' /><br/>
 
-<input type='hidden' name='system' value='-1' />
 <h3>System Add</h3>
 <b>Manufacturer:</b> <input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />
 <b>Name:</b> <input type='text' name='system' value='".$system_info["system"]."' /><br/><br/>
