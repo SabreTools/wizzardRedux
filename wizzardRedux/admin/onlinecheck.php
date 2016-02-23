@@ -9,20 +9,26 @@ Requires:
 Note: This is the most tedious one of all. All of the checks should be named as "sites/<sitename>.php".
 
 TODO: Retool existing onlinecheck.php files to follow the new format
+		2 passes: 1) reformat file and categorize, 2) check code flow to try to optimize
 TODO: Add a way to figure out if a site is dead based on the original list that WoD created
+TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
 */
 
 // Site whose checkers have been once-overed
 $checked = array (
-		"6502dude" => 1,
-		"8BitChip" => 2,
-		"8BitCommodoreItalia" => 3,
-		"AcornPreservation" => 4,
-		"ADVAnsCEne" => 5,
-		"alexvampire" => 6,
+		"6502dude",
+		"8BitChip",
+		"8BitCommodoreItalia",
+		"AcornPreservation",
+		"ADVAnsCEne",
+		"alexvampire",
+		"AmstradESP",
+		"ANN",
+		"Apple2Online",
+		"AppleIIgsInfo",
 );
 
-// Probably dead sites
+// Probably dead sites (incomplete)
 $dead = array (
 		"8BitChip" => 1,
 		"8BitCommodoreItalia" => 2,
@@ -82,6 +88,7 @@ if (array_key_exists($source, $checked))
 }
 
 // If we get to this point, we assume that it's good
+// Original code: The Wizard of DATz
 include_once("../sites/".$source.".php");
 
 if (array_key_exists($source, $checked))
