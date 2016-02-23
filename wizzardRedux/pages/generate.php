@@ -2,37 +2,34 @@
 
 /* ------------------------------------------------------------------------------------
 Create a DAT from the database
-
-Requires:
-	source		[Required by mode=custom] ID of the source as it appears in the database
-				to create a DAT from
-	system		ID of the system that is to be polled
-	old			[Optional] set this to 1 for the old style output
 	
 TODO: Create an "auto-generate all available"? Would it need to filter on things like
 		TOSEC or Redump? Harder than just clicking links?
-TODO: Allow for DAT creation flexibility
-		As per conversations with emuload here's the list of possible DATs
-		if (!system && !source) => ALL (ALL).dat
-		if (!system && source) => ALL (Source).dat
-		if (system && !source) => System (merged).dat
-		if (system && source) => System (Souce).dat
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
  ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
 
-$mode = "lame";
+// All possible $_GET variables that we can use (propogate this to other files?)
+$getvars = array(
+		"system",			// systems.id
+		"source",			// sources.id
+		"old",				// set this to 1 for the old style output
+		"dats",				// systems.id-sources.id
+		"mega",				// override to create complete merged DAT
+);
 
-// Handle the Form case first since we had a dropdown
-if (isset($_GET["dats"]))
+//Get the values for all parameters
+foreach ($getvars as $var)
 {
-	if ($_GET["dats"] == "0")
-	{
-		echo "<a href=\"index.php\">Return to home</a>";
-	}
-	$dats = explode("-", $_GET["dats"]);	
+	$$var = (isset($_GET[$var]) ? trim($_GET[$var]) : "");
+}
+
+// Use dropdown value to override others, if applicable
+if ($dats != "" && $dats != "0")
+{
+	$dats = explode("-", $_GET["dats"]);
 	$system = $dats[0];
 	$source = ($dats[1] == "0" ? "" : $dats[1]);
 	$loc = "?page=generate&system=".$system."&source=".$source.(isset($_GET["old"]) && $_GET["old"] == 1 ? "&old=1" : "");
@@ -40,23 +37,9 @@ if (isset($_GET["dats"]))
 	exit;
 }
 
-// Check the output mode first
-if (isset($_GET["source"]) && $_GET["source"] != "" && isset($_GET["system"]) && $_GET["system"] != "")
-{
-	$mode = "custom";
-	$source = $_GET["source"];
-	$system = $_GET["system"];
-}
-elseif (isset($_GET["system"]) && $_GET["system"] != "")
-{
-	$mode = "merged";
-	$system = $_GET["system"];
-}
 
-echo "The mode is ".$mode."<br/>";
-
-// Check if the given values for source and system are actually valid
-if ($mode == "lame")
+// If nothing is set, show the list of all available DATs
+if ($system == "" && $source == "" && $mega != "1")
 {
 	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
 		FROM systems
@@ -72,14 +55,15 @@ if ($mode == "lame")
 		array_push($systems, $system);
 	}
 	
-	echo "<form action='?page=generate' method='get'>\n";
-	echo "<input type='hidden' name='page' value='generate' />";
-	echo "<select name='dats' id='dats'>\n";
-	echo "<option value=' ' selected='selected'>Choose a DAT</option>\n";
+	// Note: Source-only DATs are not provided as an option yet
+	echo "<form action='?page=generate' method='get'>
+<input type='hidden' name='page' value='generate' />
+<select name='dats' id='dats'>
+<option value=' ' selected='selected'>Choose a DAT</option>\n";
 	foreach ($systems as $system)
 	{
 		echo "<option value='".$system["id"]."-0'>".$system["manufacturer"]." - ".$system["system"]." (merged)</option>\n";
-		
+	
 		$query = "SELECT DISTINCT sources.id, sources.name
 			FROM systems
 			JOIN games
@@ -88,50 +72,56 @@ if ($mode == "lame")
 				ON games.source=sources.id
 			WHERE systems.id=".$system["id"];
 		$result = mysqli_query($link, $query);
-		
+	
 		while($source = mysqli_fetch_assoc($result))
 		{
 			echo "<option value='".$system["id"]."-".$source["id"]."'>".$system["manufacturer"]." - ".$system["system"]." (".$source["name"].")</option>\n";
 		}
 	}
-	echo "</select><br/>\n";
-	echo "<input type='checkbox' name='old' value='1'>Use old DAT format<br/><br/>\n";
-	echo "<input type='submit'>\n</form><br/><br/>\n";
-	
-	echo "<a href=\"index.php\">Return to home</a>";
-	
-	die();
+	echo "</select><br/>
+<input type='checkbox' name='old' value='1'>Use old DAT format<br/><br/>
+<input type='submit'>\n</form><br/><br/>
+<a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>";
 }
-
-$query = "SELECT *
-FROM systems
-WHERE id='$system'";
-$result = mysqli_query($link, $query);
-if (gettype($result)=="boolean" || mysqli_num_rows($result) == 0)
+/*
+If just the source is set, create a DAT that has each game suffixed by system and merged
+If just the system is set, create a DAT that has each game suffixed by source and merged (merged)
+If both system and source are set, create a DAT that has each rom unsuffixed and unmerged (custom)
+*/
+else
 {
-	echo "<b>The system number provided was not valid, please check your code and try again</b><br/><br/>";
-	echo "<a href=\"index.php\">Return to home</a>";
-	
-	die();
-}
-
-if ($mode == "custom")
-{
-	$query = "SELECT *
-	FROM sources
-	WHERE id='$source'";
-	$result = mysqli_query($link, $query);
-	if (gettype($result)=="boolean" || mysqli_num_rows($result) == 0)
+	// Check the validity of the source id
+	if ($source != "")
 	{
-		echo "<b>The source number provided was not valid, please check your code and try again</b><br/><br/>";
-		echo "<a href=\"index.php\">Return to home</a>";
-	
-		die();
+		$query = "SELECT * FROM sources WHERE id=".$source;
+		$result = mysqli_query($link, $query);
+		
+		// If the source doesn't exist, tell the user and don't proceed
+		if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
+		{
+			echo "No source could be found by that ID. Please check and try again.<br/>";
+			echo "<a href='?page=generate'>Go Back</a>";
+			exit;
+		}
 	}
-}
-
-// Now that everything is checked, create the queries that will get all of the information for the DAT
-$query = "SELECT systems.manufacturer AS manufacturer, systems.system AS system, sources.name AS source, sources.url AS url,
+	
+	// Check the validity of the system id
+	if ($system != "")
+	{
+		$query = "SELECT * FROM systems WHERE id=".$system;
+		$result = mysqli_query($link, $query);
+		
+		// If the system doesn't exist, tell the user and don't proceed
+		if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
+		{
+			echo "No system could be found by that ID. Please check and try again.<br/>";
+			echo "<a href='?page=generate'>Go Back</a>";
+			exit;
+		}
+	}
+	
+	// Since the source and/or system are valid, retrive all files
+	$query = "SELECT systems.manufacturer AS manufacturer, systems.system AS system, sources.name AS source, sources.url AS url,
 				games.name AS game, files.name AS name, files.type AS type, checksums.size AS size, checksums.crc AS crc,
 				checksums.md5 AS md5, checksums.sha1 AS sha1
 			FROM systems
@@ -142,155 +132,148 @@ $query = "SELECT systems.manufacturer AS manufacturer, systems.system AS system,
 			JOIN files
 				ON games.id=files.setid
 			JOIN checksums
-				ON files.id=checksums.file
-			WHERE systems.id=".$system.
-				($mode == "custom" ? " AND sources.id=$source" : "");
-				
-$result = mysqli_query($link, $query);
-
-if (gettype($result)=="boolean" && !$result)
-{
-	echo "MYSQL Error! ".mysqli_error($link)."<br/>";
-	die();
-}
-
-if (mysqli_num_rows($result) == 0)
-{
-	echo "There are no roms found for these inputs. Please try again<br/>";
-	die();
-}
-
-$roms = Array();
-while($rom = mysqli_fetch_assoc($result))
-{
-	array_push($roms, $rom);
-}
-
-// Process the roms by renaming and, if necessary, merging
-$roms = process_roms($roms, $mode == "merged");
-
-if ($debug)
-{
-	echo "<table border='1'>
-		<tr><th>Source</th><th>Set</th><th>Name</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>";
+				ON files.id=checksums.file".
+			($system != "" || $source != "" ? " WHERE" : "").
+			($source != "" ? " sources.id=".$source : "").
+			($source != "" && $system != "" ? " AND" : "").
+			($system != "" ? " systems.id=".$system : "");
+	$result = mysqli_query($link, $query);
 	
-	foreach ($roms as $rom)
+	// If there are no games for this set of parameters, tell the user
+	if (gettype($result) == "boolean" || mysql_num_rows($result) == 0)
 	{
-		echo "<tr><td>".$rom["source"]."</td><td>".$rom["game"]."</td><td>".$rom["name"]."</td><td>".$rom["size"]."</td><td>".$rom["crc"]."</td><td>".$rom["md5"]."</td><td>".$rom["sha1"]."</td></tr>";
+		echo "No games could be found with those inputs. Please check and try again.<br/>";
+		echo "<a href='?page=generate'>Go Back</a>";
+		exit;
 	}
 	
-	echo "</table>";
-}
-
-$version = date("YmdHis");
-$datname = $roms[0]["manufacturer"]." - ".$roms[0]["system"]." (".($mode == "custom" ? $roms[0]["source"] : "merged")." ".$version.")";
-
-$old = (isset($_GET["old"]) && $_GET["old"] == "1");
-
-// Create and open an output file for writing (currently uses current time, change to "last updated time"
-echo "Opening file for writing: temp/output/".$datname.($old ? ".dat" : ".xml")."<br/>\n";
-$handle = fopen("temp/output/".$datname.($old ? ".dat" : ".xml"), "w");
-
-$header_old = <<<END
-clrmamepro (
-	name "$datname"
-	description "$datname"
-	version "$version"
-	comment ""
-	author "The Wizard of DATz"
-)\n
-END;
-
-$header = <<<END
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE datafile PUBLIC "-//Logiqx//DTD ROM Management Datafile//EN" "http://www.logiqx.com/Dats/datafile.dtd">
-
-<datafile>
-	<header>
-		<name>$datname</name>
-		<description>$datfile</description>
-		<category>The Wizard of DATz $mode</category>
-		<version>$version</version>
-		<date>$version</date>
-		<author>The Wizard of DATz</author>
-		<email></email>
-		<homepage></homepage>
-		<url></url>
-		<comment></comment>
-		<clrmamepro/>
-	</header>\n
-END;
-
-$footer = "\n</datafile>";
-
-echo "Writing data to file<br/>\n";
-$lastgame = "";
-if ($old)
-{
-	fwrite($handle, $header_old);
-	foreach ($roms as $rom)
+	// Get all roms from the result for processing
+	$roms = Array();
+	while($rom = mysqli_fetch_assoc($result))
 	{
-		$state = "";		
-		if ($lastgame != "" && $lastgame != $rom["game"])
-		{
-			$state = $state.")\n";
-		}
-		if ($lastgame != $rom["game"])
-		{
-			$state = $state."game (\n".
-						"\tname \"".$rom["game"]."\"\n";
-		}
-		$state = $state."\t".$rom["type"]." ( name \"".$rom["name"]."\"".
-				($rom["size"] != "" ? " size ".$rom["size"] : "").
-				($rom["crc"] != "" ? " crc ".$rom["crc"] : "").
-				($rom["md5"] != "" ? " md5 ".$rom["md5"] : "").
-				($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
-				" )\n";
-
-		$lastgame = $rom["game"];
-		
-		fwrite($handle, $state);
+		array_push($roms, $rom);
 	}
-	fwrite($handle, ")");
-}
-else
-{
-	fwrite($handle, $header);
-	foreach ($roms as $rom)
+	
+	// Process the roms
+	$roms = process_roms($roms, $system, $source);
+	
+	// If we're in debug mode, print out the entire DAT to screen
+	if ($debug)
 	{
-		$state = "";
+		echo "<table border='1'>
+			<tr><th>Source</th><th>Set</th><th>Name</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>";
 		
-		if ($lastgame != "" && $lastgame != $rom["game"])
+		foreach ($roms as $rom)
 		{
-			$state = $state."\t</machine>\n";
+			echo "<tr><td>".$rom["source"]."</td><td>".$rom["game"]."</td><td>".$rom["name"]."</td><td>".$rom["size"]."</td><td>".$rom["crc"]."</td><td>".$rom["md5"]."</td><td>".$rom["sha1"]."</td></tr>";
 		}
-		if ($lastgame != $rom["game"])
+		
+		echo "</table>";
+	}
+	
+	$version = date("YmdHis");
+	$datname = ($system != "" ? $roms[0]["manufacturer"]." - ".$roms[0]["system"] : "ALL").
+		" (".($source != "" ? $roms[0]["source"] : "merged")." ".$version.")";
+	
+	// Create and open an output file for writing (currently uses current time, change to "last updated time"
+	echo "Opening file for writing: temp/output/".$datname.($old == "1" ? ".dat" : ".xml")."<br/>\n";
+	$handle = fopen("temp/output/".$datname.($old == "1" ? ".dat" : ".xml"), "w");
+	
+	$header_old = "clrmamepro (
+	name \"".$datname."\"
+	description \"".$datname."\"
+	version \"".$version."\"
+	comment \"\"
+	author \"The Wizard of DATz\"
+)\n";
+	
+	$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+	<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">
+	
+	<datafile>
+		<header>
+			<name>".$datname."</name>
+			<description>".$datname."</description>
+			<category>The Wizard of DATz</category>
+			<version>".$version."</version>
+			<date>".$version."</date>
+			<author>The Wizard of DATz</author>
+			<email></email>
+			<homepage></homepage>
+			<url></url>
+			<comment></comment>
+			<clrmamepro/>
+		</header>\n";
+	
+	$footer = "\n</datafile>";
+	
+	echo "Writing data to file<br/>\n";
+	$lastgame = "";
+	if ($old == "1")
+	{
+		fwrite($handle, $header_old);
+		foreach ($roms as $rom)
 		{
-			$state = $state."\t<machine name=\"".$rom["game"]."\">\n".
-				"\t\t<description>".$rom["game"]."</description>\n";
-		}
-		$state = $state."\t\t<".$rom["type"]." name=\"".$rom["name"]."\"".
-			($rom["size"] != "" ? " size=\"".$rom["size"]."\"" : "").
-			($rom["crc"] != "" ? " crc=\"".$rom["crc"]."\"" : "").
-			($rom["md5"] != "" ? " md5=\"".$rom["md5"]."\"" : "").
-			($rom["sha1"] != "" ? " sha1=\"".$rom["sha1"]."\"" : "").
-			" />\n";
+			$state = "";		
+			if ($lastgame != "" && $lastgame != $rom["game"])
+			{
+				$state = $state.")\n";
+			}
+			if ($lastgame != $rom["game"])
+			{
+				$state = $state."game (\n".
+							"\tname \"".$rom["game"]."\"\n";
+			}
+			$state = $state."\t".$rom["type"]." ( name \"".$rom["name"]."\"".
+					($rom["size"] != "" ? " size ".$rom["size"] : "").
+					($rom["crc"] != "" ? " crc ".$rom["crc"] : "").
+					($rom["md5"] != "" ? " md5 ".$rom["md5"] : "").
+					($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
+					" )\n";
+	
+			$lastgame = $rom["game"];
 			
-		$lastgame = $rom["game"];
-		
-		fwrite($handle, $state);
+			fwrite($handle, $state);
+		}
+		fwrite($handle, ")");
 	}
-	fwrite($handle, "\t</machine>");
-	fwrite($handle, $footer);
+	else
+	{
+		fwrite($handle, $header);
+		foreach ($roms as $rom)
+		{
+			$state = "";
+			
+			if ($lastgame != "" && $lastgame != $rom["game"])
+			{
+				$state = $state."\t</machine>\n";
+			}
+			if ($lastgame != $rom["game"])
+			{
+				$state = $state."\t<machine name=\"".$rom["game"]."\">\n".
+					"\t\t<description>".$rom["game"]."</description>\n";
+			}
+			$state = $state."\t\t<".$rom["type"]." name=\"".$rom["name"]."\"".
+				($rom["size"] != "" ? " size=\"".$rom["size"]."\"" : "").
+				($rom["crc"] != "" ? " crc=\"".$rom["crc"]."\"" : "").
+				($rom["md5"] != "" ? " md5=\"".$rom["md5"]."\"" : "").
+				($rom["sha1"] != "" ? " sha1=\"".$rom["sha1"]."\"" : "").
+				" />\n";
+				
+			$lastgame = $rom["game"];
+			
+			fwrite($handle, $state);
+		}
+		fwrite($handle, "\t</machine>");
+		fwrite($handle, $footer);
+	}
+	fclose($handle);
+	
+	echo "File written!<br/>\n";
 }
-fclose($handle);
-
-echo "File written!<br/>\n";
-
-mysqli_close($link);
 
 // Change duplicate names and remove duplicates (merged only)
-function process_roms($roms, $merge)
+function process_roms($roms, $system, $source)
 {	
 	// First sort all roms by name and game
 	usort($roms, function ($a, $b)
@@ -351,7 +334,7 @@ function process_roms($roms, $merge)
 	}
 	
 	// If we're in merged mode, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
-	if ($merged)
+	if ($system == "" xor $source == "")
 	{
 		$roms = $newroms;
 		unset($newroms);
@@ -446,7 +429,9 @@ function process_roms($roms, $merge)
 		// Then rename the sets to include the proper source
 		foreach ($newroms as &$rom)
 		{
-			$rom["game"] = $rom["game"]." [".$rom["source"]."]";
+			$rom["game"] = $rom["game"]." [".
+				($system == "" && $source != "" ? $rom["source"]."]" : "").
+				($system != "" && $source == "" ? $rom["manufacturer"]." - ".$rom["system"] : "");
 		}
 	}
 	
