@@ -11,7 +11,6 @@ Requires:
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
-TODO: Finish edit of game and file
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
@@ -132,7 +131,7 @@ if (in_array($remove, $rmopts))
 	{
 		$query = "DELETE FROM games
 				JOIN files
-					ON games.id=files.game
+					ON games.id=files.setid
 				JOIN checksums
 					ON files.id=checksums.file
 				WHERE games.id=".$game;
@@ -205,7 +204,7 @@ else
 		{
 			// Check if the system exists first
 			$query = "SELECT * FROM systems WHERE id=".$system;
-			$restult = mysqli_query($link, $query);
+			$result = mysqli_query($link, $query);
 			
 			// If we don't find the system, don't add it. This might have been in error
 			if (gettype($result) == "boolean" && !$result)
@@ -276,13 +275,13 @@ else
 		else
 		{
 			// Check if the source exists first
-			$query = "SELECT * FROM systems WHERE id=".$system;
-			$restult = mysqli_query($link, $query);
+			$query = "SELECT * FROM sources WHERE id=".$system;
+			$result = mysqli_query($link, $query);
 			
 			// If we don't find the source, don't add it. This might have been in error
 			if (gettype($result) == "boolean" && !$result)
 			{
-				echo "The system with id '".$source."' could not be found, try again later<br/>";
+				echo "The source with id '".$source."' could not be found, try again later<br/>";
 			}
 			// If we find the source, update with the new information, if not a duplicate of another
 			else
@@ -347,7 +346,42 @@ else
 		// If the game is being edited
 		else
 		{
-			echo "Edit game<br/>";
+			// Check if the game exists first
+			$query = "SELECT * FROM games WHERE id=".$game;
+			$result = mysqli_query($link, $query);
+				
+			// If we don't find the game, don't add it. This might have been in error
+			if (gettype($result) == "boolean" && !$result)
+			{
+				echo "The game with id '".$game."' could not be found, try again later<br/>";
+			}
+			// If we find the game, update with the new information, if not a duplicate of another
+			else
+			{
+				$query = "SELECT * FROM games WHERE name='".$gamename."' AND system=".$system." AND source=".$source;
+				$result = mysqli_query($link, $query);
+					
+				// If the game is found elsewhere or unchanged, don't readd it
+				if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+				{
+					echo "This source has been found. No further action is required<br/>";
+				}
+				// If the game really has changed or is not a duplicate, add it
+				else
+				{
+					$query = "UPDATE game SET name='".$gamename."', system=".$system.", source=".$source." WHERE id=".$game;
+					$result = mysqli_query($link, $query);
+						
+					if (gettype($result) == "boolean" && $result)
+					{
+						echo "The game '".$gamename."' has been updated successfully!<br/>";
+					}
+					else
+					{
+						echo "The game '".$gamename."' could not be updated, try again later<br/>";
+					}
+				}
+			}
 		}
 	}
 	// If a file is being edited or added via POST
@@ -362,7 +396,7 @@ else
 			$query = "SELECT * FROM files
 					JOIN checksums ON files.id=checksums.file
 					WHERE files.name='".$filename.
-						"' AND files.game=".$game.
+						"' AND files.setid=".$game.
 						" AND files.type='".$type.
 						"' AND checksums.size=".$size.
 						"' AND checksums.crc='".$crc.
@@ -409,7 +443,58 @@ else
 		// If the file is being edited
 		else
 		{
-			echo "Edit file<br/>";
+		// Check if the file exists first
+			$query = "SELECT * FROM files WHERE id=".$file;
+			$result = mysqli_query($link, $query);
+				
+			// If we don't find the file, don't add it. This might have been in error
+			if (gettype($result) == "boolean" && !$result)
+			{
+				echo "The game with id '".$file."' could not be found, try again later<br/>";
+			}
+			// If we find the file, update with the new information, if not a duplicate of another
+			else
+			{
+				$query = "SELECT * FROM files
+						JOIN checksums ON files.id=checksums.file
+						WHERE files.name='".$filename.
+						"' AND files.setid=".$game.
+						" AND files.type='".$type.
+						"' AND checksums.size=".$size.
+						"' AND checksums.crc='".$crc.
+						"' AND checksums.md5='".$md5.
+						"' AND checksums.sha1='".$sha1;
+				$result = mysqli_query($link, $query);
+					
+				// If the file is found elsewhere or unchanged, don't readd it
+				if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+				{
+					echo "This file has been found. No further action is required<br/>";
+				}
+				// If the source really has changed or is not a duplicate, add it
+				else
+				{
+					$query = "UPDATE file
+							JOIN checksums ON files.id=checksums.file
+							SET files.name='".$filename.
+							"' AND files.setid=".$game.
+							" AND files.type='".$type.
+							"' AND checksums.size=".$size.
+							"' AND checksums.crc='".$crc.
+							"' AND checksums.md5='".$md5.
+							"' AND checksums.sha1='".$sha1;
+					$result = mysqli_query($link, $query);
+						
+					if (gettype($result) == "boolean" && $result)
+					{
+						echo "The file '".$filename."' has been updated successfully!<br/>";
+					}
+					else
+					{
+						echo "The file '".$filename."' could not be updated, try again later<br/>";
+					}
+				}
+			}
 		}
 	}
 }
