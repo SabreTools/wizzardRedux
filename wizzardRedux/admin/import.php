@@ -7,12 +7,6 @@ Requires:
 	filename	File name in the format of "Manufacturer - SystemName (Source .*)\.dat"
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
-TODO: Add lastupdated to each rom if added
-TODO: sourceid now allows for subfolders with auto-generated links
-		e.g. temp/redump/ can have the id for Redump autoappended so they don't have to be renamed
-	  opens the possibility for custom patterns for all possible sets, including having a matching
-	  	array for MAME softlists. Array should go in separate include file, or in style.php with
-	  	other such arrays
 ------------------------------------------------------------------------------------ */
 
 echo "<h2>Import From Datfile</h2>";
