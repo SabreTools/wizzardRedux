@@ -11,6 +11,7 @@ Requires:
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
+TODO: Finish add/edit of game and file
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
@@ -174,8 +175,6 @@ else
 		// If the system is new and being added
 		if ($system == "-1")
 		{
-			echo "Add system<br/>";
-			
 			// Always check if this exact combination is already there. This might have been in error
 			$query = "SELECT * FROM systems WHERE manufacturer='".$manufacturer." AND system='".$systemname."'";
 			$result = mysqli_query($link, $query);
@@ -204,8 +203,6 @@ else
 		// If the system is being edited
 		else
 		{
-			echo "Edit system<br/>";
-			
 			// Check if the system exists first
 			$query = "SELECT * FROM systems WHERE id=".$system;
 			$restult = mysqli_query($link, $query);
@@ -250,8 +247,6 @@ else
 		// If the source is new and being added
 		if ($source == "-1")
 		{
-			echo "Add source<br/>";
-			
 			// Always check if this exact combination is already there. This might have been in error
 			$query = "SELECT * FROM sources WHERE name='".$sourcename."'";
 			$result = mysqli_query($link, $query);
@@ -280,8 +275,6 @@ else
 		// If the source is being edited
 		else
 		{
-			echo "Edit source<br/>";
-			
 			// Check if the source exists first
 			$query = "SELECT * FROM systems WHERE id=".$system;
 			$restult = mysqli_query($link, $query);
@@ -376,10 +369,12 @@ elseif ($file != "")
 	$rom = mysqli_fetch_assoc($result);
 	
 	// Now output the editable information (add form around this)
-	echo "<table>
+	echo "<form action='index.php?page=edit' method='post'>
+<input type='hidden' name='file' value='".$file."' />
+<table>
 <tr>
 	<th>Name</th>
-	<td>".$rom["name"]."</td>
+	<td><input type='text' name='filename' value='".$rom["name"]."' /></td>
 </tr>
 <tr>
 	<th>Type</th>
@@ -390,23 +385,25 @@ elseif ($file != "")
 </tr>
 <tr>
 	<th>Size</th>
-	<td>".$rom["size"]."</td>
+	<td><input type='text' name='size' value='".$rom["size"]."' /></td>
 </tr>
 <tr>
 	<th>CRC</th>
-	<td>".$rom["crc"]."</td>
+	<td><input type='text' name='crc' value='".$rom["crc"]."' /></td>
 </tr>
 <tr>
 	<th>MD5</th>
-	<td>".$rom["md5"]."</td>
+	<td><input type='text' name='md5' value='".$rom["md5"]."' /></td>
 </tr>
 <tr>
 	<th>SHA-1</th>
-	<td>".$rom["sha1"]."</td>
+	<td><input type='text' name='sha1' value='".$rom["sha1"]."' /></td>
 </tr>
-</table>";
-	
-	
+</table>
+			
+<input type='submit'>
+</form><br/>";
+		
 }
 // Then capture game edit mode, it also takes precidence over the others.
 elseif ($game != "")
