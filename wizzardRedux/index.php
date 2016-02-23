@@ -40,7 +40,7 @@ Welcome to the WoD Revival homepage!
 		
 Here, the following functions will be implemented:
 <ul>
-	<li>Viewing system, source, and game data</li>
+	<li><a href='?page=view'>Viewing system, source, and game data</a></li>
 	<li><a href='?page=generate'>Creating and downloading DATs</a><ul>
 		<li>Merged dats based on multiple sources</li>
 		<li>Custom dats based on a single source</li>
