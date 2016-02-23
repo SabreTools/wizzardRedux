@@ -11,8 +11,6 @@ Requires:
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
-TODO: Add POST handling
-	file & !filename => open edit file
 TODO: DO STUFF TO SHOW AND EDIT ROM INFORMATION
 	"<tr><th>Type</th><td><select name='type' id='type'>".
 			"<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>\n".
@@ -26,6 +24,7 @@ $getvars = array(
 		"source",			// sources.id
 		"game",				// games.id
 		"page",
+		"remove",			// enable deletion mode, see $rmopts for more details
 );
 
 // All possible $_POST variables that we can use
@@ -47,6 +46,14 @@ $postvars = array(
 		"sha1",				// checksums.sha1
 );
 
+// All possible values for $_GET["remove"]
+$rmopts = array(
+		"system",			// set all former games with system to have system 0, requires system
+		"source",			// set all former games with source to have source 0, requires source
+		"game",				// delete all files and checksums associated, requires game
+		"file",				// delete all checksums associated, requires file
+);
+
 //Get the values for all parameters
 foreach ($getvars as $var)
 {
@@ -63,168 +70,286 @@ foreach ($postvars as $var)
 $source_set = $source != "";
 $system_set = $system != "";
 
-// Handle the POST cases. They do not have to be mutually exclusive
-
-// If a system is being edited or added via POST
-if ($system != "" && $manufacturer != "" && $systemname != "")
+// Handle the remove cases. They have to be mutually exclusive
+if (in_array($remove, $rmopts))
 {
-	// If the system is new and being added
-	if ($system == "-1")
+	// If a system is being removed (can't remove default)
+	if ($remove == "system" && $system != "" && $system != "0")
 	{
-		echo "Add system<br/>";
-		
-		// Always check if this exact combination is already there. This might have been in error
-		$query = "SELECT * FROM systems WHERE manufacturer='".$manufacturer." AND system='".$systemname."'";
+		$query = "DELETE FROM system where id=".$system;
 		$result = mysqli_query($link, $query);
 		
-		// If we find this system, tell the user and don't move forward
-		if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+		if (gettype($result) == "boolean" && $result)
 		{
-			echo "This system has been found. No further action is required<br/>";
-		}
-		// If the system is not found, add it
-		else
-		{
-			$query = "INSERT INTO systems (manufacturer, system) VALUES ('".$manufacturer."', '".$systemname."')";
+			echo "System deleted successfully! Altering all related files.<br/>";
+			
+			$query = "UPDATE games SET system=0 WHERE system=".$system;
 			$result = mysqli_query($link, $query);
 			
 			if (gettype($result) == "boolean" && $result)
 			{
-				echo "The system '".$manufacturer." - ".$systemname."' has been added successfully!<br/>";
+				echo "Files altered successfully! No further action required.<br/>";
 			}
 			else
 			{
-				echo "The system '".$manufacturer." - ".$systemname."' could not be added, try again later<br/>";
+				echo "Something has gone wrong, please manually alter all files with system '".$system."' to have value 0<br/>";
 			}
 		}
-	}
-	// If the system is being edited
-	else
-	{
-		echo "Edit system<br/>";
-		
-		// Check if the system exists first
-		$query = "SELECT * FROM systems WHERE id=".$system;
-		$restult = mysqli_query($link, $query);
-		
-		// If we don't find the system, don't add it. This might have been in error
-		if (gettype($result) == "boolean" && !$result)
-		{
-			echo "The system with id '".$system."' could not be found, try again later<br/>";
-		}
-		// If we find the system, update with the new information, if not a duplicate of another
 		else
 		{
+			echo "System could not be deleted. Try again later.<br/>";
+		}
+	}
+	// If a source is being removed (can't remove default)
+	elseif ($remove == "source" && $source != "" && $source != "0")
+	{
+		$query = "DELETE FROM source where id=".$system;
+		$result = mysqli_query($link, $query);
+		
+		if (gettype($result) == "boolean" && $result)
+		{
+			echo "Source deleted successfully! Altering all related files.<br/>";
+				
+			$query = "UPDATE games SET source=0 WHERE source=".$source;
+			$result = mysqli_query($link, $query);
+				
+			if (gettype($result) == "boolean" && $result)
+			{
+				echo "Files altered successfully! No further action required.<br/>";
+			}
+			else
+			{
+				echo "Something has gone wrong, please manually alter all files with source '".$source."' to have value 0<br/>";
+			}
+		}
+		else
+		{
+			echo "System could not be deleted. Try again later.<br/>";
+		}
+	}
+	// If a game is being removed
+	elseif ($remove == "game" && $game != "")
+	{
+		$query = "DELETE FROM games
+				JOIN files
+					ON games.id=files.game
+				JOIN checksums
+					ON files.id=checksums.file
+				WHERE games.id=".$game;
+		$result = mysqli_query($link, $query);
+		
+		if (gettype($result) == "boolean" && $result)
+		{
+			echo "Game and dependent files deleted successfully!<br/>";
+		}
+		else
+		{
+			echo "Could not delete game or dependent files. Please try again<br/>";;
+		}
+	}
+	// If a file is being removed
+	elseif ($remove == "file" && $file != "")
+	{
+		$query = "DELETE FROM files
+				JOIN checksums
+					ON files.id=checksums.file
+				WHERE files.id=".$file;
+		$result = mysqli_query($link, $query);
+		
+		if (gettype($result) == "boolean" && $result)
+		{
+			echo "File deleted successfully!<br/>";
+		}
+		else
+		{
+			echo "Could not delete file. Please try again<br/>";;
+		}
+	}
+}
+// Handle the POST cases. They do not have to be mutually exclusive
+else
+{
+	// If a system is being edited or added via POST
+	if ($system != "" && $manufacturer != "" && $systemname != "")
+	{
+		// If the system is new and being added
+		if ($system == "-1")
+		{
+			echo "Add system<br/>";
+			
+			// Always check if this exact combination is already there. This might have been in error
 			$query = "SELECT * FROM systems WHERE manufacturer='".$manufacturer." AND system='".$systemname."'";
 			$result = mysqli_query($link, $query);
 			
-			// If the system is found or unchanged, don't readd it
+			// If we find this system, tell the user and don't move forward
 			if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
 			{
 				echo "This system has been found. No further action is required<br/>";
 			}
-			// If the system really has changed or is not a duplicate, add it
+			// If the system is not found, add it
 			else
 			{
+				$query = "INSERT INTO systems (manufacturer, system) VALUES ('".$manufacturer."', '".$systemname."')";
+				$result = mysqli_query($link, $query);
 				
+				if (gettype($result) == "boolean" && $result)
+				{
+					echo "The system '".$manufacturer." - ".$systemname."' has been added successfully!<br/>";
+				}
+				else
+				{
+					echo "The system '".$manufacturer." - ".$systemname."' could not be added, try again later<br/>";
+				}
 			}
 		}
-	}
-}
-// If a source is being edited or added via POST
-if ($source != "" && $sourcename != "" && $url != "")
-{
-	// If the source is new and being added
-	if ($source == "-1")
-	{
-		echo "Add source<br/>";
-		
-		// Always check if this exact combination is already there. This might have been in error
-		$query = "SELECT * FROM sources WHERE name='".$sourcename."'";
-		$result = mysqli_query($link, $query);
-		
-		// If we find this source, tell the user and don't move forward
-		if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
-		{
-			echo "This source has been found. No further action is required<br/>";
-		}
-		// If the source is not found, add it
+		// If the system is being edited
 		else
 		{
-			$query = "INSERT INTO sources (name, url) VALUES ('".$sourcename."', '".$url."')";
-			$result = mysqli_query($link, $query);
+			echo "Edit system<br/>";
 			
-			if (gettype($result) == "boolean" && $result)
+			// Check if the system exists first
+			$query = "SELECT * FROM systems WHERE id=".$system;
+			$restult = mysqli_query($link, $query);
+			
+			// If we don't find the system, don't add it. This might have been in error
+			if (gettype($result) == "boolean" && !$result)
 			{
-				echo "The source '".$sourcename."' has been added successfully!<br/>";
+				echo "The system with id '".$system."' could not be found, try again later<br/>";
 			}
+			// If we find the system, update with the new information, if not a duplicate of another
 			else
 			{
-				echo "The source '".$sourcename."' could not be added, try again later<br/>";
+				$query = "SELECT * FROM systems WHERE manufacturer='".$manufacturer." AND system='".$systemname."'";
+				$result = mysqli_query($link, $query);
+				
+				// If the system is found or unchanged, don't readd it
+				if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+				{
+					echo "This system has been found. No further action is required<br/>";
+				}
+				// If the system really has changed or is not a duplicate, add it
+				else
+				{
+					$query = "UPDATE systems SET manufacturer='".$manufacturer."', system='".$systemname."' WHERE id=".$system;
+					$result = mysqli_query($link, $query);
+					
+					if (gettype($result) == "boolean" && $result)
+					{
+						echo "The system '".$manufacturer." - ".$systemname."' has been updated successfully!<br/>";
+					}
+					else
+					{
+						echo "The system '".$manufacturer." - ".$systemname."' could not be updated, try again later<br/>";
+					}
+				}
 			}
 		}
 	}
-	// If the source is being edited
-	else
+	// If a source is being edited or added via POST
+	if ($source != "" && $sourcename != "" && $url != "")
 	{
-		echo "Edit source<br/>";
-		
-		// Check if the source exists first
-		$query = "SELECT * FROM systems WHERE id=".$system;
-		$restult = mysqli_query($link, $query);
-		
-		// If we don't find the source, don't add it. This might have been in error
-		if (gettype($result) == "boolean" && !$result)
+		// If the source is new and being added
+		if ($source == "-1")
 		{
-			echo "The system with id '".$source."' could not be found, try again later<br/>";
-		}
-		// If we find the source, update with the new information, if not a duplicate of another
-		else
-		{
+			echo "Add source<br/>";
+			
+			// Always check if this exact combination is already there. This might have been in error
 			$query = "SELECT * FROM sources WHERE name='".$sourcename."'";
 			$result = mysqli_query($link, $query);
-				
-			// If the source is found or unchanged, don't readd it
+			
+			// If we find this source, tell the user and don't move forward
 			if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
 			{
 				echo "This source has been found. No further action is required<br/>";
 			}
-			// If the source really has changed or is not a duplicate, add it
+			// If the source is not found, add it
 			else
 			{
+				$query = "INSERT INTO sources (name, url) VALUES ('".$sourcename."', '".$url."')";
+				$result = mysqli_query($link, $query);
+				
+				if (gettype($result) == "boolean" && $result)
+				{
+					echo "The source '".$sourcename."' has been added successfully!<br/>";
+				}
+				else
+				{
+					echo "The source '".$sourcename."' could not be added, try again later<br/>";
+				}
+			}
+		}
+		// If the source is being edited
+		else
+		{
+			echo "Edit source<br/>";
 			
+			// Check if the source exists first
+			$query = "SELECT * FROM systems WHERE id=".$system;
+			$restult = mysqli_query($link, $query);
+			
+			// If we don't find the source, don't add it. This might have been in error
+			if (gettype($result) == "boolean" && !$result)
+			{
+				echo "The system with id '".$source."' could not be found, try again later<br/>";
+			}
+			// If we find the source, update with the new information, if not a duplicate of another
+			else
+			{
+				$query = "SELECT * FROM sources WHERE name='".$sourcename."'";
+				$result = mysqli_query($link, $query);
+					
+				// If the source is found or unchanged, don't readd it
+				if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+				{
+					echo "This source has been found. No further action is required<br/>";
+				}
+				// If the source really has changed or is not a duplicate, add it
+				else
+				{
+					$query = "UPDATE sources SET name='".$sourcename."', url='".$url."' WHERE id=".$source;
+					$result = mysqli_query($link, $query);
+					
+					if (gettype($result) == "boolean" && $result)
+					{
+						echo "The source '".$sourcename."' has been updated successfully!<br/>";
+					}
+					else
+					{
+						echo "The source '".$sourcename."' could not be updated, try again later<br/>";
+					}
+				}
 			}
 		}
 	}
-}
-// If a game is being edited or added via POST
-if ($game != "" && $gamename != "" && $system != "" && $source != "")
-{
-	// If the game is new and being added
-	if ($game == "-1")
+	// If a game is being edited or added via POST
+	if ($game != "" && $gamename != "" && $system != "" && $source != "")
 	{
-		echo "Add game<br/>";
+		// If the game is new and being added
+		if ($game == "-1")
+		{
+			echo "Add game<br/>";
+		}
+		// If the game is being edited
+		else
+		{
+			echo "Edit game<br/>";
+		}
 	}
-	// If the game is being edited
-	else
+	// If a file is being edited or added via POST
+	if ($file != "" && $filename != "" && $type != "" &&
+			(($type == "rom" && $size != "" && ($crc != "" || $md5 != "" || $sha1 != "")) ||
+					($type == "disk" && ($md5 != "" || $sha1 != ""))))
 	{
-		echo "Edit game<br/>";
-	}
-}
-// If a file is being edited or added via POST
-if ($file != "" && $filename != "" && $type != "" &&
-		(($type == "rom" && $size != "" && ($crc != "" || $md5 != "" || $sha1 != "")) ||
-				($type == "disk" && ($md5 != "" || $sha1 != ""))))
-{
-	// If the file is new and being added
-	if ($file == "-1")
-	{
-		echo "Add file<br/>";
-	}
-	// If the file is being edited
-	else
-	{
-		echo "Edit file<br/>";
+		// If the file is new and being added
+		if ($file == "-1")
+		{
+			echo "Add file<br/>";
+		}
+		// If the file is being edited
+		else
+		{
+			echo "Edit file<br/>";
+		}
 	}
 }
 
