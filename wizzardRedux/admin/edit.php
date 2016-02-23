@@ -683,6 +683,22 @@ else
 		$system_info = mysqli_fetch_assoc($system_result);
 	}
 	
+	// Get the total count in the case that it needs limiting
+	$query = "SELECT COUNT(*) as count
+			FROM systems
+			JOIN games
+				ON systems.id=games.system
+			JOIN sources
+				ON games.source=sources.id
+			WHERE ".
+				($source_set ? "sources.id=".$source : "").
+				($source_set && $system_set ? " AND " : "").
+				($system_set ? "systems.id=".$system : "");
+	$count = mysqli_query($link, $query);
+	$count = mysqli_fetch_assoc($count);
+	$count = $count["count"];
+	settype($count, "integer");
+	
 	// Then get all games assocated
 	$query = "SELECT games.name AS name,
 				games.id AS id, 
@@ -698,7 +714,8 @@ else
 				($source_set ? "sources.id=".$source : "").
 				($source_set && $system_set ? " AND " : "").
 				($system_set ? "systems.id=".$system : "").
-			" ORDER BY games.name ASC";
+			" ORDER BY games.name ASC
+			LIMIT 50 OFFSET ".($offset == "" ? "0" : ($offset*5)."0");
 	$games_result = mysqli_query($link, $query);
 
 	echo "<form action='index.php?page=edit".
@@ -740,6 +757,16 @@ else
 			}
 			echo "</a><br/>\n";
 		}
+		echo "<br/>";
+		if ($offset != "" && $offset > 0)
+		{
+			echo "<a href='?page=edit&system=".$system."&source=".$source."&offset=".($offset-1)."'>Last 50</a>   ";
+		}
+		if ($count > (mysqli_num_rows($games_result) + ($offset == "" ? 0 : $offset*50)))
+		{
+			echo "<a href='?page=edit&system=".$system."&source=".$source."&offset=".($offset+1)."'>Next 50</a>";
+		}
+		echo "<br/>";
 	}
 	else
 	{
