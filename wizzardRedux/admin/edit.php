@@ -2,6 +2,8 @@
 
 /* ------------------------------------------------------------------------------------
 Add, edit, and remove data from the database manually.
+
+TODO: Add search functionality
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
@@ -513,7 +515,7 @@ elseif ($file != "")
 	$result = mysqli_query($link, $query);
 	$rom = mysqli_fetch_assoc($result);
 	
-	// Now output the editable information (add form around this)
+	// Now output the editable information
 	echo "<form action='index.php?page=edit' method='post'>
 <input type='hidden' name='file' value='".$file."' />
 <table>
