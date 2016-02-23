@@ -574,6 +574,23 @@ elseif ($game != "")
 		array_push($sources, $row);
 	}
 	
+	// Get the total count in the case that it needs limiting
+	$query = "SELECT COUNT(*) as count
+			FROM systems
+			JOIN games
+				ON systems.id=games.system
+			JOIN sources
+				ON games.source=sources.id
+			JOIN files
+				ON games.id=files.setid
+			JOIN checksums
+				ON files.id=checksums.file
+			WHERE games.id=".$game;
+	$count = mysqli_query($link, $query);
+	$count = mysqli_fetch_assoc($count);
+	$count = $count["count"];
+	settype($count, "integer");
+	
 	// Retrieve the game info
 	$query = "SELECT systems.manufacturer AS manufacturer,
 				systems.system AS system,
@@ -597,8 +614,14 @@ elseif ($game != "")
 				ON games.id=files.setid
 			JOIN checksums
 				ON files.id=checksums.file
-			WHERE games.id=".$game;
+			WHERE games.id=".$game.
+			" LIMIT 50 OFFSET ".($offset == "" ? "0" : ($offset*5)."0");
 	$result = mysqli_query($link, $query);
+	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
+	{
+		echo "No game info could be retrieved! There might be an error.<br/>";
+		exit;
+	}
 	$roms = mysqli_fetch_all($result);
 	$game_info = $roms[1];
 	
@@ -614,7 +637,7 @@ elseif ($game != "")
 	foreach ($systems as $system)
 	{
 		echo "\t\t<option value='".$system["id"]."'".
-			($system["id"] == $game_info["systemid"] ? " selected='selected'" : "").
+			($system["id"] == $game_info[2] ? " selected='selected'" : "").
 			">".$system["manufacturer"]." - ".$system["system"]."</option>\n";
 	}
 	
@@ -627,7 +650,7 @@ elseif ($game != "")
 	foreach ($sources as $source)
 	{
 		echo "\t\t<option value='".$source["id"]."'".
-			($source["id"] == $game_info["sourceid"] ? " selected='selected'" : "").
+			($source["id"] == $game_info[4] ? " selected='selected'" : "").
 			">".$source["name"]."</option>\n";
 	}
 	
@@ -635,7 +658,7 @@ elseif ($game != "")
 </tr>
 <tr>
 	<th>Name</th>
-	<td><input type='text' name='gamename' value='".$game_info["game"]."'/></td>
+	<td><input type='text' name='gamename' value='".$game_info[5]."'/></td>
 </tr>
 </table><br/>
 
@@ -656,8 +679,20 @@ elseif ($game != "")
 	}
 	
 	echo "</table>".
-			"<input type='submit'>\n</form><br/>".			
-			"<a href='?page=edit".
+			"<input type='submit'>\n</form><br/>";
+	
+	echo "<br/>";
+	if ($offset != "" && $offset > 0)
+	{
+		echo "<a href='?page=edit&system=".$system."&source=".$source."&game=".$game."&offset=".($offset-1)."'>Last 50</a>   ";
+	}
+	if ($count > (mysqli_num_rows($result) + ($offset == "" ? 0 : $offset*50)))
+	{
+		echo "<a href='?page=edit&system=".$system."&source=".$source."&game=".$game."&offset=".($offset+1)."'>Next 50</a>";
+	}
+	echo "<br/>";
+	
+	echo "<a href='?page=edit".
 			($source_set ? "&source='".$source : "").
 			($system_set ? "&system='".$system : "").
 			"'>Back to previous page</a><br/>\n";
