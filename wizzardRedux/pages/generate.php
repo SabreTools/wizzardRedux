@@ -17,7 +17,6 @@ TODO: Allow for DAT creation flexibility
 		if (!system && source) => ALL (Source).dat
 		if (system && !source) => System (merged).dat
 		if (system && source) => System (Souce).dat
-TODO: Add parenting to the database and to the edit page.
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
  ------------------------------------------------------------------------------------ */
