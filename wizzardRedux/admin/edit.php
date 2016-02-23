@@ -524,8 +524,8 @@ elseif ($file != "")
 <tr>
 	<th>Type</th>
 	<td><select name='type' id='type'>
-		<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>
-		<option value='disk'".($game_info["type"] == "disk" ? " selected='selected'" : "").">disk</option>
+		<option value='rom'".($rom["type"] == "rom" ? " selected='selected'" : "").">rom</option>
+		<option value='disk'".($rom["type"] == "disk" ? " selected='selected'" : "").">disk</option>
 	</td>
 </tr>
 <tr>
