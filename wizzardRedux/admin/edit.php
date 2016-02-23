@@ -11,7 +11,7 @@ Requires:
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
-TODO: Finish add/edit of game and file
+TODO: Finish edit of game and file
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
@@ -319,7 +319,30 @@ else
 		// If the game is new and being added
 		if ($game == "-1")
 		{
-			echo "Add game<br/>";
+			// Always check if this exact combination is already there. This might have been in error
+			$query = "SELECT * FROM games WHERE name='".$gamename."' AND system=".$system." AND source=".$source;
+			$result = mysqli_query($link, $query);
+				
+			// If we find this game, tell the user and don't move forward
+			if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+			{
+				echo "This game has been found. No further action is required<br/>";
+			}
+			// If the game is not found, add it
+			else
+			{
+				$query = "INSERT INTO games (name, system, source) VALUES ('".$gamename."', ".$system.", ".$source.")";
+				$result = mysqli_query($link, $query);
+			
+				if (gettype($result) == "boolean" && $result)
+				{
+					echo "The game '".$gamename."' has been added successfully!<br/>";
+				}
+				else
+				{
+					echo "The game '".$gamename."' could not be added, try again later<br/>";
+				}
+			}
 		}
 		// If the game is being edited
 		else
@@ -328,14 +351,60 @@ else
 		}
 	}
 	// If a file is being edited or added via POST
-	if ($file != "" && $filename != "" && $type != "" &&
+	if ($file != "" && $filename != "" && $game != "" && $type != "" &&
 			(($type == "rom" && $size != "" && ($crc != "" || $md5 != "" || $sha1 != "")) ||
 					($type == "disk" && ($md5 != "" || $sha1 != ""))))
 	{
 		// If the file is new and being added
 		if ($file == "-1")
 		{
-			echo "Add file<br/>";
+			// Always check if this exact combination is already there. This might have been in error
+			$query = "SELECT * FROM files
+					JOIN checksums ON files.id=checksums.file
+					WHERE files.name='".$filename.
+						"' AND files.game=".$game.
+						" AND files.type='".$type.
+						"' AND checksums.size=".$size.
+						"' AND checksums.crc='".$crc.
+						"' AND checksums.md5='".$md5.
+						"' AND checksums.sha1='".$sha1;
+			$result = mysqli_query($link, $query);
+			
+			// If we find this file, tell the user and don't move forward
+			if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
+			{
+				echo "This file has been found. No further action is required<br/>";
+			}
+			// If the file is not found, add it
+			else
+			{
+				$query = "INSERT INTO files (name, game, type)
+						VALUES ('".$filename."', ".$game.", ".$type.")";
+				$result = mysqli_query($link, $query);
+					
+				if (gettype($result) == "boolean" && $result)
+				{
+					echo "The file '".$filename."' has been added successfully! Adding checksums.<br/>";
+					
+					$file = mysqli_insert_id($link);
+					$query = "INSERT INTO checksums (game, size, crc, md5, sha1)
+							VALUES (".$game.", ".$size.", '".$crc."', '".$md5."', '".$sha1."')";
+					$result = mysqli_query($link, $query);
+					
+					if (gettype($result) == "boolean" && $result)
+					{
+						echo "The checksums have been added!<br/>";
+					}
+					else
+					{
+						echo "The checksums could not be added, please try again later<br/>";
+					}
+				}
+				else
+				{
+					echo "The file '".$filename."' could not be added, try again later<br/>";
+				}
+			}
 		}
 		// If the file is being edited
 		else
