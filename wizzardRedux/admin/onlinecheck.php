@@ -14,7 +14,7 @@ TODO: Add a way to figure out if a site is dead based on the original list that 
 TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
 */
 
-// Site whose checkers have been once-overed
+// Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
 		"6502dude",
 		"8BitChip",						// Probably dead
@@ -26,6 +26,9 @@ $checked = array (
 		"ANN",
 		"Apple2Online",
 		"AppleIIgsInfo",
+		"Arise64",
+		"AtariAge",
+		"Atarimania",
 );
 
 if (!isset($_GET["source"]))

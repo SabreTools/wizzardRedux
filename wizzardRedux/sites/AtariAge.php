@@ -1,10 +1,9 @@
 <?php
-if($_GET["type"]=='forum')
-{
-	$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-	$r_query=explode ("\r\n","\r\n".$r_query);
-	$r_query=array_flip($r_query);
 
+// Original code: The Wizard of DATz
+
+if (isset($_GET["type"]) && $_GET["type"] == 'forum')
+{
 	print "<pre>";
 
 	$topics=Array(
@@ -96,7 +95,7 @@ if($_GET["type"]=='forum')
 			'68-atari-7800-hacks',						// 		Atari 7800 Hacks
 	);
 
-	$bad_ext=Array(
+	$bad_ext = array(
 		'asm',
 		'bas',
 		'bmp',
@@ -110,116 +109,133 @@ if($_GET["type"]=='forum')
 		'xls',
 	);
 
-	$max=1000000;
+	$max = 1000000;
 
-	$newAttachIDs=Array();
-	$newDLIDs=Array();
-	$checked=Array();
+	$newAttachIDs = array();
+	$checked = array();
 
 	error_reporting(E_ERROR | E_PARSE);
 
-	foreach($topics as $topic){
-		if(!$checked[$topic])
+	foreach ($topics as $topic)
+	{
+		if (!$checked[$topic])
 		{
-			$checked[$topic]=true;
-			for ($x=1;$x<$max;$x++)
+			$checked[$topic] = true;
+			for ($x = 1; $x < $max; $x++)
 			{
 				print "load: ".$topic." * ".$x."\n";
 	
-				$query=implode ('', file ("http://atariage.com/forums/forum/".$topic."/page-".$x."?prune_day=100&sort_by=Z-A&sort_key=last_post&topicfilter=all"));
+				$query = implode('', file("http://atariage.com/forums/forum/".$topic."/page-".$x."?prune_day=100&sort_by=Z-A&sort_key=last_post&topicfilter=all"));
 	
-				$next=explode ("rel='next'>Next</a></li>",$query);
+				$next = explode("rel='next'>Next</a></li>", $query);
 	
-				$pinned=explode (">Pinned<",$query);
-				$pinned[0]=null;
+				$pinned = explode(">Pinned<", $query);
+				$pinned[0] = null;
 	
-				$pinnedAttachments=Array();
+				$pinnedAttachments = array();
 
-				foreach($pinned as $pin){
-					if($pin){
-						$attachset=explode ('id="tid-link-',$pin);
-						$attachset=explode ('"',$attachset[1]);
-						$attachset=$attachset[0];
-						$pinnedAttachments[$attachset]=true;
+				foreach ($pinned as $pin)
+				{
+					if ($pin)
+					{
+						$attachset = explode('id="tid-link-', $pin);
+						$attachset = explode('"', $attachset[1]);
+						$attachset = $attachset[0];
+						$pinnedAttachments[$attachset] = true;
 					}
 				}
 	
-				$section=explode ("<h1 class='ipsType_pagetitle'>",$query);
-				$section=explode ("</h1>",$section[1]);
-				$section=$section[0];
+				$section = explode("<h1 class='ipsType_pagetitle'>", $query);
+				$section = explode("</h1>", $section[1]);
+				$section = $section[0];
 	
-				$query=explode ('data-tid="',$query);
-				$query[0]=null;
+				$query = explode('data-tid="', $query);
+				$query[0] = null;
 
-				foreach($query as $row){
-					if($row){
-						$attachset=explode ('"',$row);
-						$attachset=$attachset[0];
+				foreach ($query as $row)
+				{
+					if ($row)
+					{
+						$attachset = explode('"',$row);
+						$attachset = $attachset[0];
 
-						$attachcount=explode ('UserComments:',$row);
-						$attachcount=explode ('"',$attachcount[1]);
-						$attachcount=$attachcount[0];
+						$attachcount = explode('UserComments:', $row);
+						$attachcount = explode('"', $attachcount[1]);
+						$attachcount = $attachcount[0];
 
-						if($r_query[$attachset.'*'.$attachcount]){
-							if($pinnedAttachments[$attachset]){
+						if ($r_query[$attachset.'*'.$attachcount])
+						{
+							if ($pinnedAttachments[$attachset])
+							{
 								print "skipp pinned ".$attachset.'*'.$attachcount."\n";
 								continue;
-							} else{
-								$x=$max;
+							}
+							else
+							{
+								$x = $max;
 								print "break by ".$attachset.'*'.$attachcount."\n";
 								break;
 							}
 						}
 
-						$newAttachIDs[]=$attachset.'*'.$attachcount;
+						$newAttachIDs[] = $attachset.'*'.$attachcount;
 
-						$attachtitle=explode ('<span itemprop="name">',$row);
-						$attachtitle=explode ('</span>',$attachtitle[1]);
-						$attachtitle=$attachtitle[0];
+						$attachtitle = explode('<span itemprop="name">', $row);
+						$attachtitle = explode('</span>', $attachtitle[1]);
+						$attachtitle = $attachtitle[0];
 
-						for ($y=0;$y<1000;$y++)
+						for ($y = 0; $y < 1000; $y++)
 						{
 							print "load: ".$attachset." * ".($y+1)."\n";
-							$b_query=file ("http://atariage.com/forums/index.php?app=forums&module=forums&section=attach&tid=".$attachset."&st=".($y*50));
+							$b_query = file("http://atariage.com/forums/index.php?app=forums&module=forums&section=attach&tid=".$attachset."&st=".($y * 50));
 
-							if($b_query){
-								$new=0;
-								$old=0;
-								$reject=0;
+							if ($b_query)
+							{
+								$new = 0;
+								$old = 0;
+								$reject = 0;
 
-								$b_query=implode ('', $b_query);
-								$b_next=explode ("rel='next'>Next</a></li>",$b_query);
+								$b_query = implode('', $b_query);
+								$b_next = explode("rel='next'>Next</a></li>", $b_query);
 
-								$b_query=explode ("post&amp;attach_id=",$b_query);
-								$b_query[0]=null;
+								$b_query = explode("post&amp;attach_id=", $b_query);
+								$b_query[0] = null;
 
-								foreach($b_query as $dl){
-									if($dl){
-										$dl_id=explode ('"',$dl);
-										$dl_id=$dl_id[0];
+								foreach ($b_query as $dl)
+								{
+									if ($dl)
+									{
+										$dl_id = explode ('"', $dl);
+										$dl_id = $dl_id[0];
 
-										if(!$r_query[$dl_id.'#0']){
-											$dl_date=explode ('<br />( Posted on ',$dl);
-											$dl_date=explode (' )',$dl_date[1]);
-											$dl_date=strtotime($dl_date[0]);
-											$dl_date=date('Y.m.d H.i',$dl_date);
+										if (!$r_query[$dl_id.'#0'])
+										{
+											$dl_date = explode('<br />( Posted on ', $dl);
+											$dl_date = explode(' )', $dl_date[1]);
+											$dl_date = strtotime($dl_date[0]);
+											$dl_date = date('Y.m.d H.i', $dl_date);
 
-											$dl_title=explode ('" title="',$dl);
-											$dl_title=explode ('"',$dl_title[1]);
-											$dl_title=$dl_title[0];
+											$dl_title = explode('" title="', $dl);
+											$dl_title = explode('"', $dl_title[1]);
+											$dl_title = $dl_title[0];
 
-											$dl_ext=explode ('.',$dl_title);
-											$dl_ext=strtolower($dl_ext[count($dl_ext)-1]);
+											$dl_ext = explode('.', $dl_title);
+											$dl_ext = strtolower($dl_ext[count($dl_ext) - 1]);
 
-											$dl_title=substr($dl_title, 0, -(strlen($dl_ext)+1));
-											if(!in_array($dl_ext,$bad_ext)){
-												$newDLIDs[]=Array($dl_id,"{".$section."}".$attachtitle." (".$dl_title.") (".$dl_date.").".$dl_ext);
-												$newAttachIDs[]=$dl_id.'#0';
+											$dl_title = substr($dl_title, 0, -(strlen($dl_ext) + 1));
+											if (!in_array($dl_ext, $bad_ext))
+											{
+												$found[] = array($dl_id, "{".$section."}".$attachtitle." (".$dl_title.") (".$dl_date.").".$dl_ext);
+												$newAttachIDs[] = $dl_id.'#0';
 												$new++;
-											}else{
+											}
+											else
+											{
 												$reject++;
 											}
-										}else{
+										}
+										else
+										{
 											$old++;
 										}
 									}
@@ -227,18 +243,22 @@ if($_GET["type"]=='forum')
 								
 								print "found: old:".$old.", new:".$new.", reject:".$reject."\n";
 
-								if(!$b_next[1]){
+								if (!$b_next[1])
+								{
 									break;
 								}
-							}else{
+							}
+							else
+							{
 								break;
                             }
 						}
 					}
 				}
 	
-				if(!$next[1]){
-					$x=$max;
+				if (!$next[1])
+				{
+					$x = $max;
 					break;
 				}
 			}
@@ -247,25 +267,24 @@ if($_GET["type"]=='forum')
 
 	print "\nnew IDs:\n<table><tr><td><pre>";
 
-	foreach($newAttachIDs as $ID){
+	foreach ($newAttachIDs as $ID)
+	{
 		print $ID."\n";
 	}
 
 	print "</td></tr></table>\nnew DLs:\n<table><tr><td><pre>";
 
-	foreach($newDLIDs as $ID){
+	foreach ($found as $ID)
+	{
 		print "<a href=\"http://atariage.com/forums/index.php?app=core&amp;module=attach&amp;section=attach&amp;attach_rel_module=post&amp;attach_id=".$ID[0]."\" >".$ID[1]."</a>\n";
 	}
 
 	print "</td></tr></table>";
 
-}elseif($_GET["type"]=='main')
+}
+elseif($_GET["type"] == 'main')
 {
-	$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-	$r_query=explode ("\r\n","\r\n".$r_query);
-	$r_query=array_flip($r_query);
-
-	$systems=Array(
+	$systems = array(
 		Array('2600',	'Atari - 2600'),
 		Array('5200',	'Atari - 5200'),
 		Array('7800',	'Atari - 7800'),
@@ -274,24 +293,24 @@ if($_GET["type"]=='forum')
 
 	print "<pre>";
 
-	foreach($systems as $system)
+	foreach ($systems as $system)
 	{
-		$query2=Array();
-		$count=0;
+		$query2 = Array();
+		$count = 0;
 
 		print "load page for ".$system[1].", ";
 
-		$query=implode ('', file ("http://www.atariage.com/software_list.html?SystemID=".$system[0]."&searchROM=checkbox&recordsPerPage=100000"));
-		$query=explode ('atariage.com/software_page.html?SoftwareLabelID=', $query);
+		$query = implode('', file ("http://www.atariage.com/software_list.html?SystemID=".$system[0]."&searchROM=checkbox&recordsPerPage=100000"));
+		$query = explode ('atariage.com/software_page.html?SoftwareLabelID=', $query);
 
-		for($x=1;$x<count($query);$x++)
+		for ($x = 1; $x < count($query); $x++)
 		{
-			$id=explode('"', $query[$x]);
-			$id=$id[0];
+			$id = explode('"', $query[$x]);
+			$id = $id[0];
 			
-			if(!$r_query[$id])
+			if (!$r_query[$id])
 			{
-				$query2[]=$id;
+				$query2[] = $id;
 			}
 			$count++;
 		}
@@ -300,71 +319,101 @@ if($_GET["type"]=='forum')
 
 		print "<table><tr><td><pre>";
 
-		foreach($query2 as $row)
+		foreach ($query2 as $row)
 		{
 			print "<a href=http://www.atariage.com/software_page.html?SoftwareLabelID=".$row." target=_blank>".$row."</a>\n";
 		}
 
 		print "</td><td><pre>";
 
-		foreach($query2 as $row)
+		foreach ($query2 as $row)
 		{
-			$query=implode ('', file ("http://www.atariage.com/software_page.html?SoftwareLabelID=".$row));
+			$query = implode('', file ("http://www.atariage.com/software_page.html?SoftwareLabelID=".$row));
 
-			$gametitle=explode ('<span class="gametitle">', $query);
-			$gametitle=explode ('</span>', $gametitle[1]);
-			$gametitle=$gametitle[0];
+			$gametitle = explode('<span class="gametitle">', $query);
+			$gametitle = explode('</span>', $gametitle[1]);
+			$gametitle = $gametitle[0];
 
-			$rarity=explode ('<a href="http://www.atariage.com/common/rarity_key.html" title="', $query);
-			$rarity=explode (' - ', $rarity[1]);
-			$rarity=$rarity[0];
+			$rarity = explode('<a href="http://www.atariage.com/common/rarity_key.html" title="', $query);
+			$rarity = explode(' - ', $rarity[1]);
+			$rarity = $rarity[0];
 
-			$region=explode ('<a href="http://www.atariage.com/common/region_key.html" title="', $query);
-			$region=explode (' - ', $region[1]);
-			$region=$region[0];
+			$region = explode('<a href="http://www.atariage.com/common/region_key.html" title="', $query);
+			$region = explode(' - ', $region[1]);
+			$region = $region[0];
 
-			$video=explode ('<a href="http://www.atariage.com/common/video_key.html" title="', $query);
-			$video=explode (' - ', $video[1]);
-			$video=$video[0];
+			$video = explode('<a href="http://www.atariage.com/common/video_key.html" title="', $query);
+			$video = explode(' - ', $video[1]);
+			$video = $video[0];
 
-			$url=explode ('<img src="http://www.atariage.com/images/buttons/ShotButton.gif"  width="18" height="18" /></a>&nbsp;<a href="', $query);
-			$url=explode ('"', $url[1]);
-			$url=$url[0];
+			$url = explode('<img src="http://www.atariage.com/images/buttons/ShotButton.gif"  width="18" height="18" /></a>&nbsp;<a href="', $query);
+			$url = explode ('"', $url[1]);
+			$url = $url[0];
 
-			$company=explode ('<b>Company:</b>', $query);
-			$company=explode ('</td>', $company[1]);
-			$company=trim(strip_tags($company[0]));
+			$company = explode('<b>Company:</b>', $query);
+			$company = explode('</td>', $company[1]);
+			$company = trim(strip_tags($company[0]));
 
-			$developer=explode ('<b>Developer:</b>', $query);
-			$developer=explode ('</td>', $developer[1]);
-			$developer=trim(strip_tags($developer[0]));
+			$developer = explode('<b>Developer:</b>', $query);
+			$developer = explode('</td>', $developer[1]);
+			$developer = trim(strip_tags($developer[0]));
 
-			$model=explode ('<b>Model #:</b>', $query);
-			$model=explode ('</td>', $model[1]);
-			$model=trim(strip_tags($model[0]));
+			$model = explode('<b>Model #:</b>', $query);
+			$model = explode('</td>', $model[1]);
+			$model = trim(strip_tags($model[0]));
 
-			$year=explode ('<b>Year of Release: </b>', $query);
-			$year=explode ('</td>', $year[1]);
-			$year=trim(strip_tags($year[0]));
+			$year = explode('<b>Year of Release: </b>', $query);
+			$year = explode('</td>', $year[1]);
+			$year = trim(strip_tags($year[0]));
 
-			$name=$gametitle;
+			$name = $gametitle;
 
-			$manufactor=Array();
-			if($company) $manufactor[]=$company;
-			if($developer) $manufactor[]=$developer;
-			if($manufactor) $name=$name." (".implode(', ', $manufactor).")";
+			$manufactor = array();
+			if ($company)
+			{
+				$manufactor[] = $company;
+			}
+			if ($developer)
+			{
+				$manufactor[] = $developer;
+			}
+			if ($manufactor)
+			{
+				$name = $name." (".implode(', ', $manufactor).")";
+			}
 
-			if($year!='n/a') $name=$name." (".$year.")";
+			if ($year!='n/a')
+			{
+				$name=$name." (".$year.")";
+			}
 
-			$location=Array();
-			if($region) $location[]=$region;
-			if($video) $location[]=$video;
-			if($location) $name=$name." (".implode(', ', $location).")";
+			$location = array();
+			if ($region)
+			{
+				$location[] = $region;
+			}
+			if ($video)
+			{
+				$location[] = $video;
+			}
+			if ($location)
+			{
+				$name = $name." (".implode(', ', $location).")";
+			}
 
-			$propertys=Array();
-			if(in_array($rarity, array('Homebrew','Reproduction','Prototype'))) $propertys[]=$rarity;
-			if($model!='n/a') $propertys[]=$model;
-			if($propertys) $name=$name." (".implode(', ', $propertys).")";
+			$propertys = array();
+			if (in_array($rarity, array('Homebrew','Reproduction','Prototype')))
+			{
+				$propertys[] = $rarity;
+			}
+			if ($model!='n/a')
+			{
+				$propertys[] = $model;
+			}
+			if ($propertys)
+			{
+				$name = $name." (".implode(', ', $propertys).")";
+			}
 
 			print "<a href=".$url." target=_blank>".$name.".zip</a>\n";
 
@@ -374,7 +423,9 @@ if($_GET["type"]=='forum')
 
 		print "\n";
 	}
-}else{
+}
+else
+{
 	print "<pre>";
 	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=main>main</a>\n";
 	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=forum>forum</a>\n";
