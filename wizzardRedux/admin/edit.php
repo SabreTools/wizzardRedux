@@ -11,11 +11,6 @@ Requires:
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
-TODO: DO STUFF TO SHOW AND EDIT ROM INFORMATION
-	"<tr><th>Type</th><td><select name='type' id='type'>".
-			"<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>\n".
-			"<option value='disk'".($game_info["type"] == "disk" ? " selected='selected'" : "").">disk</option>\n".
-		"</td></tr>\n".
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
@@ -23,7 +18,8 @@ $getvars = array(
 		"system",			// systems.id
 		"source",			// sources.id
 		"game",				// games.id
-		"page",
+		"file",				// files.id
+		"offset",			// offset for pagination
 		"remove",			// enable deletion mode, see $rmopts for more details
 );
 
@@ -63,7 +59,10 @@ foreach ($getvars as $var)
 //Get thve values for all POST vars ($_GET overrides)
 foreach ($postvars as $var)
 {
-	$$var = (isset($_POST[$var]) ? (isset($$var) && $$var != "" ? $$var : $_POST[$var]) : "");
+	if (!isset($$var) || $$var == "")
+	{
+		$$var = (isset($_POST[$var]) ? $_POST[$var] : "");
+	}
 }
 
 // Set the special check values
@@ -354,11 +353,62 @@ else
 }
 
 // Assuming there are no relevent params (or processing POST is done), show the basic page
-if ($system == "" && $source == "" && $game == "")
+if ($system == "" && $source == "" && $game == "" && $file == "")
 {
 	show_default($link);
 }
-// First and foremost, capture game edit mode. It's exclusive above all others.
+// First and foremost, capture file edit mode. It's exclusive above all others.
+elseif ($file != "")
+{
+	// Retrieve the file info
+	$query = "SELECT files.id AS file,
+				files.name AS name,
+				files.type AS type,
+				checksums.size AS size,
+				checksums.crc AS crc,
+				checksums.md5 AS md5,
+				checksums.sha1 AS sha1
+			FROM files
+			JOIN checksums
+				ON files.id=checksums.file
+			WHERE files.id=".$file;
+	$result = mysqli_query($link, $query);
+	$rom = mysqli_fetch_assoc($result);
+	
+	// Now output the editable information (add form around this)
+	echo "<table>
+<tr>
+	<th>Name</th>
+	<td>".$rom["name"]."</td>
+</tr>
+<tr>
+	<th>Type</th>
+	<td><select name='type' id='type'>
+		<option value='rom'".($game_info["type"] == "rom" ? " selected='selected'" : "").">rom</option>
+		<option value='disk'".($game_info["type"] == "disk" ? " selected='selected'" : "").">disk</option>
+	</td>
+</tr>
+<tr>
+	<th>Size</th>
+	<td>".$rom["size"]."</td>
+</tr>
+<tr>
+	<th>CRC</th>
+	<td>".$rom["crc"]."</td>
+</tr>
+<tr>
+	<th>MD5</th>
+	<td>".$rom["md5"]."</td>
+</tr>
+<tr>
+	<th>SHA-1</th>
+	<td>".$rom["sha1"]."</td>
+</tr>
+</table>";
+	
+	
+}
+// Then capture game edit mode, it also takes precidence over the others.
 elseif ($game != "")
 {	
 	// Retrieve the system listing
