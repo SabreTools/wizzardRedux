@@ -17,26 +17,15 @@ TODO: Most explode/implode can probably be changed to preg_match, just need to d
 // Site whose checkers have been once-overed
 $checked = array (
 		"6502dude",
-		"8BitChip",
-		"8BitCommodoreItalia",
+		"8BitChip",						// Probably dead
+		"8BitCommodoreItalia",			// Probably dead
 		"AcornPreservation",
-		"ADVAnsCEne",
+		"ADVAnsCEne",					// External site only
 		"alexvampire",
 		"AmstradESP",
 		"ANN",
 		"Apple2Online",
 		"AppleIIgsInfo",
-);
-
-// Probably dead sites (incomplete)
-$dead = array (
-		"8BitChip" => 1,
-		"8BitCommodoreItalia" => 2,
-);
-
-// Sites that are purely external
-$external = array (
-		"ADVAnsCEne" => 1,
 );
 
 if (!isset($_GET["source"]))
