@@ -2,9 +2,6 @@
 
 /* ------------------------------------------------------------------------------------
 Add, edit, and remove data from the database manually.
-	
-TODO: Add pagination to game outputs for sources/systems
-	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
