@@ -36,8 +36,7 @@ if ($_GET["page"] && file_exists(str_replace("../", "", htmlspecialchars($_GET["
 else
 {
 	echo "<p>
-So, this is where all admin functions will be linked from. Currently, that page is /pages/admin.php for testability.<br/>
-This will include:
+Administrative Functions Homepage
 <ol>
 	<li><a href='?page=edit'>Add/Edit/Remove a system/source/game/file</a></li>
 	<li><a href='parenting/index.php'>Add/Edit/Remove a parent</a></li>
