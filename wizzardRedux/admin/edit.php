@@ -2,12 +2,6 @@
 
 /* ------------------------------------------------------------------------------------
 Add, edit, and remove data from the database manually.
-
-Requires:
-	system		System id to be used
-	source		Source id to be used
-	game		Game id to be used
-	page		Page number for necessary pagination of some systems/sources
 	
 TODO: Add pagination to game outputs for sources/systems
 	(http://stackoverflow.com/questions/25718856/php-best-way-to-display-x-results-per-page)
