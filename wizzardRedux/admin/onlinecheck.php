@@ -29,6 +29,10 @@ $checked = array (
 		"Arise64",
 		"AtariAge",
 		"Atarimania",
+		"AtariOnline",
+		"BananaRepublic",
+		"bjars",
+		"BrutalDeluxeSoftware",
 );
 
 if (!isset($_GET["source"]))
