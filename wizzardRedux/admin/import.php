@@ -116,7 +116,7 @@ function import_dat($filename, $link)
 	$handle = fopen("../temp/".$filename, "r");
 	if ($handle)
 	{
-		$old = false;
+		$format = "";
 		$machinefound = false;
 		$machinename = "";
 		$description = "";
@@ -134,58 +134,88 @@ function import_dat($filename, $link)
 			// Normalize the whole line, just in case
 			$line = strtr($line, $normalize_chars);
 			
-			// This first block is for XML-derived DATs
-			if ((strpos($line, "<machine") !== false || strpos($line, "<game") !== false) && !$old)
+			// If the input style hasn't been set, set it according to the header
+			if ($format == "")
 			{
-				$machinefound = true;
-				$xml = simplexml_load_string($line.(strpos($line, "<machine")?"</machine>":"</game>"));
-				$machinename = $xml->attributes()["name"];
-				$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
-				$gameid = add_game($sysid, $machinename, $sourceid, $link);
+				if (strpos($line, "<!DOCTYPE datafile") !== false)
+				{
+					$format = "logiqx";
+				}
+				elseif (strpos($line, "<!DOCTYPE softwarelist") !== false)
+				{
+					$format = "softwarelist";
+				}
+				elseif (strpos($line, "clrmamepro (") !== false || strpos($line, "romvault (") !== false)
+				{
+					$format = "romvault";
+				}
+				else
+				{
+					$format = "unknown";
+				}
 			}
-			elseif (strpos($line, "<rom") !== false && $machinefound && !$old)
+			// Process Logiqx XML-derived DATs
+			elseif ($format == "logiqx")
 			{
-				add_rom($line, $machinename, $link, "rom", $gameid, $date);
+				if ((strpos($line, "<machine") !== false || strpos($line, "<game") !== false))
+				{
+					$machinefound = true;
+					$xml = simplexml_load_string($line.(strpos($line, "<machine")?"</machine>":"</game>"));
+					$machinename = $xml->attributes()["name"];
+					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
+					$gameid = add_game($sysid, $machinename, $sourceid, $link);
+				}
+				elseif (strpos($line, "<rom") !== false && $machinefound)
+				{
+					add_rom($line, $machinename, $link, "rom", $gameid, $date);
+				}
+				elseif (strpos($line, "<disk") !== false && $machinefound)
+				{
+					add_rom($line, $machinename, $link, "disk", $gameid, $date);
+				}
+				elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false)d)
+				{			
+					$machinefound = false;
+					$machinename = "";
+					$description = "";
+					$gameid = 0;
+				}
 			}
-			elseif (strpos($line, "<disk") !== false && $machinefound && !$old)
+			// Process SoftwareList XML-derived DATs
+			elseif ($format == "softwarelist")
 			{
-				add_rom($line, $machinename, $link, "disk", $gameid, $date);
+				
 			}
-			elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false) && !$old)
-			{			
-				$machinefound = false;
-				$machinename = "";
-				$description = "";
-				$gameid = 0;
-			}
-			
-			// This block is for the old style DATs
-			if (strpos($line, "game (") !== false)
+			// Process original style RomVault DATs
+			elseif ($format == "romvault")
 			{
-				$old = true;
-			}
-			elseif (strpos($line, "rom (") !== false && $machinefound && $old)
-			{
-				add_rom_old($line, $machinename, $link, "rom", $gameid, $date);
-			}
-			elseif (strpos($line, "disk (") !== false && $machinefound && $old)
-			{
-				add_rom_old($line, $machinename, $link, "disk", $gameid, $date);
-			}
-			elseif (strpos($line, "name") !== false && $old)
-			{
-				$machinefound = true;
-				preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
-				$machinename = $machinename[1];
-				$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
-				$gameid = add_game($sysid, $machinename, $sourceid, $link);
-			}
-			elseif (strpos($line, ")") !== false && $old)
-			{
-				$machinefound = false;
-				$machinename = "";
-				$description = "";
-				$gameid = 0;
+				if (strpos($line, "game (") !== false)
+				{
+					$old = true;
+				}
+				elseif (strpos($line, "name") !== false && !$machinefound)
+				{
+					$machinefound = true;
+					preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
+					$machinename = $machinename[1];
+					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
+					$gameid = add_game($sysid, $machinename, $sourceid, $link);
+				}
+				elseif (strpos($line, "rom (") !== false && $machinefound)
+				{
+					add_rom_old($line, $machinename, $link, "rom", $gameid, $date);
+				}
+				elseif (strpos($line, "disk (") !== false && $machinefound)
+				{
+					add_rom_old($line, $machinename, $link, "disk", $gameid, $date);
+				}
+				elseif (strpos($line, ")") !== false)
+				{
+					$machinefound = false;
+					$machinename = "";
+					$description = "";
+					$gameid = 0;
+				}
 			}
 		}
 		echo "</table><br/>\n";
