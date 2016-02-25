@@ -11,6 +11,22 @@ TODO: Make the else block actually traverse a system and get the information dir
 		like scene releases for Nintendo DS, 3DS, etc. which we can get as rollbacks.
 */
 
+// Create a name to field mapping for each of the findable fields
+$field_mapping = array (
+		"Size:" => "size",
+		"CRC32:" => "crc",
+		"MD5:" => "md5",
+		"SHA-1:" => "sha1",
+		"Decrypted CRC32:" => "crc",
+		"Decrypted MD5:" => "md5",
+		"Decrypted SHA-1:" => "sha1",
+		"Directory:" => "dir",
+		"NFO File:" => "nfo",
+		"Group:" => "group",
+		"Released" => "date",
+		"Section:" => "section",
+);
+
 ini_set('max_execution_time', 6000); // Set the execution time higher because DATs can be big
 
 // auto means create the mapping
@@ -40,94 +56,94 @@ else
 {
 	echo "<a href='page=parsenointro&auto=1'>Auto-generate no-intro name to system mapping</a><br/><br/>\n";
 	
-	$gameid = 1;
+	$gameid = 1; $skip = 0;
 	$errorpage = false;
-	while(!$errorpage)
+	$baddumps = array();
+	while (!$errorpage)
 	{
-		$query = get_data("http://datomatic.no-intro.org/index.php?page=show_record&s=1&n=".str_pad($gameid, 4, "0", STR_PAD_LEFT));
-		$query = explode("\n", $query);
+		// Retrieve the page information
+		$query = get_data("http://datomatic.no-intro.org/index.php?page=show_record&s=28&n=".str_pad($gameid, 4, "0", STR_PAD_LEFT));
+				
+		// The error page case, it means time to stop the cycle
+		// This could result in too many page request too... not sure though
+		if ($query == "" || strpos($query, "I am too busy for this!"))
+		{
+			$errorpage = true;
+			break;
+		}
 		
-		$section = "";
+		// Replace tabs and nbsp by blank string (this make sure that spaces in names aren't removed)
+		$query = str_replace("    ", "", $query);
+		$query = str_replace("\t", "", $query);
+		$query = str_replace("&nbsp;", "", $query);
+		
+		// Split the page and only take the stuff under the header
+		$query = explode("</header>", $query);
+		$query = $query[1];
+		
+		// Split the page and only take the stuff before the sidebar and footer
+		$query = explode("</article>", $query);
+		$query = $query[0];
+		
+		// Remove all tags from the page to make it easier to parse
+		$query = strip_tags($query);
+		
+		// Get rid of all multiple newline sets (has to be done repeatedly because of how searching works)
+		$query = str_replace("\r\n", "\n", $query);
+		for ($i = 0; $i < 10; $i++)
+		{
+			$query = str_replace("\n\n", "\n", $query);
+		}
+		$query = str_replace("\n", "<br/>\n", $query);
+		
+		// Read the processed page into an array and get rid of the first unnecesary items
+		$query = explode("\n", $query);
+		unset($query[0]); unset($query[1]);
+		var_dump($query);
+		die();
+		
+		$rom = array();
+		$next = "";
 		$dump = "";
 		foreach ($query as $line)
 		{
-			if (strpos($line, "I am too busy for this!"))
-			{
-				$errorpage = true;
-				break;
-			}
+			$line = strip_tags($line);
 			
-			if (strpos($line, "romname_section"))
+			// The first line that doesn't mention a trusted dump or verificaiton is the name of the ROM
+			if ($line != "" && $rom["name"] == "")
 			{
-				$section = "romname";
-				echo "Name: ";
+				echo "Name: ".$line."<br/>\n";
+				$rom["name"] = $line;
 			}
-			elseif ($section == "romname" && strpos($line, "&nbsp;"))
+			// Check the key half of all of split-line fields that we know of
+			elseif ($next == "")
 			{
-				echo str_replace("&nbsp;", "", 
-						str_replace("<br />", "", trim($line)))."<br/>";
-				$section = "";
-			}
-			elseif (strpos($line, "ROM data"))
-			{
-				$dump = "rom";
-			}
-			elseif (strpos($line, "Size"))
-			{
-				$section = "size";
-				echo "Size: ";
-			}
-			elseif ($section == "size")
-			{
-				echo str_replace("<td class=\"TableData\" width=\"104px\">", "",
-						str_replace("</td>", "", $line))."<br/>";
-				$section = "";
-			}
-			elseif (strpos($line, "CRC32"))
-			{
-				$section = "crc32";
-				echo "CRC32: ";
-			}
-			elseif ($section == "crc32")
-			{
-				echo str_replace("<td class=\"TableData\">", "", str_replace("</td>", "", $line))."<br/>";
-				$section = "";
-			}
-			elseif (strpos($line, "MD5"))
-			{
-				$section = "md5";
-				echo "MD5: ";
-			}
-			elseif ($section == "md5" && !strpos($line, "<td"))
-			{
-				echo str_replace("<td class=\"TableData\">", "", str_replace("</td>", "", $line))."<br/>";
-				$section = "";
-			}
-			elseif (strpos($line, "SHA-1"))
-			{
-				$section = "sha1";
-				echo "SHA-1: ";
-			}
-			elseif ($section == "sha1")
-			{
-				echo str_replace("<td class=\"TableData\">", "", str_replace("</td>", "", $line))."<br/>";
-				$section = "";
-			}
+				foreach (array_keys($field_mapping) as $key)
+				{
+					if ($line == $key)
+					{
+						echo $key." ";
+						$next = $key;
+					}
+				}
+			}			
+			// Check the value half of all split-line fields that we know of
 			else
 			{
-				//echo htmlspecialchars($line)."<br/>";
+				if (key_exists($next, $field_mapping))
+				{
+					echo $line."<br/>\n";
+					$rom[$field_mapping[$next]] == $line;
+				}
+				$next = "";
 			}
 		}
+		
 		$gameid++;
 		echo "<br/>";
-		if ($gameid > 1000)
-		{
-			die();
-		}
 	}
 	
-	// No-intro pages use POST to update information.
-	// The values are the names, not the numericals
+	echo "Error page hit or ran out of numbers.<br/>";
 }
 
 //https://davidwalsh.name/curl-download
