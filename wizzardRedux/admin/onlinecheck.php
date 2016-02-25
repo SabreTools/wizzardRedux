@@ -38,13 +38,16 @@ $checked = array (
 		"c64com",
 		"c64gamescom",					// Empty checker page?
 		"c64gamesde",
-		
+		"C64Heaven",
+		"C64intros",
 );
 
 if (!isset($_GET["source"]))
 {
+	echo "<h2>Please Choose a Site</h2>\n";
+	
 	// List all files, auto-generate links to proper pages
-	$files = scandir("../sites/");
+	$files = scandir("../sites/", SCANDIR_SORT_NONE);
 	foreach ($files as $file)
 	{
 		if (preg_match("/^.*\.php$/", $file))
