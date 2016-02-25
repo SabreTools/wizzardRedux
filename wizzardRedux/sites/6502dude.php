@@ -4,7 +4,7 @@
 
 $base_dl_url = "http://armas.cbm8bit.com/tapescans/victaps/";
 
-$pages = Array(
+$pages = array(
 		'http://armas.cbm8bit.com/0to9taps.html',
 		'http://armas.cbm8bit.com/ataps.html',
 		'http://armas.cbm8bit.com/btaps.html',
@@ -47,7 +47,7 @@ foreach ($pages as $newfile)
 
 	foreach ($query as $row)
 	{
-		if($row != "")
+		if ($row != "")
 		{
 			$row = explode('<td', $row);
 			$title = trim(str_replace(" ( NO SCAN YET )", "", strip_tags('<td'.$row[1])));
@@ -57,15 +57,15 @@ foreach ($pages as $newfile)
 
 			foreach ($dls as $dl)
 			{
-				if($dl != "")
+				if ($dl != "")
 				{
-					$dl = explode ('"', $dl);
+					$dl = explode('"', $dl);
 					$dl = $dl[0];
 						
-					$ext = explode ('.', $dl);
+					$ext = explode('.', $dl);
 					$ext = $ext[count($ext)-1];
 
-					if($r_query[$dl] != "")
+					if ($r_query[$dl] != "")
 					{
 						$old++;
 					}

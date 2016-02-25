@@ -33,6 +33,12 @@ $checked = array (
 		"BananaRepublic",
 		"bjars",
 		"BrutalDeluxeSoftware",
+		"c16de",
+		"C64ch",
+		"c64com",
+		"c64gamescom",					// Empty checker page?
+		"c64gamesde",
+		
 );
 
 if (!isset($_GET["source"]))
@@ -44,7 +50,7 @@ if (!isset($_GET["source"]))
 		if (preg_match("/^.*\.php$/", $file))
 		{
 			$file = substr($file, 0, sizeof($file) - 5);
-			echo "<a href=\"?page=onlinecheck&source=".$file."&debug=1\">".htmlspecialchars($file)."</a><br/>";
+			echo "<a href=\"?page=onlinecheck&source=".$file."\">".htmlspecialchars($file)."</a><br/>";
 		}
 	}
 
@@ -62,16 +68,15 @@ elseif (!file_exists("../sites/".$_GET["source"].".php"))
 
 $source = $_GET["source"];
 
-// Do all onlinecheck pages use this?
-if (array_key_exists($source, $checked))
+if (in_array($source, $checked))
 {
 	echo "<h2>Loading pages and links...</h2>";
 	
-	$r_query = file("sites/".$source.".txt");
+	$r_query = file("../sites/".$source.".txt");
 	$r_query = array_flip($r_query);
 	
 	// There is the case that all keys will contain a whitespace character at the end
-	$s_query = Array();
+	$s_query = array();
 	while (list($k, $v) = each($r_query))
 	{
 		$s_query[trim($k)] = $r_query[$k];
@@ -79,16 +84,12 @@ if (array_key_exists($source, $checked))
 	$r_query = $s_query;
 	unset($s_query);
 	
-	$found = Array();
+	$found = array();
 	$base_dl_url = "";
-}
 
-// If we get to this point, we assume that it's good
-// Original code: The Wizard of DATz
-include_once("../sites/".$source.".php");
+	// Original code: The Wizard of DATz
+	include_once("../sites/".$source.".php");
 
-if (array_key_exists($source, $checked))
-{
 	echo "<h2>New files:</h2>";
 	
 	foreach ($found as $row)
