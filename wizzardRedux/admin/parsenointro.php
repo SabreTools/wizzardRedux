@@ -86,7 +86,7 @@ else
 		
 		// Get rid of all multiple newline sets (has to be done repeatedly because of how searching works)
 		$query = str_replace("\r\n", "\n", $query);
-		for ($i = 0; $i < 10; $i++)
+		while (strpos($query, "\n\n") !== false)
 		{
 			$query = str_replace("\n\n", "\n", $query);
 		}
