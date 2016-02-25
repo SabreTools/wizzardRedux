@@ -173,7 +173,7 @@ function import_dat($filename, $link)
 				{
 					add_rom($line, $machinename, $link, "disk", $gameid, $date);
 				}
-				elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false)d)
+				elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false))
 				{			
 					$machinefound = false;
 					$machinename = "";
@@ -184,7 +184,29 @@ function import_dat($filename, $link)
 			// Process SoftwareList XML-derived DATs
 			elseif ($format == "softwarelist")
 			{
-				
+				if (strpos($line, "<software") !== false)
+				{
+					$machinefound = true;
+					$xml = simplexml_load_string($line."</software>");
+					$machinename = $xml->attributes()["name"];
+					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
+					$gameid = add_game($sysid, $machinename, $sourceid, $link);
+				}
+				elseif (strpos($line, "<rom") !== false)
+				{
+					add_rom($line, $machinename, $link, "rom", $gameid, $date);
+				}
+				elseif (strpos($line, "<disk") !== false)
+				{
+					add_rom($line, $machinename, $link, "disk", $gameid, $date);
+				}
+				elseif (strpos($line, "</software>") !== false)
+				{
+					$machinefound = false;
+					$machinename = "";
+					$description = "";
+					$gameid = 0;
+				}
 			}
 			// Process original style RomVault DATs
 			elseif ($format == "romvault")
