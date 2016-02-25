@@ -52,7 +52,7 @@ else
 {
 	echo "<a href='page=parsenointro&auto=1'>Auto-generate no-intro name to system mapping</a><br/><br/>\n";
 	
-	$gameid = 1;
+	$gameid = 1; $maxid = 5;
 	$errorpage = false;
 	$roms = array();
 	while (!$errorpage)
@@ -62,7 +62,7 @@ else
 				
 		// The error page case, it means time to stop the cycle
 		// This could result in too many page request too... not sure though
-		if ($query == "" || strpos($query, "I am too busy for this!"))
+		if ($query == "" || strpos($query, "I am too busy for this!") || $gameid > $maxid)
 		{
 			$errorpage = true;
 			break;
@@ -119,6 +119,7 @@ else
 						if (isset($rom[$key]))
 						{
 							// If it is, push the current rom information to the output
+							echo "Pushing rom";
 							array_push($roms, $rom);
 							
 							// We want to blank out everything except size
@@ -131,7 +132,7 @@ else
 							}
 						}
 						
-						echo $key." ";
+						//echo $key." ";
 						$next = $key;
 					}
 				}
@@ -153,6 +154,7 @@ else
 	}
 	
 	echo "Error page hit or ran out of numbers.<br/>";
+	var_dump($roms);
 }
 
 //https://davidwalsh.name/curl-download
