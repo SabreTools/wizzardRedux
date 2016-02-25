@@ -121,7 +121,7 @@ function import_dat($filename, $link)
 		$machinename = "";
 		$description = "";
 		$gameid = 0;
-		$query = "";
+		$comment = false;
 		
 		echo "<h3>Roms Added:</h3>
 	<table border='1'>
@@ -154,8 +154,19 @@ function import_dat($filename, $link)
 					$format = "unknown";
 				}
 			}
+			
+			// If there's an XML-style comment, stop the presses and skip until it's over
+			elseif (strpos($line, "-->") !== false)
+			{
+				$comment = false;
+			}
+			elseif (strpos($line, "<!--") !== false)
+			{
+				$comment = true;
+			}
+			
 			// Process Logiqx XML-derived DATs
-			elseif ($format == "logiqx")
+			elseif ($format == "logiqx" && !$comment)
 			{
 				if ((strpos($line, "<machine") !== false || strpos($line, "<game") !== false))
 				{
@@ -181,8 +192,9 @@ function import_dat($filename, $link)
 					$gameid = 0;
 				}
 			}
+			
 			// Process SoftwareList XML-derived DATs
-			elseif ($format == "softwarelist")
+			elseif ($format == "softwarelist" && !$comment)
 			{
 				if (strpos($line, "<software") !== false)
 				{
@@ -208,6 +220,7 @@ function import_dat($filename, $link)
 					$gameid = 0;
 				}
 			}
+			
 			// Process original style RomVault DATs
 			elseif ($format == "romvault")
 			{
