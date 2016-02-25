@@ -132,7 +132,7 @@ else
 							}
 						}
 						
-						//echo $key." ";
+						echo $key." ";
 						$next = $key;
 					}
 				}
