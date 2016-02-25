@@ -5,10 +5,6 @@ Internal test to see if the No-Intro pages can be traversed reasonably
 
 Requires
 	auto		Set to 1 if a new no-intro mapping needs to be created
-	
-TODO: Make the else block actually traverse a system and get the information directly.
-		This is mostly useless for most systems, but mainly this would be to get things
-		like scene releases for Nintendo DS, 3DS, etc. which we can get as rollbacks.
 */
 
 // Create a name to field mapping for each of the findable fields
@@ -56,9 +52,9 @@ else
 {
 	echo "<a href='page=parsenointro&auto=1'>Auto-generate no-intro name to system mapping</a><br/><br/>\n";
 	
-	$gameid = 1; $skip = 0;
+	$gameid = 1;
 	$errorpage = false;
-	$baddumps = array();
+	$roms = array();
 	while (!$errorpage)
 	{
 		// Retrieve the page information
@@ -99,12 +95,9 @@ else
 		// Read the processed page into an array and get rid of the first unnecesary items
 		$query = explode("\n", $query);
 		unset($query[0]); unset($query[1]);
-		var_dump($query);
-		die();
 		
-		$rom = array();
-		$next = "";
-		$dump = "";
+		$rom = array(); // Individual ROM information
+		$next = ""; // What the key for the next value is
 		foreach ($query as $line)
 		{
 			$line = strip_tags($line);
@@ -122,6 +115,22 @@ else
 				{
 					if ($line == $key)
 					{
+						// Check if the key is already set in the rom array
+						if (isset($rom[$key]))
+						{
+							// If it is, push the current rom information to the output
+							array_push($roms, $rom);
+							
+							// We want to blank out everything except size
+							foreach ($field_mapping as $val)
+							{
+								if ($val != "size")
+								{
+									$rom[$val] = "";
+								}
+							}
+						}
+						
 						echo $key." ";
 						$next = $key;
 					}
@@ -148,7 +157,8 @@ else
 
 //https://davidwalsh.name/curl-download
 /* gets the data from a URL */
-function get_data($url) {
+function get_data($url)
+{
 	$ch = curl_init();
 	$timeout = 5;
 	curl_setopt($ch, CURLOPT_URL, $url);
