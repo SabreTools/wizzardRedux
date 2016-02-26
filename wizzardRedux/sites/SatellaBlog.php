@@ -1,98 +1,101 @@
 <?php
 
+// Original code: The Wizard of DATz
+
 print "<pre>";
 
-	$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-	$r_query=explode ("\r\n","\r\n".$r_query);
-	$r_query=array_flip($r_query);
+$murl = "http://superfamicom.org/blog/page/";
 
-	$URL_Array=array();
+for ($x = 1; $x < 4; $x++)
+{
+	$new = 0;
+	$old = 0;
 
-	$murl= "http://superfamicom.org/blog/page/";
+	print "load: ".$murl.$x."\n";
+	$query = implode('', file($murl.$x));
+	$query = explode('<h2 class="posttitle"><a href="', $query);
+	$query[0] = null;
 
-	for($x=1;$x<4;$x++){
-		$new=0;
-		$old=0;
-
-		print "load: ".$murl.$x."\n";
-		$query=implode ('', file ($murl.$x));
-		$query=explode('<h2 class="posttitle"><a href="',$query);
-		$query[0]=null;
-	
-		foreach($query as $row){
-			if($row){
-				$url=explode('"',$row);
-				$url=$url[0];
-				$title=explode("</a>",$row);
-				$title=explode(">",$title[0]);
-				$title=$title[1];
-				if(!$r_query[$url])
-				{
-					$URL_Array[]=Array($url,$title);
-					$new++;
-				} else {
-					$old++;
-				}
+	foreach ($query as $row)
+	{
+		if ($row)
+		{
+			$url = explode('"', $row);
+			$url = $url[0];
+			$title = explode("</a>", $row);
+			$title = explode(">", $title[0]);
+			$title = $title[1];
+			if (!$r_query[$url])
+			{
+				$found[] = array($url, $title);
+				$new++;
+			}
+			else
+			{
+				$old++;
 			}
 		}
-		print "found new ".$new.", old ".$old."\n";
 	}
-
-	print "<table><tr><td><pre>";
-
-	foreach($URL_Array as $row)
-	{
-		print $row[0]."\n";
-	}
-
-	print "</td><td><pre>";
-
-	foreach($URL_Array as $row)
-	{
-		print "<a href=\"".$row[0]."\" target=_blank>".$row[1]."</a>\n";
-	}
-
-	print "</td></tr></table>";
-
-	$URL_Array=array();
-	$murl="http://superfamicom.org/blog/quick-rom-download-page/";
-	$new=0;
-	$old=0;
-
-	print "load: ".$murl."\n";
-	$query=implode ('', file ($murl));
-	$query=explode("<div class='wdgpo wdgpo_standard_count'>",$query);
-	$query=explode('<div id="sidebar">',$query[1]);
-
-
-
-		$query=explode('<a href="',str_replace('>','"',$query[0]));
-		$query[0]=null;
-	
-		foreach($query as $row){
-			if($row){
-				$url=explode('"',$row);
-				$url=$url[0];
-				if(!$r_query[$url])
-				{
-					$URL_Array[]=$url;
-					$new++;
-				} else {
-					$old++;
-				}
-			}
-		}
-	
 	print "found new ".$new.", old ".$old."\n";
+}
 
-	print "<table><tr><td><pre>";
+print "<table><tr><td><pre>";
 
-	foreach($URL_Array as $row)
+foreach($found as $row)
+{
+	print $row[0]."\n";
+}
+
+print "</td><td><pre>";
+
+foreach ($found as $row)
+{
+	print "<a href=\"".$row[0]."\" target=_blank>".$row[1]."</a>\n";
+}
+
+print "</td></tr></table>";
+
+$found = array();
+$murl = "http://superfamicom.org/blog/quick-rom-download-page/";
+$new = 0;
+$old = 0;
+
+print "load: ".$murl."\n";
+$query = implode('', file($murl));
+$query = explode("<div class='wdgpo wdgpo_standard_count'>", $query);
+$query = explode('<div id="sidebar">', $query[1]);
+
+$query = explode('<a href="', str_replace('>', '"', $query[0]));
+$query[0] = null;
+
+foreach ($query as $row)
+{
+	if ($row)
 	{
-		print "<a href=\"".$row."\" target=_blank>".$row."</a>\n";
+		$url = explode('"', $row);
+		$url = $url[0];
+		if (!$r_query[$url])
+		{
+			$found[] = $url;
+			$new++;
+		}
+		else
+		{
+			$old++;
+		}
 	}
+}
 
-	print "</td></tr></table>";
+print "found new ".$new.", old ".$old."\n";
+
+print "<table><tr><td><pre>";
+
+foreach ($found as $row)
+{
+	print "<a href=\"".$row."\" target=_blank>".$row."</a>\n";
+}
+
+print "</td></tr></table>";
 
 
 ?>

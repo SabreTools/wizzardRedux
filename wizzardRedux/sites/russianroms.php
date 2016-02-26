@@ -1,47 +1,55 @@
 <?php
+
+// Original code: The Wizard of DATz
+
 print "<pre>";
 
-	$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-	$r_query=explode ("\r\n","\r\n".$r_query);
-	$r_query=array_flip($r_query);
+$query = implode('', file('http://russianroms.ru/'));
+$query = explode('?page_id=', $query);
+$query[0] = null;
 
-	$newfiles=Array();
-
-	$query=implode ('', file ('http://russianroms.ru/'));
- 	$query=explode ('?page_id=',$query);
-	$query[0]=null;
-
-	foreach($query as $row){
-		if($row){
-			$row=explode ('"', $row);
-			$row=$row[0];
-			$newfiles[]=$row;
-        }
+$urls = array();
+foreach ($query as $row)
+{
+	if ($row)
+	{
+		$row = explode('"', $row);
+		$row = $row[0];
+		$urls[] = $row;
 	}
+}
 
-	$found = Array();
-
-foreach($newfiles as $newfile){
+foreach ($urls as $newfile)
+{
 	print "load ".$newfile."\n";
-	$query=implode ('', file ("http://russianroms.ru/?page_id=".$newfile));
- 	$query=explode ('"><img src="http://russianroms.narod.ru/linkware.gif"', $query);
-	$query[count($query)-1]=null;
+	$query = implode('', file("http://russianroms.ru/?page_id=".$newfile));
+ 	$query = explode('"><img src="http://russianroms.narod.ru/linkware.gif"', $query);
+	$query[count($query) - 1] = null;
 
-	$old=0;
-	$new=0;
+	$old = 0;
+	$new = 0;
 
-	foreach($query as $row){
-		if($row){
-			$row=explode ('"', $row);
-			$row=$row[count($row)-1];
+	foreach ($query as $row)
+	{
+		if ($row)
+		{
+			$row = explode('"', $row);
+			$row = $row[count($row) - 1];
 
-		//	if(substr($row, 0, 4)!='http') $row=$dir.$row;
+			/*
+			if (substr($row, 0, 4) != 'http')
+			{
+				$row = $dir.$row;
+			}
+			*/
 
-	    	if($r_query[$row])
+	    	if ($r_query[$row])
 			{
 				$old++;
-			}else{
-				$found[]=$row;
+			}
+			else
+			{
+				$found[] = $row;
 				$new++;
 			}
   		}
@@ -51,8 +59,9 @@ foreach($newfiles as $newfile){
 	print "found new:".$new.", old:".$old."\n";
 }
 
-	foreach($found as $row){
-		print "<a href=\"".$row."\">".$row."</a>\n";
-	}
+foreach ($found as $row)
+{
+	print "<a href=\"".$row."\">".$row."</a>\n";
+}
 
 ?>

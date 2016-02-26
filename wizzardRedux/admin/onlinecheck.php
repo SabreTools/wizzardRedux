@@ -110,6 +110,14 @@ $checked = array (
 		"pokeysoft",
 		"redump",						// Import only
 		"Retro64Games",
+		"RetroPrograms",
+		"RH",
+		"rufnoiz",
+		"russianroms",
+		"SacNewsNet",
+		"SatellaBlog",
+		"smartlip",
+		"SMS-Power",
 );
 
 if (!isset($_GET["source"]))
