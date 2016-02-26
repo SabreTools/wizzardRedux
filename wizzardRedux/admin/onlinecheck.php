@@ -6,8 +6,7 @@ Check for new downloadable ROMs from all available sites
 Requires:
 	source		The sourcename to check against (in sites/<source>.php)
 
-TODO: Retool existing onlinecheck.php files to follow the new format
-		2 passes: 1) reformat file and categorize, 2) check code flow to try to optimize
+TODO: Retool existing onlinecheck.php files to follow the new format. 2 passes: 1) reformat file and categorize, 2) check code flow to try to optimize
 TODO: Add a way to figure out if a site is dead based on the original list that WoD created
 TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
 TODO: For page read, can we use the function in parsenointro (the cURL one)?
@@ -20,6 +19,8 @@ TODO: Remove external and import only
 TODO: Merge MESS and MAME in sources
 TODO: Some loadDir functions are useless because they are only used once. Put their code where it should be
 TODO: Maybe look at NES-CartDatabase for No-Intro parsing
+TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
+TODO: VimmsLair uses wget.exe currently. Can this be reamped to use cURL instead (since it's built into PHP)?
 */
 
 // Site whose checkers have been once-overed (not all checked for dead)
@@ -132,6 +133,13 @@ $checked = array (
 		"tosec",						// Import only
 		"TRS80CoCoArchive",
 		"trurip",						// Import only
+		"TZXvault",
+		"UltimateC64TP",
+		"UnofficialCD32Ports",
+		"vgdb",
+		"vic20it",
+		"VideopacNL",
+		"VimmsLair",
 );
 
 if (!isset($_GET["source"]))
