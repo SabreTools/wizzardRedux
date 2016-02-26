@@ -46,6 +46,11 @@ $checked = array (
 		"C64Warez",
 		"CaH4e3",
 		"Cas2Rom",
+		"CasArchive",
+		"computeremuzone",
+		"CPC-Crackers",
+		"CPC-GameReviews",
+		"CPC-Power",					// "full" is no longer active
 );
 
 if (!isset($_GET["source"]))
@@ -69,7 +74,7 @@ if (!isset($_GET["source"]))
 }
 elseif (!file_exists("../sites/".$_GET["source"].".php"))
 {
-	echo "<b>The file you supply must be in /wod/sites/</b><br/>";
+	echo "<b>The file you supply must be in /sites/</b><br/>";
 	echo "<a href='index.php'>Return to home</a>";
 
 	die();
