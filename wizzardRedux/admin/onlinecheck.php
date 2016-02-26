@@ -6,7 +6,7 @@ Check for new downloadable ROMs from all available sites
 Requires:
 	source		The sourcename to check against (in sites/<source>.php)
 
-TODO: Retool existing onlinecheck.php files to follow the new format. 2 passes: 1) reformat file and categorize, 2) check code flow to try to optimize
+TODO: Retool existing onlinecheck.php files to follow the new format. 2) check code flow to try to optimize
 TODO: Add a way to figure out if a site is dead based on the original list that WoD created
 TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
 TODO: For page read, can we use the function in parsenointro (the cURL one)?
@@ -15,7 +15,6 @@ TODO: Remember to replace GLOBALS GET and POST with the proper $_GET, $_POST
 TODO: Document all required GET and POST vars for each page
 TODO: Direct connect to EAB with FTP (ftp:any@ftp.grandis.nu)
 TODO: Comment all of the code...
-TODO: Remove external and import only
 TODO: Merge MESS and MAME in sources
 TODO: Some loadDir functions are useless because they are only used once. Put their code where it should be
 TODO: Maybe look at NES-CartDatabase for No-Intro parsing
