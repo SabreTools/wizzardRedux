@@ -1,63 +1,16 @@
 <?php
 
-print "<pre>";
+// Original code: The Wizard of DATz
 
-$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-$r_query=explode ("\r\n","\r\n".$r_query);
-$r_query=array_flip($r_query);
+print "<pre>";
 
 /*$r2_query=implode ('', file ($_GET["source"]."/pages.txt"));
 $r2_query=explode ("\r\n","\r\n".$r2_query);
 $r2_query=array_flip($r2_query);*/
 
-$r2_query=Array();
-$newURLs=Array();
+$r2_query = array();
 
-function loadDir($Dir,$List,$page){
-	GLOBAL $r_query, $newURLs;
-
-	if($page<10){
-		$curDir="http://cpcrulez.fr/".$Dir."/index.php?list=".$List; //."&p=".$page;
-		print "load ".$curDir."\n";
-		$query=implode ('', file ($curDir));
-
-		$new=0;
-		$old=0;
-
-		$DLs=explode('<a href="/',$query);
-
-		foreach($DLs as $DL){
-			$DL=explode('/index.php?download=',$DL);
-			if($DL[1]){
-				$DL_Dir=str_replace('http:CPCrulez.fr','',str_replace('/','',$DL[0]));
-
-				$DL=explode('"',$DL[1]);
-				$DL=explode('&',$DL[0]);
-				$DL=$DL[0];
-
-				if(!$r_query[$DL_Dir.'*'.$DL])
-				{
-					$newURLs[]=Array($DL_Dir,$DL);
-					$r_query[$DL_Dir.'*'.$DL]=true;
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
-            }
-		}
-
-		print "new: ".$new.", old: ".$old."\n";
-
-		/*$next=explode('>Page suivante &raquo;<',$query);
-		if($next[1]){
-			loadDir($Dir,$List,++$page);
-        }*/
-	}
-}
-
-$Dirs=Array(
+$Dirs = array(
 	'GamesDL_arc',
 	'GamesDL_avt',
 	'GamesDL_div',
@@ -77,7 +30,7 @@ $Dirs=Array(
 	'Scene_Slideshows',
 );
 
-$Lists=Array(
+$Lists = array(
 	'',
 	'Yg',
 	'Yw',
@@ -107,13 +60,15 @@ $Lists=Array(
 	'ew',
 );
 
-foreach($Dirs as $Dir){
-	foreach($Lists as $List){
-		loadDir($Dir,$List,0);
+foreach ($Dirs as $Dir)
+{
+	foreach ($Lists as $List)
+	{
+		loadDir($Dir, $List, 0);
 	}
 }
 
-$Dirs=Array(
+$Dirs = array(
 	'applications_menu_AUDIO',
 	'applications_menu_BUREAU',
 	'applications_menu_CODING',
@@ -144,25 +99,27 @@ $Dirs=Array(
 	'demoscene_tests',
 );
 
-$DLPages=Array();
+$DLPages = array();
 
-foreach($Dirs as $Dir){
-	$new=0;
-	$old=0;
-	$curDir="http://cpcrulez.fr/".$Dir.".htm";
+foreach ($Dirs as $Dir)
+{
+	$new = 0;
+	$old = 0;
+	$curDir = "http://cpcrulez.fr/".$Dir.".htm";
 	print "load ".$curDir."\n";
-	$query=implode ('', file ($curDir));
-	$query=str_replace('<a href="/','<a href="',$query);
-	$query=explode('<a href="',$query);
-	foreach($query as $row){
-		$row=explode('"',$row);
-		$row=explode('.',$row[0]);
-		if($row[1]=='htm')
+	$query = implode('', file($curDir));
+	$query = str_replace('<a href="/', '<a href="', $query);
+	$query = explode('<a href="', $query);
+	foreach ($query as $row)
+	{
+		$row = explode('"', $row);
+		$row = explode('.', $row[0]);
+		if ($row[1] == 'htm')
 		{
-			if(!$r2_query[$row[0]])
+			if (!$r2_query[$row[0]])
 			{
-				$DLPages[]=$row[0];
-				$r2_query[$row[0]]=true;
+				$DLPages[] = $row[0];
+				$r2_query[$row[0]] = true;
 				$new++;
 			}
 			else
@@ -174,31 +131,33 @@ foreach($Dirs as $Dir){
 	print "DLP new: ".$new.", old: ".$old."\n";
 }
 
-foreach($DLPages as $Dir)
+foreach ($DLPages as $Dir)
 {
-	$curDir="http://cpcrulez.fr/".$Dir.".htm";
+	$curDir = "http://cpcrulez.fr/".$Dir.".htm";
 	print "load ".$curDir."\n";
-	$query=implode ('', file ($curDir));
-	$query=str_replace('../','',$query);
+	$query = implode('', file($curDir));
+	$query = str_replace('../', '', $query);
 
-	$new=0;
-	$old=0;
+	$new = 0;
+	$old = 0;
 
-	$DLs=explode('<a href="',$query);
-	array_splice ($DLs,0,1);
+	$DLs = explode('<a href="', $query);
+	array_splice($DLs, 0, 1);
 
-	foreach($DLs as $DL){
-		$DL=explode('"',$DL);
-		$DL=explode('/index.php?download=',$DL[0]);
-		if($DL[1]){
-			$DL_Dir=str_replace('http:CPCrulez.fr','',str_replace('/','',$DL[0]));
-			$DL=explode('&',$DL[1]);
-			$DL=$DL[0];
+	foreach ($DLs as $DL)
+	{
+		$DL = explode('"', $DL);
+		$DL = explode('/index.php?download=', $DL[0]);
+		if ($DL[1])
+		{
+			$DL_Dir = str_replace('http:CPCrulez.fr', '', str_replace('/', '', $DL[0]));
+			$DL = explode('&', $DL[1]);
+			$DL = $DL[0];
 
-			if(!$r_query[$DL_Dir.'*'.$DL])
+			if (!$r_query[$DL_Dir.'*'.$DL])
 			{
-				$newURLs[]=Array($DL_Dir,$DL);
-				$r_query[$DL_Dir.'*'.$DL]=true;
+				$found[] = array($DL_Dir, $DL);
+				$r_query[$DL_Dir.'*'.$DL] = true;
 				$new++;
 			}
 			else
@@ -211,21 +170,74 @@ foreach($DLPages as $Dir)
 	print "new: ".$new.", old: ".$old."\n";
 }
 
-/*print "\nnew dl-pages:\n\n";
+/*
+print "\nnew dl-pages:\n\n";
 
-	print "<table><tr><td><pre>";
-	foreach($DLPages as $row)
-	{
-		print $row."\n";
-	}
-	print "</td></tr></table>";*/
+print "<table><tr><td><pre>";
+foreach ($DLPages as $row)
+{
+	print $row."\n";
+}
+print "</td></tr></table>";
+*/
 
 print "\nnew urls:\n\n";
 
-	print "<table><tr><td><pre>";
-	foreach($newURLs as $row)
-	{
-		print "<a href=\"http://cpcrulez.fr/".$row[0]."/index.php?download=".$row[1]."\" target=_blank>".$row[0].'*'.$row[1]."</a>\n";
+print "<table><tr><td><pre>";
+foreach ($found as $row)
+{
+	print "<a href=\"http://cpcrulez.fr/".$row[0]."/index.php?download=".$row[1]."\" target=_blank>".$row[0].'*'.$row[1]."</a>\n";
+}
+print "</td></tr></table>";
+
+function loadDir($Dir, $List, $page)
+{
+	GLOBAL $r_query, $found;
+
+	if ($page < 10) {
+		$curDir = "http://cpcrulez.fr/".$Dir."/index.php?list=".$List; //."&p=".$page;
+		print "load ".$curDir."\n";
+		$query = implode('', file($curDir));
+
+		$new = 0;
+		$old = 0;
+
+		$DLs = explode('<a href="/', $query);
+
+		foreach ($DLs as $DL)
+		{
+			$DL = explode('/index.php?download=', $DL);
+			if ($DL[1])
+			{
+				$DL_Dir = str_replace('http:CPCrulez.fr', '', str_replace('/', '', $DL[0]));
+
+				$DL = explode('"', $DL[1]);
+				$DL = explode('&', $DL[0]);
+				$DL = $DL[0];
+
+				if (!$r_query[$DL_Dir.'*'.$DL])
+				{
+					$found[] = array($DL_Dir, $DL);
+					$r_query[$DL_Dir.'*'.$DL] = true;
+					$new++;
+				}
+				else
+				{
+					$old++;
+				}
+			}
+		}
+
+		print "new: ".$new.", old: ".$old."\n";
+
+		/*
+		$next = explode('>Page suivante &raquo;<', $query);
+		if ($next[1])
+		{
+			loadDir($Dir, $List, ++$page);
+		}
+		*/
 	}
-	print "</td></tr></table>";
+}
+	
 ?>

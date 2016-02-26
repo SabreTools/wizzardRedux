@@ -51,6 +51,10 @@ $checked = array (
 		"CPC-Crackers",
 		"CPC-GameReviews",
 		"CPC-Power",					// "full" is no longer active
+		"CPC-Rulez",
+		"CrackersVelus",
+		"csdb",
+		"DC",
 );
 
 if (!isset($_GET["source"]))
