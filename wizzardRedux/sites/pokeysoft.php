@@ -1,88 +1,93 @@
 <?php
-	$r_query=implode ('', file ($_GET["source"]."/found.txt"));
-	$r_query=explode ("\r\n",$r_query);
-	$r_query=array_flip($r_query);
 
-	print "<pre>";
+// Original code: The Wizard of DATz
 
-	$found=array();
+print "<pre>";
 
-	$pages=Array(
-		"http://pokeysoft.no/games/atari/a8arc.htm",
-		"http://pokeysoft.no/games/atari/a8str.htm",
-		"http://pokeysoft.no/games/atari/a8util.htm",
-		"http://pokeysoft.no/games/atari/a8demo.htm",
-	);
+$pages = array(
+	"http://pokeysoft.no/games/atari/a8arc.htm",
+	"http://pokeysoft.no/games/atari/a8str.htm",
+	"http://pokeysoft.no/games/atari/a8util.htm",
+	"http://pokeysoft.no/games/atari/a8demo.htm",
+);
 
-	$found=Array();
+foreach ($pages as $page)
+{
+	$count = 0;
+	$new = 0;
 
-	foreach ($pages as $page)
+	print "load ".$page."\n";
+	$query = implode('', file($page));
+	$query = explode('<TR><TD><FONT COLOR="#FFFF00"><A HREF="../files/pokeysoft/', $query);
+	$query[0] = null;
+
+	foreach ($query as $row)
 	{
-		$count=0;
-		$new=0;
+		if ($row)
+		{
+			$count++;
 
-		print "load ".$page."\n";
-		$query=implode ('', file ($page));
-		$query=explode ('<TR><TD><FONT COLOR="#FFFF00"><A HREF="../files/pokeysoft/', $query);
-		$query[0]=null;
+			$row = explode('<TD>', $row);
 
-		foreach($query as $row){
-			if($row){
-				$count++;
+			$id = explode('"', $row[0]);
+			$id = $id[0];
 
-				$row=explode ('<TD>', $row);
+			if (!$r_query[$id])
+			{
+				$new++;
 
-				$id=explode ('"', $row[0]);
-				$id=$id[0];
-
-				if(!$r_query[$id])
+				$title = trim($row[1]);
+				if ($title[0] != '*')
 				{
-					$new++;
+					$author = trim($row[2]);
+					$year = trim($row[3]);
+					$type = explode('</TD>', $row[6]);
+					$type = trim($type[0]);
 
-					$title=trim($row[1]);
-					if($title[0]!='*')
+					if ($type == 'Disk')
 					{
-						$author=trim($row[2]);
-						$year=trim($row[3]);
-						$type=explode('</TD>',$row[6]);
-						$type=trim($type[0]);
-	
-						if($type=='Disk')
+						if ($author && $author != '?' && !strstr($title, $author))
 						{
-							if(($author)&&($author!='?')&&(!strstr($title,$author))) $title=$title." (".$author.")";
-							if(($year)&&(!strstr($year,'?'))) $title=$title." (".$year.")";
+							$title = $title." (".$author.")";
 						}
-
-						if(!$found[$id])
+						if ($year && !strstr($year, '?'))
 						{
-							$found[$id]=Array();
-							$found[$id][url]=$id;
+							$title = $title." (".$year.")";
 						}
-						
-						$found[$id][name][]=str_replace(array('/',':'),array(', ','-'),$title);
 					}
+
+					if (!$found[$id])
+					{
+						$found[$id] = array();
+						$found[$id][url] = $id;
+					}
+					
+					$found[$id][name][] = str_replace(array('/', ':'), array(', ', '-'), $title);
 				}
 			}
 		}
-
-		print "found: ".$count.", new: ".$new."\n\n";
 	}
 
-	print "\nurls:\n\n";
+	print "found: ".$count.", new: ".$new."\n\n";
+}
+
+print "\nurls:\n\n";
 
 
-	print "<table><tr><td><pre>";
+print "<table><tr><td><pre>";
 
-	foreach ($found as $row){
-		print $row[url]."\n";
-	}
+foreach ($found as $row)
+{
+	print $row[url]."\n";
+}
 
-	print "</td><td><pre>";
+print "</td><td><pre>";
 
-	foreach ($found as $row){
-		print "<a href=\"http://pokeysoft.no/games/files/pokeysoft/".$row[url]."\">".implode(', ',$row[name]).".zip</a>\n";
-	}
+foreach ($found as $row)
+{
+	print "<a href=\"http://pokeysoft.no/games/files/pokeysoft/".$row[url]."\">".implode(', ',$row[name]).".zip</a>\n";
+}
 
-	print "</td></tr></table>";
+print "</td></tr></table>";
 
 ?>

@@ -103,6 +103,13 @@ $checked = array (
 		"no-intro",						// Import only
 		"nonbetagood",					// Import only
 		"nongood",						// Import only
+		"Panprase",
+		"PiratedGameCenter",
+		"PokemonGBAroms",
+		"PokemonMiniNet",
+		"pokeysoft",
+		"redump",						// Import only
+		"Retro64Games",
 );
 
 if (!isset($_GET["source"]))

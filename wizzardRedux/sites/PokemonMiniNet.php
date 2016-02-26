@@ -1,39 +1,63 @@
 <?php
 
-$dirs=Array(
+// Original code: The Wizard of DATz
+
+$dirs = array(
 	'http://www.pokemon-mini.net/downloads/',
 );
 
-$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-$r_query=explode ("\r\n","\r\n".$r_query);
-$r_query=array_flip($r_query);
+print "<pre>check folders:\n\n";
 
-$newURLs=Array();
+foreach ($dirs as $dir)
+{
+	listDir($dir);
+}
 
-function listDir($dir){
-	GLOBAL $newURLs, $r_query;
+print "\nnew urls:\n\n";
+
+print "<table><tr><td><pre>";
+
+foreach ($found as $url)
+{
+	print "<a href=\"".$url[1]."\">".$url[0]."</a>\n";
+}
+
+print "</td><td><pre>";
+
+foreach ($found as $url)
+{
+	print $url[1]."\n";
+}
+
+print "</td></tr></table>";
+
+function listDir($dir)
+{
+	GLOBAL $found, $r_query;
 
 	print "load: ".$dir."\n";
 
-	$query=implode ('', file ($dir));
-	$query=explode('<div class="wpfilebase-fileicon"><a href="',$query);
-	$query[0]=null;
+	$query = implode('', file($dir));
+	$query = explode('<div class="wpfilebase-fileicon"><a href="', $query);
+	$query[0] = null;
 
-	$new=0;
-	$old=0;
+	$new = 0;
+	$old = 0;
 
-	foreach($query as $row){
-		if($row){
-			$url=explode('"',$row);
-			$title=$url[2];
-			$url=$url[0];
+	foreach ($query as $row)
+	{
+		if ($row)
+		{
+			$url = explode('"', $row);
+			$title = $url[2];
+			$url = $url[0];
 
-			$ext=explode('.',$url);
-			$ext=$ext[count($ext)-1];
+			$ext = explode('.', $url);
+			$ext = $ext[count($ext) - 1];
 
-			if(!$r_query[$url])
+			if (!$r_query[$url])
 			{
-				$newURLs[]=array($title.'.'.$ext,$url);
+				$found[] = array($title.'.'.$ext, $url);
 				$new++;
 			}
 			else
@@ -46,31 +70,5 @@ function listDir($dir){
 	print "close: ".$dir."\n";
 	print "new: ".$new.", old: ".$old."\n";
 }
-
-print "<pre>check folders:\n\n";
-
-foreach($dirs as $dir)
-{
-	listDir($dir);
-}
-
-print "\nnew urls:\n\n";
-
-print "<table><tr><td><pre>";
-
-foreach($newURLs as $url)
-{
-	print "<a href=\"".$url[1]."\">".$url[0]."</a>\n";
-}
-
-
-print "</td><td><pre>";
-
-foreach($newURLs as $url)
-{
-	print $url[1]."\n";
-}
-
-print "</td></tr></table>";
 
 ?>
