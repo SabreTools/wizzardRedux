@@ -84,6 +84,11 @@ $checked = array (
 		"Konamito",
 		"m3Zz",
 		"magicrip",
+		"MagyarC64HQ",
+		"MAME",							// Import only (softlists)
+		"manosoft",
+		"Mapy",
+		"Marcos64",
 );
 
 if (!isset($_GET["source"]))
