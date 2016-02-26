@@ -118,6 +118,13 @@ $checked = array (
 		"SatellaBlog",
 		"smartlip",
 		"SMS-Power",
+		"soniccenter",
+		"sonicretro",
+		"SpecialProgramSipe",
+		"spectrum4ever",
+		"ssrg",
+		"Stadium64",
+		"StairwayToHell",
 );
 
 if (!isset($_GET["source"]))

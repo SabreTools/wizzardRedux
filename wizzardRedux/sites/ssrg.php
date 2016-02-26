@@ -1,41 +1,38 @@
 <?php
-	if($_GET["start"])
+
+// Original code: The Wizard of DATz
+
+$r_query = array_flip($r_query);
+$start = $r_query[0];
+
+print "<pre>Search for new uploads\n\n";
+
+for ($x = $start; $x < $start + 25; $x++)
+{
+	print "<span style=\"display:none\" >";
+	$query = implode('', file("http://sonicresearch.org/forums/index.php?app=downloads&showfile=".$x));
+	print "</span>";
+
+	if ($query)
 	{
-		$start=$_GET["start"];
-		$fp = fopen($_GET["source"]."/ids.txt", "w");
-		fwrite($fp,	$start);
-		fclose($fp);
+		$gametitle = explode('<title>', $query);
+		$gametitle = explode(' - SSRG Forums</title>', $gametitle[1]);
+		$gametitle = $gametitle[0];
+		print $x."\t<a href=http://sonicresearch.org/forums/index.php?app=downloads&module=display&section=download&do=confirm_download&id=".$x.">".$gametitle."</a>\n";
+
+		$last = $x;
 	}
 	else
 	{
-		$start=implode ('', file ($_GET["source"]."/ids.txt"));
+		print $x."\terror\n";
 	}
+}
 
-	print "<pre>Search for new uploads\n\n";
+if ($last)
+{
+	$start = $last + 1;
+}
 
-	for ($x=$start;$x<$start+25;$x++)
-	{
-		print "<span style=\"display:none\" >";
-		$query=implode ('', file ("http://sonicresearch.org/forums/index.php?app=downloads&showfile=".$x));
-		print "</span>";
-
-		if($query)
-		{
-			$gametitle=explode ('<title>', $query);
-			$gametitle=explode (' - SSRG Forums</title>', $gametitle[1]);
-			$gametitle=$gametitle[0];
-			print $x."\t<a href=http://sonicresearch.org/forums/index.php?app=downloads&module=display&section=download&do=confirm_download&id=".$x.">".$gametitle."</a>\n";
-
-			$last=$x;
-		}
-		else
-		{
-			print $x."\terror\n";
-		}
-	}
-
-	if($last) $start=$last+1;
-
-	print "\nnext startnr\t<a href=?action=onlinecheck&source=".$_GET["source"]."&start=".($start).">".$start."</a>";
+print "\nnext startnr\t".$start;
 
 ?>
