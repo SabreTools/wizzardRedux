@@ -125,7 +125,7 @@ if (isset($_GET["type"]) && $_GET["type"] == 'forum')
 			{
 				print "load: ".$topic." * ".$x."\n";
 	
-				$query = implode('', file("http://atariage.com/forums/forum/".$topic."/page-".$x."?prune_day=100&sort_by=Z-A&sort_key=last_post&topicfilter=all"));
+				$query = get_data("http://atariage.com/forums/forum/".$topic."/page-".$x."?prune_day=100&sort_by=Z-A&sort_key=last_post&topicfilter=all");
 	
 				$next = explode("rel='next'>Next</a></li>", $query);
 	
@@ -187,7 +187,7 @@ if (isset($_GET["type"]) && $_GET["type"] == 'forum')
 						for ($y = 0; $y < 1000; $y++)
 						{
 							print "load: ".$attachset." * ".($y+1)."\n";
-							$b_query = file("http://atariage.com/forums/index.php?app=forums&module=forums&section=attach&tid=".$attachset."&st=".($y * 50));
+							$b_query = get_data("http://atariage.com/forums/index.php?app=forums&module=forums&section=attach&tid=".$attachset."&st=".($y * 50));
 
 							if ($b_query)
 							{
@@ -195,7 +195,6 @@ if (isset($_GET["type"]) && $_GET["type"] == 'forum')
 								$old = 0;
 								$reject = 0;
 
-								$b_query = implode('', $b_query);
 								$b_next = explode("rel='next'>Next</a></li>", $b_query);
 
 								$b_query = explode("post&amp;attach_id=", $b_query);
@@ -300,7 +299,7 @@ elseif($_GET["type"] == 'main')
 
 		print "load page for ".$system[1].", ";
 
-		$query = implode('', file ("http://www.atariage.com/software_list.html?SystemID=".$system[0]."&searchROM=checkbox&recordsPerPage=100000"));
+		$query = get_data("http://www.atariage.com/software_list.html?SystemID=".$system[0]."&searchROM=checkbox&recordsPerPage=100000");
 		$query = explode ('atariage.com/software_page.html?SoftwareLabelID=', $query);
 
 		for ($x = 1; $x < count($query); $x++)
@@ -328,7 +327,7 @@ elseif($_GET["type"] == 'main')
 
 		foreach ($query2 as $row)
 		{
-			$query = implode('', file ("http://www.atariage.com/software_page.html?SoftwareLabelID=".$row));
+			$query = get_data("http://www.atariage.com/software_page.html?SoftwareLabelID=".$row);
 
 			$gametitle = explode('<span class="gametitle">', $query);
 			$gametitle = explode('</span>', $gametitle[1]);

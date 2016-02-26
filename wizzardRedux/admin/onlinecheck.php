@@ -6,11 +6,9 @@ Check for new downloadable ROMs from all available sites
 Requires:
 	source		The sourcename to check against (in sites/<source>.php)
 
-TODO: Retool existing onlinecheck.php files to follow the new format. 2) check code flow to try to optimize
+TODO: Retool existing onlinecheck.php files to follow the new format. 2) replace stuff with cURL 3) check code flow to try to optimize
 TODO: Add a way to figure out if a site is dead based on the original list that WoD created
 TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
-TODO: For page read, can we use the function in parsenointro (the cURL one)?
-TODO: Addendum, page reads done by "getHTML" can probably be replaced by this too
 TODO: Remember to replace GLOBALS GET and POST with the proper $_GET, $_POST
 TODO: Document all required GET and POST vars for each page
 TODO: Direct connect to EAB with FTP (ftp:any@ftp.grandis.nu)
@@ -23,22 +21,7 @@ TODO: VimmsLair uses wget.exe currently. Can this be reamped to use cURL instead
 */
 
 // Site whose checkers have been once-overed (not all checked for dead)
-// TODO: make the mapping to the base url?
 $checked = array (
-		"6502dude",
-		"8BitChip",						// Probably dead
-		"8BitCommodoreItalia",			// Probably dead
-		"AcornPreservation",
-		"alexvampire",
-		"AmstradESP",
-		"ANN",
-		"Apple2Online",
-		"AppleIIgsInfo",
-		"Arise64",
-		"AtariAge",
-		"Atarimania",
-		"AtariOnline",
-		"BananaRepublic",
 		"bjars",
 		"BrutalDeluxeSoftware",
 		"c16de",
@@ -140,6 +123,24 @@ $checked = array (
 		"zxAAA",
 );
 
+// Sites that have been given a second look over (not all sites checked for dead)
+$fixed = array(
+		"6502dude",
+		"8BitChip",						// Probably dead
+		"8BitCommodoreItalia",			// Probably dead
+		"AcornPreservation",
+		"alexvampire",
+		"AmstradESP",
+		"ANN",
+		"Apple2Online",
+		"AppleIIgsInfo",
+		"Arise64",
+		"AtariAge",
+		"Atarimania",
+		"AtariOnline",
+		"BananaRepublic",
+);
+
 if (!isset($_GET["source"]))
 {
 	echo "<h2>Please Choose a Site</h2>\n";
@@ -169,7 +170,7 @@ elseif (!file_exists("../sites/".$_GET["source"].".php"))
 
 $source = $_GET["source"];
 
-if (in_array($source, $checked))
+if (in_array($source, $checked) || in_array($source, $fixed))
 {
 	echo "<h2>Loading pages and links...</h2>";
 	
@@ -178,19 +179,23 @@ if (in_array($source, $checked))
 	$r_query = array_flip($r_query);
 	
 	$found = array();
-	$base_dl_url = "";
 
 	// Original code: The Wizard of DATz
 	include_once("../sites/".$source.".php");
+}
 
-	// Not currently properly used by all
-	echo "<h2>New files:</h2>";
-	
-	foreach ($found as $row)
-	{
-		echo htmlspecialchars($row)."<br/>";
-		echo "<a href='".$base_dl_url.$row[0]."'>".$row[0]."</a><br/>";
-	}
+//https://davidwalsh.name/curl-download
+/* gets the data from a URL */
+function get_data($url)
+{
+	$ch = curl_init();
+	$timeout = 5;
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+	$data = curl_exec($ch);
+	curl_close($ch);
+	return $data;
 }
 
 ?>

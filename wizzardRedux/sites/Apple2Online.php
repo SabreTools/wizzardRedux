@@ -6,7 +6,7 @@ print "<pre>";
 
 $dir = "http://apple2online.com/";
 print "load: ".$dir."\n";
-$query = implode ('', file($dir));
+$query = get_data($dir);
 $query = explode("index.php?p=", $query);
 array_splice($query, 0, 1);
 
@@ -18,7 +18,7 @@ foreach ($query as $row)
 
 	$dir = "http://apple2online.com/index.php?p=".$row[0];
 	print "load: ".$dir."\n";
-	$queryb = implode('', file($dir));
+	$queryb = get_data($dir);
 	$queryb = explode('ddlevelsmenu', str_replace('&amp;', '&', $queryb));
 	$queryb = explode('web_documents/', $queryb[1]);
 	array_splice($queryb, 0, 1);
@@ -47,7 +47,7 @@ foreach ($query as $row)
 
 		if (!$r_query[$DL])
 		{
-			$found[] = array($title,$DL);
+			$found[] = array($title, $DL);
 			$new++;
 			$r_query[$DL] = true;
 		}

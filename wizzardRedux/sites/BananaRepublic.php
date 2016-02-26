@@ -9,13 +9,14 @@ $newfiles = array(
 	'http://www.elysium.filety.pl/GamesArchive.txt',
 );
 
-foreach ($newfiles as $newfile){
+foreach ($newfiles as $newfile)
+{
 	$new = 0;
 	$old = 0;	
 
 	print "load ".$newfile."\n";
-	$query = implode('', file($newfile));
- 	$query = explode ("\r\n", str_replace('-->', '   ', $query));
+	$query = get_data($newfile);
+ 	$query = explode("\r\n", str_replace('-->', '   ', $query));
 
 	foreach ($query as $row)
 	{
@@ -69,4 +70,5 @@ foreach ($found as $row)
 }
 
 print "</td></tr></table>";
+
 ?>

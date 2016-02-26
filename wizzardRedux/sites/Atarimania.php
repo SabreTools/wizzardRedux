@@ -24,7 +24,7 @@ foreach ($systems as $system)
 
 		while ($found)
 		{
-			$query = implode('', file ("http://www.atarimania.com/pgelstsoft.awp?system = ".$system[0]."&type = ".$type."&dump = 1&step = 200&page = ".$page));
+			$query = get_data("http://www.atarimania.com/pgelstsoft.awp?system = ".$system[0]."&type = ".$type."&dump = 1&step = 200&page = ".$page);
 			$query = explode('<tr><td height = "53" width = "373" valign = top><TABLE>', $query);
 
 			if (count($query) == 1)
@@ -33,22 +33,22 @@ foreach ($systems as $system)
 				break;
 			}
 
-			for($x = 1;$x<count($query);$x++)
+			for($x = 1; $x < count($query); $x++)
 			{
-				$titel = explode('.html" CLASS = "LienNoirGras">', $query[$x]);
-				$titel = explode('<', $titel[1]);
-				$titel = trim($titel[0]);
+				$title = explode('.html" CLASS = "LienNoirGras">', $query[$x]);
+				$title = explode('<', $title[1]);
+				$title = trim($title[0]);
 
-				if (!$titel)
+				if (!$title)
 				{
-					$titel = explode('.html" CLASS = "LienBlancGras">', $query[$x]);
-					$titel = explode('<', $titel[1]);
-					$titel = trim($titel[0]);
+					$title = explode('.html" CLASS = "LienBlancGras">', $query[$x]);
+					$title = explode('<', $title[1]);
+					$title = trim($title[0]);
 				}
 
-				$titel2 = explode('" class = "LienNoir">', $query[$x]);
-				$titel2 = explode('<', $titel2[1]);
-				$titel2 = trim($titel2[0]);
+				$title2 = explode('" class = "LienNoir">', $query[$x]);
+				$title2 = explode('<', $title2[1]);
+				$title2 = trim($title2[0]);
 
 				$date = explode('" class = "LienNoir">', $query[$x]);
 				$date = explode('<', $date[3]);
@@ -57,25 +57,25 @@ foreach ($systems as $system)
 				$id = explode('.html" CLASS = "', $query[$x]);
 				$id = $id[0];
 				$url = explode('<A HREF = "', $id);
-				$url = $url[count($url)-1];
+				$url = $url[count($url) - 1];
 				$id = explode('_', $id);
-				$id = $id[count($id)-1];
+				$id = $id[count($id) - 1];
 
-				if ($titel2)
+				if ($title2)
 				{
-					$titel = $titel . " (".str_replace(array('[', ']', '(', ')'), null, $titel2).")";
+					$title = $title . " (".str_replace(array('[', ']', '(', ')'), null, $title2).")";
 				}
 				if ($date)
 				{
-					$titel = $titel . " (".$date.")";
+					$title = $title . " (".$date.")";
 				}
 
-				$titel = str_replace(' / ', ', ', $titel);
-				$titel = str_replace(':', '-', $titel);
+				$title = str_replace(' / ', ', ', $title);
+				$title = str_replace(':', '-', $title);
 				
 				if (!$r_query[$id])
 				{
-					$query2[] = array($id, $titel, $url);
+					$query2[] = array($id, $title, $url);
 				}
 
 				$count++;

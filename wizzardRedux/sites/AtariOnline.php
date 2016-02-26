@@ -13,7 +13,7 @@ if (isset($_GET["type"]) && $_GET["type"] == 'search')
 	foreach ($newfiles as $newfile)
 	{
 		print "load ".$newfile."\n";
-		$query = implode('', file($newfile));
+		$query = get_data($newfile);
 	 	$query = explode('href = "/archiwa/', $query);
 		$query[0] = null;
 	
@@ -27,7 +27,6 @@ if (isset($_GET["type"]) && $_GET["type"] == 'search')
 				$row = explode('"', $row);
 				$row = explode('?', $row[0]);
 				$row = trim($row[0]);
-	
 	
 			  	if ($r_query[$row])
 				{
@@ -54,8 +53,8 @@ elseif (isset($_GET["type"]) && $_GET["type"] == 'compare')
 {
 	if ($GLOBALS[_FILES])
 	{
-		$file_old = implode('', file ($GLOBALS[_FILES][file_old][tmp_name]));
-		$file_old = explode("\r\n", str_replace('\\','+',str_replace('|',' ',$file_old)));
+		$file_old = implode('', file($GLOBALS[_FILES][file_old][tmp_name]));
+		$file_old = explode("\r\n", str_replace('\\', '+', str_replace('|', ' ', $file_old)));
 		array_splice($file_old, 0, 3);
 		$patharray = array();
 		$file_old_b = array();
@@ -100,7 +99,6 @@ elseif (isset($_GET["type"]) && $_GET["type"] == 'compare')
 				{
 					$path = $path.$patharray[$y]."\\";
 				}
-
 			}
 			else
 			{
@@ -123,14 +121,12 @@ elseif (isset($_GET["type"]) && $_GET["type"] == 'compare')
 				<input type = "submit" value = "Send">
 		</form>';
 	}
-
 }
 else
 {
 	print "<pre>";
-	print "load <a href = ?action = onlinecheck&source = ".$_GET["source"]."&type = search>search</a>\n";
-	print "load <a href = ?action = onlinecheck&source = ".$_GET["source"]."&type = compare>compare</a>\n";
-
+	print "load <a href='?page=onlinecheck&source=".$_GET["source"]."&type=search'>search</a>\n";
+	print "load <a href='?page=onlinecheck&source=".$_GET["source"]."&type=compare'>compare</a>\n";
 }
 
 ?>

@@ -10,7 +10,7 @@ for ($page = 0; $page < $max; $page++)
 {
 	$dir = "http://www.apple-iigs.info/logiciels.php?arechercher=&begin=".(($page * 10) + 1);
 	print "load: ".$dir."\n";
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('detlogiciels.php?nom=', $query);
 	array_splice($query, 0, 1);
 
@@ -27,7 +27,7 @@ for ($page = 0; $page < $max; $page++)
 
 		print "load: ".$dir."\n";
 
-		$queryb = implode('', file($dir));
+		$queryb = get_data($dir);
 		$queryb = explode("<a href='../", str_replace("\r", "", $queryb));
 		array_splice($queryb, 0, 1);
 
@@ -41,7 +41,7 @@ for ($page = 0; $page < $max; $page++)
 
 			if (!$r_query[$DL])
 			{
-				$found[] = Array($row.".".$ext, $DL);
+				$found[] = array($row.".".$ext, $DL);
 				$new++;
 				$r_query[$DL] = true;
 			}
@@ -57,13 +57,13 @@ for ($page = 0; $page < $max; $page++)
 
 	if ($notFound)
 	{
-		$page=$max;
+		$page = $max;
 	}
 
 	print "new: ".$new.", old: ".$old."\n";
 }
 
-$dirs = Array(
+$dirs = array(
 	"http://www.apple-iigs.info/logicielspartitions.php",
 	"http://www.apple-iigs.info/logicielsgoldengrail.php",
 );
@@ -75,7 +75,7 @@ foreach ($dirs as $dir)
 	$new = 0;
 	$old = 0;
 	
-	$queryb = implode('', file($dir));
+	$queryb = get_data($dir);
 	$queryb = explode('<tr class', $queryb);
 	array_splice($queryb, 0, 1);
 	
@@ -85,15 +85,15 @@ foreach ($dirs as $dir)
 		$DL = explode('"', $DL[1]);
 		$DL = $DL[0];
 	
-		$titel = explode('</tr>', $row);
-		$titel = trim(strip_tags('<tr class'.$titel[0]));
+		$title = explode('</tr>', $row);
+		$title = trim(strip_tags('<tr class'.$title[0]));
 	
 		$ext = explode('.', $DL);
 		$ext = $ext[count($ext) - 1];
 	
 		if (!$r_query[$DL])
 		{
-			$found[] = array($titel.".".$ext, $DL);
+			$found[] = array($title.".".$ext, $DL);
 			$new++;
 			$r_query[$DL] = true;
 		}
@@ -120,9 +120,9 @@ foreach ($query as $row)
 	$page = explode("'", $row);
 	$page = $page[0];
 
-	$titel = explode("<", $row);
-	$titel = explode(">", $titel[0]);
-	$titel = $titel[1];
+	$title = explode("<", $row);
+	$title = explode(">", $title[0]);
+	$title = $title[1];
 
 	$dir = "http://www.apple-iigs.info/".$page;
 	print "load: ".$dir."\n";
@@ -130,14 +130,14 @@ foreach ($query as $row)
 	$new = 0;
 	$old = 0;
 	
-	$queryb = implode ('', file($dir));
+	$queryb = get_data($dir);
 	$queryb = explode('<tr class', str_replace("\r", "", $queryb));
 	array_splice($queryb, 0, 1);
 	
 	foreach ($queryb as $row)
 	{
-		$titel2 = explode('</tr>', $row);
-		$titel2 = trim(strip_tags('<tr class'.$titel2[0]));
+		$title2 = explode('</tr>', $row);
+		$title2 = trim(strip_tags('<tr class'.$title2[0]));
 	
 		$DLs = explode(" href='../", $row);
 		array_splice($DLs, 0, 1);
@@ -152,7 +152,7 @@ foreach ($query as $row)
 		
 			if (!$r_query[$DL])
 			{
-				$found[] = array($titel." (".$titel2.").".$ext, $DL);
+				$found[] = array($title." (".$title2.").".$ext, $DL);
 				$new++;
 				$r_query[$DL] = true;
 			}

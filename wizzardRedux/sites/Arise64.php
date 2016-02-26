@@ -55,7 +55,7 @@ foreach ($dirs1 as $dir)
 {
 	if ($dir)
 	{
-		listDir($dir,1);
+		listDir($dir, 1);
 	}
 }
 
@@ -63,7 +63,7 @@ foreach ($dirs2 as $dir)
 {
 	if ($dir)
 	{
-		listDir($dir,2);
+		listDir($dir, 2);
 	}
 }
 
@@ -71,7 +71,7 @@ foreach ($dirs3 as $dir)
 {
 	if ($dir)
 	{
-		listDir($dir,3);
+		listDir($dir, 3);
 	}
 }
 
@@ -79,7 +79,7 @@ foreach ($dirs4 as $dir)
 {
 	if ($dir)
 	{
-		listDir($dir,4);
+		listDir($dir, 4);
 	}
 }
 
@@ -106,7 +106,7 @@ function listDir($dir, $mode)
 	GLOBAL $found, $r_query, $base_dl_url;
 
 	print "load: ".$dir."\n";
-	$query = implode('', file($base_dl_url.$dir));
+	$query = get_data($base_dl_url.$dir);
 	$query = explode('Parent Directory</a>', $query);
 	$query = explode('<a href="', $query[1]);
 	$query[0] = null;

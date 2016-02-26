@@ -2,8 +2,6 @@
 
 // Original code: The Wizard of DATz
 
-$base_dl_url = "http://armas.cbm8bit.com/tapescans/victaps/";
-
 $pages = array(
 		'http://armas.cbm8bit.com/0to9taps.html',
 		'http://armas.cbm8bit.com/ataps.html',
@@ -32,32 +30,36 @@ $pages = array(
 		'http://armas.cbm8bit.com/xtaps.html',
 		'http://armas.cbm8bit.com/ytaps.html',
 		'http://armas.cbm8bit.com/ztaps.html',
-		);
+);
 
 foreach ($pages as $newfile)
 {
-	$query = implode ('', file ($newfile));
+	$query = get_data($newfile); // Read the whole page into one string
 	$query = preg_replace('/(\s+)/',' ', $query); // Remove all whitespace
 	$query = preg_replace('/(href=)("?)(\S+?)("?)(>)/','\1"\3"\5', $query); // Make sure all hrefs are quoted properly
-	$query = explode ('<tr ',$query);
-	$query[0] = null;
+	$query = explode ('<tr ',$query); // Separate lines based on table rows
+	unset($query[0]); // The first item is never a match so unset it
 
 	$old = 0;
 	$new = 0;
 
+	// For each table row, process and get links
 	foreach ($query as $row)
 	{
-		if ($row != "")
+		// If the row is not empty or null
+		if ($row)
 		{
-			$row = explode('<td', $row);
-			$title = trim(str_replace(" ( NO SCAN YET )", "", strip_tags('<td'.$row[1])));
-			$info = trim(strip_tags('<td'.$row[2]));
-			$dls = explode ('tapescans/victaps/', $row[3]);
-			$dls[0] = null;
+			$row = explode('<td', $row); // Separate lines based on table cells
+			$title = trim(str_replace(" ( NO SCAN YET )", "", strip_tags('<td'.$row[1]))); // Extract the title from the row
+			$info = trim(strip_tags('<td'.$row[2])); // Extract the information from the row
+			$dls = explode('tapescans/victaps/', $row[3]); // Get any downloads that can be found in the row
+			unset($dls[0]); // The first item is never a match so unset it
 
+			// For each download found, see if we've included it already
 			foreach ($dls as $dl)
 			{
-				if ($dl != "")
+				// If the download is not empty or null
+				if ($dl)
 				{
 					$dl = explode('"', $dl);
 					$dl = $dl[0];
@@ -71,7 +73,7 @@ foreach ($pages as $newfile)
 					}
 					else
 					{
-						$found[] = Array($dl,$title." (".$info.").".$ext);
+						$found[] = array($dl, $title." (".$info.").".$ext);
 						$new++;
 					}
 				}
@@ -84,5 +86,11 @@ foreach ($pages as $newfile)
 }
 
 echo "\n";
+
+foreach ($found as $row)
+{
+	echo htmlspecialchars($row)."<br/>";
+	echo "<a href='http://armas.cbm8bit.com/tapescans/victaps/".$row[0]."'>".$row[0]."</a><br/>";
+}
 
 ?>

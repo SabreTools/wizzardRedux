@@ -2,14 +2,14 @@
 
 // Original code: The Wizard of DATz
 
-$newfiles = Array(
+$newfiles = array(
 	'https://alexvampire.wordpress.com/feed/',
 );
 
 foreach ($newfiles as $newfile)
 {
 	print "load ".$newfile."<br/>\n";
-	$query = implode('', file($newfile));
+	$query = get_data($newfile);
  	$query = explode('<link>', $query);
 	$query[0] = null;
 

@@ -4,7 +4,7 @@
 
 print "<pre>";
 
-$content = implode('', file("http://www.8bitcommodoreitalia.com/index.php?option=com_phocadownload&view=sections&Itemid=101"));
+$content = get_data("http://www.8bitcommodoreitalia.com/index.php?option=com_phocadownload&view=sections&Itemid=101");
 $content = explode('<div class="componentheading">Download generale</div>', $content);
 $content = explode('<div id="phoca-dl-most-viewed-box">', $content[1]);
 $content = explode('<h3>', $content[0]);
@@ -12,7 +12,6 @@ $content[0] = null;
 
 foreach ($content as $row)
 {
-	$found = Array();
 	if ($row)
 	{
 		$new = 0;
@@ -31,8 +30,8 @@ foreach ($content as $row)
 				$categorie = explode('"', $categorie);
 				$categorie = $categorie[0];
 				print "load :".$categorie."<br/>\n";
-							
-				$content2 = implode('', file ("http://www.8bitcommodoreitalia.com/".$categorie."&limit=0"));
+				
+				$content2 = get_data("http://www.8bitcommodoreitalia.com/".$categorie."&limit=0");
 				$content2 = explode('<div class="pd-float"><a href="', $content2);
 				$content2[0] = null;
 				foreach ($content2 as $dl)
@@ -55,7 +54,7 @@ foreach ($content as $row)
 						}
 						else
 						{
-								$old++;
+							$old++;
 						}
 					}
 				}
