@@ -11,11 +11,14 @@ TODO: Retool existing onlinecheck.php files to follow the new format
 TODO: Add a way to figure out if a site is dead based on the original list that WoD created
 TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
 TODO: For page read, can we use the function in parsenointro (the cURL one)?
+TODO: Addendum, page reads done by "getHTML" can probably be replaced by this too
 TODO: Remember to replace GLOBALS GET and POST with the proper $_GET, $_POST
 TODO: Document all required GET and POST vars for each page
 TODO: Direct connect to EAB with FTP (ftp:any@ftp.grandis.nu)
 TODO: Comment all of the code...
 TODO: Remove external and import only
+TODO: Merge MESS and MAME in sources
+TODO: Some loadDir functions are useless because they are only used once. Put their code where it should be
 */
 
 // Site whose checkers have been once-overed (not all checked for dead)
@@ -75,6 +78,12 @@ $checked = array (
 		"heranbago",
 		"HHUG",
 		"i-mockery",
+		"Import64",						// Empty checker page?
+		"Kamming",
+		"karpez",
+		"Konamito",
+		"m3Zz",
+		"magicrip",
 );
 
 if (!isset($_GET["source"]))
