@@ -140,6 +140,17 @@ $checked = array (
 		"vic20it",
 		"VideopacNL",
 		"VimmsLair",
+		"VirtualTR-DOS",
+		"Vizzed",
+		"Vjetnam",
+		"webbedspace",
+		"WhatIsThe2gs",
+		"WinWorld",
+		"WorldOfDragon",
+		"WorldOfSpectrum",
+		"z80ne",
+		"Zandro",						// Import only
+		"zxAAA",
 );
 
 if (!isset($_GET["source"]))
