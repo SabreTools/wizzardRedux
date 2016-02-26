@@ -101,17 +101,9 @@ if (in_array($source, $checked))
 {
 	echo "<h2>Loading pages and links...</h2>";
 	
-	$r_query = file("../sites/".$source.".txt");
+	$r_query = implode('', file("../sites/".$source.".txt"));
+	$r_query = explode("\r\n", $r_query);
 	$r_query = array_flip($r_query);
-	
-	// There is the case that all keys will contain a whitespace character at the end
-	$s_query = array();
-	while (list($k, $v) = each($r_query))
-	{
-		$s_query[trim($k)] = $r_query[$k];
-	}
-	$r_query = $s_query;
-	unset($s_query);
 	
 	$found = array();
 	$base_dl_url = "";
