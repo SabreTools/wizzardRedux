@@ -89,6 +89,12 @@ $checked = array (
 		"manosoft",
 		"Mapy",
 		"Marcos64",
+		"Maybe-Intro",					// Import only
+		"MCBremakes",
+		"MSXbasic",
+		"MSXcassettes",
+		"MyVG5000",
+		"NanoWasp",
 );
 
 if (!isset($_GET["source"]))
