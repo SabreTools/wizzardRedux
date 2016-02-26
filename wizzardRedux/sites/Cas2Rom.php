@@ -1,56 +1,58 @@
 <?php
+
+// Original code: The Wizard of DATz
+
 print "<pre>";
 
-	$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-	$r_query=explode ("\r\n",$r_query);
-	$r_query=array_flip($r_query);
+$page = "http://msxcas2rom.zxq.net/";
 
-$page="http://msxcas2rom.zxq.net/";
+print "load ".$page."\n";
 
-$URLs=Array();
+$old = 0;
+$new = 0;
 
-	print "load ".$page."\n";
+$content = implode('', file($page));
+$content = explode('<a href="', $content);
+$content[0] = null;
 
-	$old=0;
-	$new=0;
+foreach ($content as $row)
+{
+	if ($row)
+	{
+		$url = explode('"', $row);
+		$url = $url[0];
+		$ext = explode('.', $url);
 
-	$content=implode ('', file ($page));
-	$content=explode ('<a href="',$content);
-	$content[0]=null;
+		$title = explode('</a>', $row);
+		$title = trim(strip_tags('<a href="'.$title[0].'</a>'));
 
-	foreach($content as $row){
-		if($row){
-			$url=explode ('"',$row);
-			$url=$url[0];
-			$ext=explode('.',$url);
-
-			$title=explode('</a>',$row);
-			$title=trim(strip_tags('<a href="'.$title[0].'</a>'));
-
-				if(!$r_query[$url])	{
-					$URLs[]=array($url,$title.".".$ext[count($ext)-1]);
-					$new++;
-				} else {
-					$old++;
-				}
+		if (!$r_query[$url])
+		{
+			$found[] = array($url, $title.".".$ext[count($ext) - 1]);
+			$new++;
+		}
+		else
+		{
+			$old++;
 		}
 	}
+}
 
-	print "new ".$new.", old ".$old."\n";
+print "new ".$new.", old ".$old."\n";
 
-	print "<table><tr><td><pre>";
+print "<table><tr><td><pre>";
 
-foreach($URLs as $row)
+foreach ($found as $row)
 {
 	print $row[0]."\n";
 }
 
-	print "</td><td><pre>";
+print "</td><td><pre>";
 
-foreach($URLs as $row)
+foreach ($found as $row)
 {
 	print "<a href=\"".$page.$row[0]."\" target=_blank>".$row[1]."</a>\n";
 }
 
-	print "</td></tr></table>";
+print "</td></tr></table>";
 ?>

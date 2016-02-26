@@ -15,6 +15,7 @@ TODO: Most explode/implode can probably be changed to preg_match, just need to d
 */
 
 // Site whose checkers have been once-overed (not all checked for dead)
+// TODO: make the mapping to the base url?
 $checked = array (
 		"6502dude",
 		"8BitChip",						// Probably dead
@@ -40,6 +41,11 @@ $checked = array (
 		"c64gamesde",
 		"C64Heaven",
 		"C64intros",
+		"c64rulez",
+		"C64Tapes",
+		"C64Warez",
+		"CaH4e3",
+		"Cas2Rom",
 );
 
 if (!isset($_GET["source"]))
