@@ -4,9 +4,7 @@
 Check for new downloadable ROMs from all available sites
 
 Requires:
-	source		The sourcename to check against
-
-Note: This is the most tedious one of all. All of the checks should be named as "sites/<sitename>.php".
+	source		The sourcename to check against (in sites/<source>.php)
 
 TODO: Retool existing onlinecheck.php files to follow the new format
 		2 passes: 1) reformat file and categorize, 2) check code flow to try to optimize
