@@ -19,6 +19,7 @@ TODO: Comment all of the code...
 TODO: Remove external and import only
 TODO: Merge MESS and MAME in sources
 TODO: Some loadDir functions are useless because they are only used once. Put their code where it should be
+TODO: Maybe look at NES-CartDatabase for No-Intro parsing
 */
 
 // Site whose checkers have been once-overed (not all checked for dead)
@@ -28,7 +29,7 @@ $checked = array (
 		"8BitChip",						// Probably dead
 		"8BitCommodoreItalia",			// Probably dead
 		"AcornPreservation",
-		"ADVAnsCEne",					// External site only
+		"ADVAnsCEne",					// Import only
 		"alexvampire",
 		"AmstradESP",
 		"ANN",
@@ -95,6 +96,13 @@ $checked = array (
 		"MSXcassettes",
 		"MyVG5000",
 		"NanoWasp",
+		"NES-CartDatabase",
+		"newgame",
+		"NewRom",
+		"NintendoPlayer",
+		"no-intro",						// Import only
+		"nonbetagood",					// Import only
+		"nongood",						// Import only
 );
 
 if (!isset($_GET["source"]))
