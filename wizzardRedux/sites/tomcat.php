@@ -1,13 +1,10 @@
 <?php
+
+// Original code: The Wizard of DATz
+
 print "<pre>";
 
-	$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-	$r_query=explode ("\r\n","\r\n".$r_query);
-	$r_query=array_flip($r_query);
-
-$found = Array();
-
-$newfiles=Array(
+$newfiles = array(
 	'http://retrospec.sgn.net/users/tomcat/yu/ZX_list.php',
 	'http://retrospec.sgn.net/users/tomcat/yu/C64_list.php',
 	'http://retrospec.sgn.net/users/tomcat/yu/Amiga_list.php',
@@ -19,45 +16,54 @@ $newfiles=Array(
 	'http://retrospec.sgn.net/users/tomcat/yu/Pecom_list.php',
 );
 
-foreach($newfiles as $newfile){
+foreach ($newfiles as $newfile)
+{
 	print "load ".$newfile."\n";
-	$query=implode ('', file ($newfile));
- 	$query=explode ('<tr onmouseover', $query);
-	$query[0]=null;
+	$query = implode('', file($newfile));
+ 	$query = explode('<tr onmouseover', $query);
+	$query[0] = null;
 
-	$old=0;
-	$new=0;
+	$old = 0;
+	$new = 0;
 
-	foreach($query as $row){
-		if($row){
-			$row=explode ('</tr>', $row);
-			$row=explode ('<td', $row[0]);
+	foreach ($query as $row)
+	{
+		if ($row)
+		{
+			$row = explode('</tr>', $row);
+			$row = explode('<td', $row[0]);
 
-			$title=trim(strip_tags('<td'.$row[2]));
-			if($title){
-				$lastTitle=$title;
-			}else{
-				$title=$lastTitle;
+			$title = trim(strip_tags('<td'.$row[2]));
+			if ($title)
+			{
+				$lastTitle = $title;
+			}
+			else
+			{
+				$title = $lastTitle;
 			}
 
-			$info=trim(strip_tags('<td'.$row[3]));
+			$info = trim(strip_tags('<td'.$row[3]));
 
-			$url=explode ('<a href="', $row[5]);
-			$url=explode ('"', $url[1]);
+			$url = explode('<a href="', $row[5]);
+			$url = explode('"', $url[1]);
 
-			if($url[0]){
-				$url=$url[0];
+			if ($url[0])
+			{
+				$url = $url[0];
 	
-				$ext=explode ('.', $url);
-				$ext=$ext[count($ext)-1];
+				$ext = explode('.', $url);
+				$ext = $ext[count($ext) - 1];
 	
-				$title=$title." (".$info.").".$ext;
+				$title = $title." (".$info.").".$ext;
 	
-		    	if($r_query[$url])
+		    	if ($r_query[$url])
 				{
 					$old++;
-				}else{
-					$found[]=Array($url,$title);
+				}
+				else
+				{
+					$found[] = array($url, $title);
 					$new++;
 				}
 			}
@@ -67,54 +73,66 @@ foreach($newfiles as $newfile){
 	print "found new:".$new.", old:".$old."\n\n";
 }
 
-$newfiles=Array(
+$newfiles = array(
 	'http://retrospec.sgn.net/users/tomcat/yu/TRDosReCracks.php',
 );
 
-foreach($newfiles as $newfile){
+foreach ($newfiles as $newfile)
+{
 	print "load ".$newfile."\n";
-	$query=implode ('', file ($newfile));
- 	$query=explode ('<TR>', $query);
-	$query[0]=null;
+	$query = implode('', file($newfile));
+ 	$query = explode('<TR>', $query);
+	$query[0] = null;
 
-	$old=0;
-	$new=0;
+	$old = 0;
+	$new = 0;
 
-	foreach($query as $row){
-		if($row){
-			$row=explode ('<td', $row);
+	foreach($query as $row)
+	{
+		if ($row)
+		{
+			$row = explode('<td', $row);
 
-			$title=trim(strip_tags('<td'.$row[2]));
-			if($title){
-				$lastTitle=$title;
-			}else{
-				$title=$lastTitle;
+			$title = trim(strip_tags('<td'.$row[2]));
+			if ($title)
+			{
+				$lastTitle = $title;
+			}
+			else
+			{
+				$title = $lastTitle;
 			}
 			
-			$info=Array();
+			$info = array();
 
-			for($x=5;$x<=8;$x++)
+			for ($x = 5; $x <= 8; $x++)
 			{
-				$temp=trim(strip_tags('<td'.$row[$x]));
-				if($temp)$info[]=$temp;
+				$temp = trim(strip_tags('<td'.$row[$x]));
+				if ($temp)
+				{
+					$info[] = $temp;
+				}
 			}
 
-			$url=explode ('<a href="', $row[4]);
-			$url=explode ('"', $url[1]);
+			$url = explode('<a href="', $row[4]);
+			$url = explode('"', $url[1]);
 
-			if($url[0]){
-				$url=$url[0];
+			if ($url[0])
+			{
+				$url = $url[0];
 	
-				$ext=explode ('.', $url);
-				$ext=$ext[count($ext)-1];
+				$ext = explode('.', $url);
+				$ext = $ext[count($ext) - 1];
 	
-				$title=$title." (".implode(') (',$info).").".$ext;
+				$title = $title." (".implode(') (', $info).").".$ext;
 	
-		    	if($r_query[$url])
+		    	if ($r_query[$url])
 				{
 					$old++;
-				}else{
-					$found[]=Array($url,$title);
+				}
+				else
+				{
+					$found[] = array($url, $title);
 					$new++;
 				}
    			}
@@ -126,13 +144,15 @@ foreach($newfiles as $newfile){
 
 print "<table><tr><td><pre>";
 
-foreach($found as $row){
+foreach ($found as $row)
+{
 	print $row[0]."\n";
 }
 
 print "</td><td><pre>";
 
-foreach($found as $row){
+foreach ($found as $row)
+{
 	print "<a href=\"http://retrospec.sgn.net/users/tomcat/yu/".$row[0]."\">".$row[1]."</a>\n";
 }
 

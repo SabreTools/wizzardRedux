@@ -125,6 +125,13 @@ $checked = array (
 		"ssrg",
 		"Stadium64",
 		"StairwayToHell",
+		"Symlink",
+		"TapProject",
+		"Tiddles",
+		"tomcat",
+		"tosec",						// Import only
+		"TRS80CoCoArchive",
+		"trurip",						// Import only
 );
 
 if (!isset($_GET["source"]))
