@@ -30,7 +30,6 @@ $checked = array (
 		"8BitChip",						// Probably dead
 		"8BitCommodoreItalia",			// Probably dead
 		"AcornPreservation",
-		"ADVAnsCEne",					// Import only
 		"alexvampire",
 		"AmstradESP",
 		"ANN",
@@ -67,14 +66,12 @@ $checked = array (
 		"Demotopia",
 		"DigitalDream",
 		"DigitalDungeon",
-		"DuncanTwain",					// Import only
 		"EAB",
 		"Edicolac64",
 		"EludeVisibility",
 		"ep128hu",
 		"Fandal",
 		"Gamebase64",
-		"good",							// Import only
 		"GratisSaugen",
 		"hackedroms",
 		"heranbago",
@@ -87,11 +84,9 @@ $checked = array (
 		"m3Zz",
 		"magicrip",
 		"MagyarC64HQ",
-		"MAME",							// Import only (softlists)
 		"manosoft",
 		"Mapy",
 		"Marcos64",
-		"Maybe-Intro",					// Import only
 		"MCBremakes",
 		"MSXbasic",
 		"MSXcassettes",
@@ -101,15 +96,11 @@ $checked = array (
 		"newgame",
 		"NewRom",
 		"NintendoPlayer",
-		"no-intro",						// Import only
-		"nonbetagood",					// Import only
-		"nongood",						// Import only
 		"Panprase",
 		"PiratedGameCenter",
 		"PokemonGBAroms",
 		"PokemonMiniNet",
 		"pokeysoft",
-		"redump",						// Import only
 		"Retro64Games",
 		"RetroPrograms",
 		"RH",
@@ -130,9 +121,7 @@ $checked = array (
 		"TapProject",
 		"Tiddles",
 		"tomcat",
-		"tosec",						// Import only
 		"TRS80CoCoArchive",
-		"trurip",						// Import only
 		"TZXvault",
 		"UltimateC64TP",
 		"UnofficialCD32Ports",
@@ -149,7 +138,6 @@ $checked = array (
 		"WorldOfDragon",
 		"WorldOfSpectrum",
 		"z80ne",
-		"Zandro",						// Import only
 		"zxAAA",
 );
 
