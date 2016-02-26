@@ -151,6 +151,9 @@ else
 		
 		$gameid++;
 		echo "<br/>";
+		
+		// Wait 5 seconds to avoid flooding the server
+		sleep(5);
 	}
 	
 	echo "Error page hit or ran out of numbers.<br/>";
