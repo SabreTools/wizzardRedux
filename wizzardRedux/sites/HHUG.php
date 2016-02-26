@@ -1,46 +1,49 @@
 <?php
 
+// Original code: The Wizard of DATz
+
 print "<pre>";
 
-	$r_query=implode ('', file ($_GET["source"]."/ids.txt"));
-	$r_query=explode ("\r\n","\r\n".$r_query);
-	$r_query=array_flip($r_query);
+for ($x = 1; $x <= 10; $x++)
+{
+	$new = 0;
+	$old = 0;
+	
+	$url = "http://hhug.me/?tags=dumps&page=".$x;
 
-	$URL_Array=array();
+	print "load: ".$url."\n";
 
-	for($x=1;$x<=10;$x++)
+	$query = implode('', file($url));
+	$query = explode("<a href=\"uploads/dumps/", str_replace("\r\n", '', $query));
+	$query[0] = null;
+	foreach ($query as $row)
 	{
-		$new=0;
-		$old=0;
-		
-		$url= "http://hhug.me/?tags=dumps&page=".$x;
-
-		print "load: ".$url."\n";
-
-		$query=implode ('', file ($url));
-		$query=explode("<a href=\"uploads/dumps/",str_replace("\r\n",'',$query));
-		$query[0]=null;
-		foreach($query as $row){
-			if($row){
-				$url=explode('"',$row);
-				$url=$url[0];
-				if(!$r_query[$url])
-				{
-					$URL_Array[]=$url;
-					$new++;
-				} else {
-					$old++;
-				}
+		if ($row)
+		{
+			$url = explode('"', $row);
+			$url = $url[0];
+			if (!$r_query[$url])
+			{
+				$found[] = $url;
+				$new++;
+			}
+			else
+			{
+				$old++;
 			}
 		}
-		print "found new ".$new.", old ".$old."\n";
-	
-		if(!$new&&!$old) break;
 	}
+	print "found new ".$new.", old ".$old."\n";
 
-	foreach($URL_Array as $row)
+	if (!$new && !$old)
 	{
-		print "<a href=\"http://hhug.me/uploads/dumps/".$row."\" target=_blank>".$row."</a>\n";
+		break;
 	}
+}
+
+foreach ($found as $row)
+{
+	print "<a href=\"http://hhug.me/uploads/dumps/".$row."\" target=_blank>".$row."</a>\n";
+}
 
 ?>

@@ -15,6 +15,7 @@ TODO: Remember to replace GLOBALS GET and POST with the proper $_GET, $_POST
 TODO: Document all required GET and POST vars for each page
 TODO: Direct connect to EAB with FTP (ftp:any@ftp.grandis.nu)
 TODO: Comment all of the code...
+TODO: Remove external and import only
 */
 
 // Site whose checkers have been once-overed (not all checked for dead)
@@ -61,13 +62,19 @@ $checked = array (
 		"Demotopia",
 		"DigitalDream",
 		"DigitalDungeon",
-		"DuncanTwain",					// Empy checker page?
+		"DuncanTwain",					// Import only
 		"EAB",
 		"Edicolac64",
 		"EludeVisibility",
 		"ep128hu",
 		"Fandal",
 		"Gamebase64",
+		"good",							// Import only
+		"GratisSaugen",
+		"hackedroms",
+		"heranbago",
+		"HHUG",
+		"i-mockery",
 );
 
 if (!isset($_GET["source"]))
