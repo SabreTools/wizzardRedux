@@ -66,6 +66,10 @@ $checked = array (
 		"DuncanTwain",					// Empy checker page?
 		"EAB",
 		"Edicolac64",
+		"EludeVisibility",
+		"ep128hu",
+		"Fandal",
+		"Gamebase64",
 );
 
 if (!isset($_GET["source"]))
@@ -111,6 +115,7 @@ if (in_array($source, $checked))
 	// Original code: The Wizard of DATz
 	include_once("../sites/".$source.".php");
 
+	// Not currently properly used by all
 	echo "<h2>New files:</h2>";
 	
 	foreach ($found as $row)
