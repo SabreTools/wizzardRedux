@@ -18,14 +18,13 @@ TODO: Some loadDir functions are useless because they are only used once. Put th
 TODO: Maybe look at NES-CartDatabase for No-Intro parsing
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
 TODO: VimmsLair uses wget.exe currently. Can this be reamped to use cURL instead (since it's built into PHP)?
+TODO: Can we run all online checks in a coherent way (in series, that is)?
 */
+
+ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
 
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
-		"bjars",
-		"BrutalDeluxeSoftware",
-		"c16de",
-		"C64ch",
 		"c64com",
 		"c64gamescom",					// Empty checker page?
 		"c64gamesde",
@@ -123,11 +122,11 @@ $checked = array (
 		"zxAAA",
 );
 
-// Sites that have been given a second look over (not all sites checked for dead)
+// Sites that have been given a second look over (all sites checked for dead)
 $fixed = array(
 		"6502dude",
-		"8BitChip",						// Probably dead
-		"8BitCommodoreItalia",			// Probably dead
+		"8BitChip",
+		"8BitCommodoreItalia",
 		"AcornPreservation",
 		"alexvampire",
 		"AmstradESP",
@@ -139,6 +138,17 @@ $fixed = array(
 		"Atarimania",
 		"AtariOnline",
 		"BananaRepublic",
+		"bjars",
+		"BrutalDeluxeSoftware",
+		"c16de",
+		"C64ch",
+);
+
+// Sites that are probably dead
+$dead = array(
+		"8BitChip",
+		"8BitCommodoreItalia",
+		"Atarimania",
 );
 
 if (!isset($_GET["source"]))
@@ -152,7 +162,8 @@ if (!isset($_GET["source"]))
 		if (preg_match("/^.*\.php$/", $file))
 		{
 			$file = substr($file, 0, sizeof($file) - 5);
-			echo "<a href=\"?page=onlinecheck&source=".$file."\">".htmlspecialchars($file)."</a><br/>";
+			echo "<a href=\"?page=onlinecheck&source=".$file."\">".htmlspecialchars($file).
+				(in_array($file, $dead) ? " (Dead)" : "")."</a><br/>";
 		}
 	}
 
@@ -184,18 +195,40 @@ if (in_array($source, $checked) || in_array($source, $fixed))
 	include_once("../sites/".$source.".php");
 }
 
-//https://davidwalsh.name/curl-download
-/* gets the data from a URL */
+//http://nadeausoftware.com/articles/2007/06/php_tip_how_get_web_page_using_curl
+//http://stackoverflow.com/questions/4372710/php-curl-https
+/**
+ * Get a web file (HTML, XHTML, XML, image, etc.) from a URL.  Return an
+ * array containing the HTTP server response header fields and content.
+ */
 function get_data($url)
 {
-	$ch = curl_init();
-	$timeout = 5;
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-	$data = curl_exec($ch);
-	curl_close($ch);
-	return $data;
+    $options = array(
+        CURLOPT_RETURNTRANSFER => true,     // return web page
+        CURLOPT_HEADER         => false,    // don't return headers
+        CURLOPT_FOLLOWLOCATION => true,     // follow redirects
+        CURLOPT_ENCODING       => "",       // handle all encodings
+        CURLOPT_USERAGENT      => "spider", // who am i
+        CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+        CURLOPT_CONNECTTIMEOUT => 120,      // timeout on connect
+        CURLOPT_TIMEOUT        => 120,      // timeout on response
+        CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+    	CURLOPT_SSL_VERIFYPEER => false     // Disabled SSL Cert checks
+    );
+
+    $ch      = curl_init( $url );
+    curl_setopt_array( $ch, $options );
+    $content = curl_exec( $ch );
+    $err     = curl_errno( $ch );
+    $errmsg  = curl_error( $ch );
+    $header  = curl_getinfo( $ch );
+    curl_close( $ch );
+
+    $header['errno']   = $err;
+    $header['errmsg']  = $errmsg;
+    $header['content'] = $content;
+    $header = implode('', $header);
+    return $header;
 }
 
 ?>

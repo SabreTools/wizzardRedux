@@ -2,23 +2,16 @@
 
 // Original code: The Wizard of DATz
 
-if ($_GET["start"])
-{
-	$start=$_GET["start"];
-	$fp = fopen("sites/".$source.".txt", "w");
-	fwrite($fp,	$start);
-	fclose($fp);
-}
-else
-{
-	$start=implode('', $r_query);
-}
+// TODO: Fix naming issue (comes up with "Array" for one part)
+// TODO: Find end to list without having to add start
+
+$start = implode('', $r_query);
 
 print "<pre>Search for new uploads\n\n";
 
-for ($x = $start; $x < $start + 50; $x++)
+for ($x = $start; $x < $start + 100; $x++)
 {
-	$query = trim(implode('', file("http://c64.ch/demos/realdetail.php?id=".$x)));
+	$query = trim(get_data("http://c64.ch/demos/realdetail.php?id=".$x));
 
 	$OK = explode('C64.CH - The C64 Demo Portal - News', $query);
 
@@ -72,6 +65,6 @@ if ($last)
 	$start = $last + 1;
 }
 
-print "\nnext startnr\t<a href=?action=onlinecheck&source=".$_GET["source"]."&start=".($start).">".$start."</a>";
+print "\nnext startnr\t".($start)."<br/>\n";
 
 ?>

@@ -426,8 +426,8 @@ elseif($_GET["type"] == 'main')
 else
 {
 	print "<pre>";
-	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=main>main</a>\n";
-	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=forum>forum</a>\n";
+	print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=main>main</a>\n";
+	print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=forum>forum</a>\n";
 
 }
 ?>

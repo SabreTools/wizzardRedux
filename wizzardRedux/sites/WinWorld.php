@@ -20,6 +20,7 @@ $badRoot = array(
 
 $error = 0;
 
+/*
 if (!$_GET["cookie"])
 {
 	print"<form method=\"get\" action=\"?\">
@@ -31,9 +32,10 @@ if (!$_GET["cookie"])
 }
 else
 {
+*/
 	print "<pre>check folders:\n\n";
 	listDir("library","library", $_GET["cookie"], 1);
-}
+//}
 
 print "\nnew urls:\n\n";
 

@@ -6,7 +6,7 @@ print "<pre>";
 
 $dir = "http://brutaldeluxe.fr/projects/cassettes/index.html";
 print "load: ".$dir."\n";
-$query = implode('', file($dir));
+$query = get_data($dir);
 $query = preg_replace('/\s+/', " ", $query);
 $query = explode('name="current">Apple Cassettes Tapes</a>', $query);
 $query = explode('</ul>', $query[1]);
@@ -26,7 +26,7 @@ foreach ($query as $row)
 
 	$dir = "http://brutaldeluxe.fr/".$url;
 	print "load: ".$dir."\n";
-	$queryb = implode('', file($dir));
+	$queryb = get_data($dir);
 	$queryb = preg_replace('/\s+/', " ", $queryb);
 	$queryb = explode('<tr>', $queryb);
 	array_splice($queryb, 0, 1);
@@ -105,7 +105,7 @@ function listDir($dir)
 
 	print "load: ".$dir."\n";
 
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('>Parent Directory<', $query);
 	if ($query[1])
 	{

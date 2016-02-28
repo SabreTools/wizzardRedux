@@ -30,7 +30,7 @@ function listDir($dir)
 
 	print "load: ".$dir."\n";
 
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('>Parent Directory<', $query);
 	if ($query[1])
 	{
