@@ -1,13 +1,13 @@
 <?php
 
 // Original code: The Wizard of DATz
-
+$r_query = array_flip($r_query);
 $z_query = array();
 
 foreach ($r_query as $row)
 {
 	$row = explode("\t", $row);
-	$z_query[preg_replace('/\W/', null, strtr($row[1], $GLOBALS['normalize_chars']))] = true;
+	$z_query[preg_replace('/\W/', null, strtr($row[1], $normalize_chars))] = true;
 }
 
 print "<pre>";
@@ -18,7 +18,7 @@ for ($x = $start; $x < $start + 100; $x++)
 	$new = 0;
 	$old = 0;
 
-	$query = implode('', file("http://computeremuzone.com/?id=games&cat=&val=&order=nom&pag=".$x));
+	$query = get_data("http://computeremuzone.com/?id=games&cat=&val=&order=nom&pag=".$x);
 	$query = explode('<table width="100%" border=0 cellpadding="0" cellspacing="0" cols=8 >', $query);
 	$query = explode('</table>', $query[1]);
 	$query = explode('<tr', $query[0]);

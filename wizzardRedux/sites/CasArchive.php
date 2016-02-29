@@ -27,7 +27,7 @@ $add = array (
 for ($x = 1; $x < 9; $x++)
 {
 	print "load http://cas-archive.pigwa.net/cas".$x.".htm\n";
-	$query = implode('', file("http://cas-archive.pigwa.net/cas".$x.".htm"));
+	$query = get_data("http://cas-archive.pigwa.net/cas".$x.".htm");
 	$query = explode('<a href="ftp://ftp.pigwa.net/stuff/collections/stryker/cas/', $query);
 	$query[0] = null;
 	$addnr = 0;

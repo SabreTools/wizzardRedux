@@ -1,6 +1,6 @@
 <?php
 
-/*
+/* ------------------------------------------------------------------------------------
 Check for new downloadable ROMs from all available sites
 
 Requires:
@@ -19,26 +19,12 @@ TODO: Maybe look at NES-CartDatabase for No-Intro parsing
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
 TODO: VimmsLair uses wget.exe currently. Can this be reamped to use cURL instead (since it's built into PHP)?
 TODO: Can we run all online checks in a coherent way (in series, that is)?
-*/
+ ------------------------------------------------------------------------------------ */
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
 
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
-		"c64com",
-		"c64gamescom",					// Empty checker page?
-		"c64gamesde",
-		"C64Heaven",
-		"C64intros",
-		"c64rulez",
-		"C64Tapes",
-		"C64Warez",
-		"CaH4e3",
-		"Cas2Rom",
-		"CasArchive",
-		"computeremuzone",
-		"CPC-Crackers",
-		"CPC-GameReviews",
 		"CPC-Power",					// "full" is no longer active
 		"CPC-Rulez",
 		"CrackersVelus",
@@ -142,6 +128,20 @@ $fixed = array(
 		"BrutalDeluxeSoftware",
 		"c16de",
 		"C64ch",
+		"c64com",
+		"c64gamescom",					// Empty checker page?
+		"c64gamesde",
+		"C64Heaven",
+		"C64intros",
+		"c64rulez",
+		"C64Tapes",
+		"C64Warez",
+		"CaH4e3",
+		"Cas2Rom",
+		"CasArchive",
+		"computeremuzone",
+		"CPC-Crackers",
+		"CPC-GameReviews",
 );
 
 // Sites that are probably dead
@@ -149,6 +149,7 @@ $dead = array(
 		"8BitChip",
 		"8BitCommodoreItalia",
 		"Atarimania",
+		"Cas2Rom",
 );
 
 if (!isset($_GET["source"]))

@@ -11,7 +11,7 @@ print "load ".$page."\n";
 $old = 0;
 $new = 0;
 
-$content = implode('', file($page));
+$content = get_data($page);
 $content = explode('<a href="', $content);
 $content[0] = null;
 
