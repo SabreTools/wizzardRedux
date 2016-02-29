@@ -4,12 +4,16 @@
 
 print "<pre>";
 
-$page="http://www.c64heaven.com/";
+$page = "http://www.c64heaven.com/";
 
 print "load ".$page."\n";
 
-$content = implode('', file($page));
+$content = get_data($page);
 
-print str_replace(array('style'), null, $content);
+preg_match_all("/<a href=\"(.*)\">/", $content, $links);
+$links = $links[1];
+var_dump($links);
+
+print str_replace('style', null, $content);
 
 ?>

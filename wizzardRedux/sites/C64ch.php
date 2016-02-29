@@ -3,7 +3,7 @@
 // Original code: The Wizard of DATz
 
 // TODO: Fix naming issue (comes up with "Array" for one part)
-// TODO: Find end to list without having to add start
+// TODO: Find end of list without having to add start
 
 $start = implode('', $r_query);
 

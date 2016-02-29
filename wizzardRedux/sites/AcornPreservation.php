@@ -51,6 +51,6 @@ foreach ($pages as $page)
 
 foreach ($found as $row)
 {
-	print "<a href=\"http://www.8bitchip.info/".$row."\">".$row."</a><br/>\n";
+	print "<a href=\"http://www.acornpreservation.org/".$row."\">".$row."</a><br/>\n";
 }
 ?>

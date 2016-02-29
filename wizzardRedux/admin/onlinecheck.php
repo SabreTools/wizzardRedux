@@ -163,7 +163,7 @@ if (!isset($_GET["source"]))
 		{
 			$file = substr($file, 0, sizeof($file) - 5);
 			echo "<a href=\"?page=onlinecheck&source=".$file."\">".htmlspecialchars($file).
-				(in_array($file, $dead) ? " (Dead)" : "")."</a><br/>";
+				"</a>".(in_array($file, $dead) ? " (Dead)" : "")."<br/>";
 		}
 	}
 
@@ -223,12 +223,8 @@ function get_data($url)
     $errmsg  = curl_error( $ch );
     $header  = curl_getinfo( $ch );
     curl_close( $ch );
-
-    $header['errno']   = $err;
-    $header['errmsg']  = $errmsg;
-    $header['content'] = $content;
-    $header = implode('', $header);
-    return $header;
+    
+    return $content;
 }
 
 ?>

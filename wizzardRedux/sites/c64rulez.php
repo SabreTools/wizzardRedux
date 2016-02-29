@@ -15,7 +15,7 @@ $newfiles = array (
 foreach ($newfiles as $newfile)
 {
 	print "load ".$newfile."\n";
-	$query = implode('', file ($newfile));
+	$query = get_data($newfile);
  	$query = explode("\n", $query);
  	$dir = explode("/", $newfile);
 	$dir[count($dir) - 1] = null;

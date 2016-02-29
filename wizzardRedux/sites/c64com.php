@@ -34,7 +34,7 @@ function parse_games($type, $start)
 	
 	for ($x = $start; $x < $start + 50; $x++)
 	{
-		$query = implode ('', file($url[$type].$x));
+		$query = get_data($url[$type].$x);
 		if ($type == 'demos')
 		{
 			$query = explode('<td height="41" align="center" valign="middle" bgcolor="#535353">', $query);

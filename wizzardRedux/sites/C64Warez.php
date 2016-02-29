@@ -2,10 +2,15 @@
 
 // Original code: The Wizard of DATz
 
+// TODO: This site needs an overhaul. The URL and page structure changed and now requires a login to download the files.
+
 print "<pre>";
 
-$query = implode('', file('http://c64warez.com/'));
-$query = explode('<a href="http://c64warez.com/files/', $query);
+//$query = get_data('http://c64warez.com/');
+$query = get_data('http://remotecpu.com/downloads.html');
+preg_match_all('/<a href="(\/downloads\/category\/.*)/">', $query, $categories);
+var_dump($categories);
+$query = explode('<a href="/downloads/category/', $query);
 array_splice($query, 0, 1);
 
 foreach ($query as $row)
@@ -19,7 +24,7 @@ foreach ($query as $row)
 	{
 		print "load ".$row."\n";
 
-		$queryb = implode('', file('http://c64warez.com/files/'.str_replace(' ', '%20', $row)));
+		$queryb = get_data('http://c64warez.com/files/'.str_replace(' ', '%20', $row));
 		$queryb = explode('<a href="http://c64warez.com/files/get_file/', $queryb);
 		array_splice($queryb, 0, 1);
 

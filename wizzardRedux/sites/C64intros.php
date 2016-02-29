@@ -6,7 +6,7 @@ print "<pre>";
 
 print "Last fixes\n\n";
 
-$query = implode('', file("http://intros.c64.org/frame.php"));
+$query = get_data("http://intros.c64.org/frame.php");
 $query = explode('<div class="menu_header">FIXED</div>', $query);
 $query = explode('<a href="main.php?module=showintro&iid=', $query[1]);
 
@@ -36,11 +36,13 @@ $start = $start[1];
 
 print "\nSearch for new uploads\n\n";
 
-for ($x = $start; $x < $start + 50; $x++)
+$error = false;
+$x = $start;
+while(!$error)
 {
-	$query = implode('', file("http://intros.c64.org/main.php?module=showintro&iid=".$x));
+	$query = get_data("http://intros.c64.org/main.php?module=showintro&iid=".$x);
 
-	if ($query != "Database error. Please contact us if this problem persists.") 
+	if ($query != "Database error. Please contact us if this problem persists." || strpos($query, "<a href=\"inc_download.php?iid=\"")) 
 	{
 		$gametitle = explode('<span class="introname">', $query);
 		$gametitle = explode('</span>', $gametitle[1]);
@@ -52,10 +54,16 @@ for ($x = $start; $x < $start + 50; $x++)
 
 		$last = $x;
 	}
+	elseif ($x == 9744)
+	{
+		$error = true;
+	}
 	else
 	{
 		print $x."\t".$query."\n";
+		$error = true;
 	}
+	$x++;
 }
 
 if ($last)
@@ -63,6 +71,6 @@ if ($last)
 	$start = $last + 1;
 }
 
-print "\nnext startnr\t<a href=?action=onlinecheck&source=C64intros&start=".($start).">".$start."</a>";
+print "\nnext startnr\t".$start."<br/>\n";
 
 ?>

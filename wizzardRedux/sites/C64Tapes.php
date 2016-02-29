@@ -8,7 +8,7 @@ $page = "http://c64tapes.org/games_list.php?title=^.&sort=title";
 
 print "load ".$page."\n";
 
-$content = implode('', file($page));
+$content = get_data($page);
 $content = utf8_decode($content);
 $content = explode('<tr>', $content);
 $content[0] = null;
@@ -33,7 +33,7 @@ foreach ($content as $row)
 								array(null, ', ', null, ')</a>', '(<a', null, null), $row[4]);
 			$add = trim(strip_tags('<td'.$row[4]));
 
-			$dl_page = implode('', file("http://c64tapes.org/title.php?id=".$id));
+			$dl_page = get_data("http://c64tapes.org/title.php?id=".$id);
 			$dl_page = utf8_decode($dl_page);
 
 			$url1 = explode('<td>Filename (TAP): </td>', $dl_page);

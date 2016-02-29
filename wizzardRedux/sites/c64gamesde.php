@@ -27,7 +27,7 @@ for ($x = 1; $x <= 4; $x++)
 	$old = 0;
 	$new = 0;
 
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('spieledetail.php?filnummer=', $query);
 	$query[0] = null;
 
@@ -103,8 +103,7 @@ foreach($found as $id)
 	
 print "<table><tr><td><pre>";
 
-foreach
-($files as $row)
+foreach ($files as $row)
 {
 	print $row[0]."\n";
 }
