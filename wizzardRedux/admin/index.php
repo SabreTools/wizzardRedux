@@ -44,6 +44,7 @@ Administrative Functions Homepage
 	<li><a href='?page=onlinecheck'>Check for new files online</a></li>
 	<li><a href='?page=getmamenames'>Generate an array of names for all MAME softlists</a></li>
 	<li><a href='?page=parsenointro'>Generate an array of names for all No-Intro sources</a></li>
+	<li><a href='?page=clean'>Clean the database of dupes and orphans</a></li>
 </ol>";
 }
 
