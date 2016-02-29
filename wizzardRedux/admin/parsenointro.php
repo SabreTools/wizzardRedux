@@ -5,6 +5,8 @@ Internal test to see if the No-Intro pages can be traversed reasonably
 
 Requires
 	auto		Set to 1 if a new no-intro mapping needs to be created
+	
+TODO: Better figure out how to differentiate between individual dumps on a page more effectively than duped filds
 */
 
 // Create a name to field mapping for each of the findable fields
@@ -52,7 +54,7 @@ else
 {
 	echo "<a href='page=parsenointro&auto=1'>Auto-generate no-intro name to system mapping</a><br/><br/>\n";
 	
-	$gameid = 1; $maxid = 5;
+	$gameid = 1; $maxid = 1;
 	$errorpage = false;
 	$roms = array();
 	while (!$errorpage)
@@ -111,12 +113,12 @@ else
 			// Check the key half of all of split-line fields that we know of
 			elseif ($next == "")
 			{
-				foreach (array_keys($field_mapping) as $key)
+				foreach ($field_mapping as $key => $value)
 				{
 					if ($line == $key)
 					{
 						// Check if the key is already set in the rom array
-						if (isset($rom[$key]))
+						if ($rom[$value] != NULL && $rom[$value] != "")
 						{
 							// If it is, push the current rom information to the output
 							echo "Pushing rom";
@@ -143,12 +145,13 @@ else
 				if (key_exists($next, $field_mapping))
 				{
 					echo $line."<br/>\n";
-					$rom[$field_mapping[$next]] == $line;
+					$rom[$field_mapping[$next]] = $line;
 				}
 				$next = "";
 			}
 		}
 		
+		array_push($roms, $rom);
 		$gameid++;
 		echo "<br/>";
 		
