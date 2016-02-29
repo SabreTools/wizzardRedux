@@ -35,7 +35,7 @@ if (!isset($_GET["filename"]))
 				}
 				else
 				{
-					echo "<a href=\"?page=import&filename=".$file."\">".htmlspecialchars($file)."</a><br/>\n";
+					echo "<a href=\"?page=import&filename=".$file."\">".htmlspecialchars($file)."</a> (".filesize("../temp/".$file)." bytes)<br/>\n";
 				}
 			}
 		}

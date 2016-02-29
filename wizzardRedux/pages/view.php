@@ -91,7 +91,7 @@ elseif ($game != "")
 </tr>
 <tr>
 	<th>Name</th>
-	<td>'".$game_info[5]."</td>
+	<td>".$game_info[5]."</td>
 </tr>
 </table><br/>
 
