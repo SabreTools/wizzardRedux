@@ -8,7 +8,7 @@ $dirs = array();
 
 for ($x = 1; $x < 1000; $x++)
 {
-	$query = implode('', file('https://app.box.com/shared/mlxzoyjyr7/'.$x.'/59652717'));
+	$query = get_data('https://app.box.com/shared/mlxzoyjyr7/'.$x.'/59652717');
 	$query = explode('id=\"filename_', $query);
 	array_splice($query, 0, 1);
 

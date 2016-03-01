@@ -7,7 +7,7 @@ print "<pre>";
 $new = 0;
 $old = 0;
 
-$query= implode('', file("https://sites.google.com/site/msxbasicgames/"));
+$query= get_data("https://sites.google.com/site/msxbasicgames/");
 $query = explode('<td class="td-file">', str_replace('&amp;', '&', utf8_decode($query)));
 array_splice($query, 0, 1);
 foreach ($query as $row)

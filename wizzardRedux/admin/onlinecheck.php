@@ -12,7 +12,6 @@ TODO: Remember to replace GLOBALS GET and POST with the proper $_GET, $_POST
 TODO: Document all required GET and POST vars for each page
 TODO: Comment all of the code...
 TODO: Some loadDir functions are useless because they are only used once. Put their code where it should be
-TODO: Maybe look at NES-CartDatabase for No-Intro parsing
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
 TODO: VimmsLair uses wget.exe currently. Can this be reamped to use cURL instead (since it's built into PHP)?
 TODO: Can we run all online checks in a coherent way (in series, that is)?
@@ -22,12 +21,8 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
-		"MSXbasic",
-		"MSXcassettes",
-		"MyVG5000",
-		"NanoWasp",
 		"NES-CartDatabase",
-		"newgame",
+		
 		"NewRom",
 		"NintendoPlayer",
 		"Panprase",
@@ -139,6 +134,12 @@ $fixed = array(
 		"Mapy",
 		"Marcos64",
 		"MCBremakes",
+		"MSXbasic",
+		"MSXcassettes",
+		"MyVG5000",
+		"NanoWasp",
+		
+		"newgame",
 		
 		"ntscene",
 );

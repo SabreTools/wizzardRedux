@@ -15,7 +15,40 @@ foreach ($dirs as $dir)
 {
 	if ($dir)
 	{
-		listDir($dir);
+		print "load: ".$dir."\n";
+		$query = str_replace("\n", '', get_data($dir));
+		$query = explode(' href="', $query);
+		$query[0] = null;
+	
+		$new = 0;
+		$old = 0;
+	
+		foreach ($query as $row)
+		{
+			if ($row)
+			{
+				$url = explode('"', $row);
+				$url = $url[0];
+	
+				$text = explode('</p>', $row);
+				$text = trim(strip_tags('<a href="'.$text[0]));
+	
+				$ext = explode('.', $url);
+	
+				if (!$r_query[$url])
+				{
+					$found[] = array($url, $text.'.'.$ext[count($ext) - 1]);
+					$new++;
+				}
+				else
+				{
+					$old++;
+				}
+			}
+		}
+	
+		print "close: ".$dir."\n";
+		print "new: ".$new.", old: ".$old."\n";
 	}
 }
 
@@ -36,45 +69,5 @@ foreach ($found as $row)
 }
 
 print "</td></tr></table>";
-
-function listDir($dir)
-{
-	GLOBAL $found, $r_query;
-
-	print "load: ".$dir."\n";
-	$query = str_replace("\n", '', implode('', file($dir)));
-	$query = explode(' href="', $query);
-	$query[0] = null;
-
-	$new = 0;
-	$old = 0;
-
-	foreach ($query as $row)
-	{
-		if ($row)
-		{
-			$url = explode('"', $row);
-			$url = $url[0];
-
-			$text = explode('</p>', $row);
-			$text = trim(strip_tags('<a href="'.$text[0]));
-
-			$ext = explode('.', $url);
-
-			if (!$r_query[$url])
-			{
-				$found[] = array($url, $text.'.'.$ext[count($ext) - 1]);
-				$new++;
-			}
-			else
-			{
-				$old++;
-			}
-		}
-	}
-
-	print "close: ".$dir."\n";
-	print "new: ".$new.", old: ".$old."\n";
-}
 
 ?>

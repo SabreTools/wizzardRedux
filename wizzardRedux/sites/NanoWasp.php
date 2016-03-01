@@ -4,7 +4,7 @@
 
 print "<pre>";
 
-$query = implode('', file('http://www.nanowasp.org/'));
+$query = get_data('http://www.nanowasp.org/');
 $query = explode('<script src="v', $query);
 $query = explode('"', $query[1]);
 $query = $query[0];
