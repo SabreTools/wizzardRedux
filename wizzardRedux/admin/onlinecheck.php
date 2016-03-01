@@ -7,13 +7,11 @@ Requires:
 	source		The sourcename to check against (in sites/<source>.php)
 
 TODO: Retool existing onlinecheck.php files to follow the new format. 2) replace stuff with cURL 3) check code flow to try to optimize
-TODO: Add a way to figure out if a site is dead based on the original list that WoD created
 TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
 TODO: Remember to replace GLOBALS GET and POST with the proper $_GET, $_POST
 TODO: Document all required GET and POST vars for each page
 TODO: Direct connect to EAB with FTP (ftp:any@ftp.grandis.nu)
 TODO: Comment all of the code...
-TODO: Merge MESS and MAME in sources
 TODO: Some loadDir functions are useless because they are only used once. Put their code where it should be
 TODO: Maybe look at NES-CartDatabase for No-Intro parsing
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
@@ -25,13 +23,6 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
-		"Demotopia",
-		"DigitalDream",
-		"DigitalDungeon",
-		"EAB",
-		"Edicolac64",
-		"EludeVisibility",
-		"ep128hu",
 		"Fandal",
 		"Gamebase64",
 		"GratisSaugen",
@@ -142,6 +133,13 @@ $fixed = array(
 		"CrackersVelus",
 		"csdb",
 		"DC",
+		"Demotopia",
+		"DigitalDream",
+		"DigitalDungeon",
+		"EAB",
+		"Edicolac64",
+		"EludeVisibility",
+		"ep128hu",
 );
 
 // Sites that are probably dead

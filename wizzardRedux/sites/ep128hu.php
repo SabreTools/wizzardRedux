@@ -75,7 +75,7 @@ $pages = array(
 foreach ($pages as $page)
 {
 	print "load: ".$page[0]."\n";
-	$query = str_replace('&nbsp;', '', implode('', file('http://www.ep128.hu/'.$page[0])));
+	$query = str_replace('&nbsp;', '', get_data('http://www.ep128.hu/'.$page[0]));
 	$query = explode('<tr class=', $query);
 	array_splice($query, 0, 1);
 
@@ -92,7 +92,7 @@ foreach ($pages as $page)
 		$dir = "";
 	}
 
-	foreach( $query as $row)
+	foreach ($query as $row)
 	{
 		$row = explode('<td', $row);
 		$title = trim(strip_tags('<td'.$row[1]));

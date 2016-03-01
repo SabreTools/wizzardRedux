@@ -11,7 +11,7 @@ $url= "http://eludevisibility.org/archive/";
 
 print "load: ".$url."\n";
 
-$query = implode('', file($url));
+$query = get_data($url);
 $query = explode(": <a href=\"", $query);
 $query[0] = null;
 

@@ -4,7 +4,7 @@
 
 print "<pre>";
 
-$dir = "/giochi-c64.htm";
+$dir = "http://digitaldream.totalh.net/giochi-c64.htm";
 print "load: ".$dir."\n";
 $query = getHTML($dir);
 
@@ -41,19 +41,15 @@ foreach ($found as $url)
 	print $url."\n";
 }
 
-print "\n<a href=DigitalDream/xml.php>xml</a>";
-
+// Can't use get_data($url) because of parsing issues with the site
 function getHTML($target)
 {
-	GLOBAL $GLOBALS;
-
 	$timeout = 100;  // Max time for stablish the conection
-
-	$server  = 'digitaldream.totalh.net';           			 // Ziel domain
-	$host    = 'digitaldream.totalh.net';           			 // Domain name
-	//$target  = '/new.html';        		 // Ziel document
-	$referer = 'http://digitaldream.totalh.net/index.htm';   // ausgangs document
-	$port    = 80;
+	$server = 'digitaldream.totalh.net';
+	$host = 'digitaldream.totalh.net';
+	//$target  = '/new.html';
+	$referer = 'http://digitaldream.totalh.net/index.htm';
+	$port = 80;
 
 	$request="GET /giochi-c64.htm HTTP/1.1
 Host: digitaldream.totalh.net
@@ -65,7 +61,7 @@ Accept-Language: de,en;q=0.7,en-us;q=0.3
 Referer: http://web-sniffer.net/
 ";
 
-	$socket  = fsockopen($server, $port, $errno, $errstr, $timeout);
+	$socket = fsockopen($server, $port, $errno, $errstr, $timeout);
 	fputs($socket, $request."\r\n");
 
 	$ret = '';
@@ -81,16 +77,6 @@ Referer: http://web-sniffer.net/
 	fclose($socket);
 
 	return $ret;
-}
-
-function gzdecode($data)
-{
-	$g = tempnam('/tmp', 'ff');
-	@file_put_contents($g,$data);
-	ob_start();
-	readgzfile($g);
-	$d = ob_get_clean();
-	return $d;
 }
 
 ?>

@@ -4,13 +4,18 @@
 
 if ($_GET["type"] == 'rename')
 {
-	print "<pre><form method=\"post\" action=\"?action=onlinecheck&source=".$_GET["source"]."&type=rename\">
-<textarea name=lines cols=\"50\" rows=\"10\">".stripslashes ($GLOBALS[HTTP_POST_VARS][lines])."</textarea>
-<input type=submit></form><table><tr><td><pre>";
+	print "<pre>
+	<form method=\"post\" action=\"?page=onlinecheck&source=".$_GET["source"]."&type=rename\">
+		<textarea name=lines cols=\"50\" rows=\"10\">".stripslashes($_POST["lines"])."</textarea>
+		<input type=submit>
+	</form>
+	<table>
+		<tr>
+			<td><pre>";
 
-	if ($GLOBALS[HTTP_POST_VARS][lines])
+	if ($_POST["lines"])
 	{
-		$lines = explode("\r\n", "\r\n".stripslashes($GLOBALS[HTTP_POST_VARS][lines]));
+		$lines = explode("\r\n", "\r\n".stripslashes($_POST["lines"]));
 		$lines = array_flip($lines);
 
 		//print_r($lines);
@@ -37,7 +42,10 @@ if ($_GET["type"] == 'rename')
         }
 	}
 
-	print "</td></tr></table>";
+	print "</pre></td>
+		</tr>
+	</table>
+</pre>\n";
 
 }
 elseif ($_GET["type"] == 'search')
@@ -51,7 +59,7 @@ elseif ($_GET["type"] == 'search')
 	foreach ($newfiles as $newfile)
 	{
 		print "load ".$newfile."\n";
-		$query = implode('', file($newfile));
+		$query = get_data($newfile);
  		$query = explode("\n", $query);
 
 		$old = 0;
@@ -159,8 +167,8 @@ elseif ($_GET["type"] == 'search')
 else
 {
 	print "<pre>";
-	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=search>search</a>\n";
-	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=rename>rename</a>\n";
+	print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=search>search</a>\n";
+	print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=rename>rename</a>\n";
 
 }
 

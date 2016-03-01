@@ -17,7 +17,7 @@ foreach ($urls as $url)
 {
 	print "load ".$baseURL.$url."\n";
 
-	$query = implode('', file($baseURL.$url));
+	$query = get_data($baseURL.$url);
 	$query = explode('<tr>', str_replace('HREF=', 'href=', $query));
 	$query[0] = null;
 
@@ -37,7 +37,7 @@ foreach ($urls as $url)
 			{
 				print "found ".$baseURL.$id."\n";
 
-				$query2 = implode('', file($baseURL.$id));
+				$query2 = get_data($baseURL.$id);
 				$query2 = explode('<tr>', $query2);
 				$query2[0] = null;
 				foreach ($query2 as $row)
@@ -54,7 +54,7 @@ foreach ($urls as $url)
 
 							if (!$r_query[$dlink])
 							{
-								$page = implode('', file($baseURL.$dlink));
+								$page = get_data($baseURL.$dlink);
 								$dl = explode('href=download', $page);
 								$dls = array();
 								
@@ -70,7 +70,7 @@ foreach ($urls as $url)
 										$helper_url = $baseURL.$helper_url[count($helper_url) - 1].'id_gioco='.$helper_id;
 										print "\t".$helper_url."\n";
 
-										$page = implode('', file($helper_url));
+										$page = get_data($helper_url);
 										$dl = explode('href=download', $page);
 										$dl = explode('=', $dl[1]);
 										$dl = explode('>', $dl[1]);
@@ -151,7 +151,7 @@ $url2 = "http://www.edicolac64.com/public/giochi_made_in_italy_c64.php";
 
 print "load ".$url2."\n";
 
-$query = implode('', file($url2));
+$query = get_data($url2);
 $query = explode('<TABLE', $query);
 $query = explode('</TABLE>', $query[1]);
 $query = explode('<TR>', $query[0]);
@@ -208,7 +208,7 @@ $url2 = "http://www.edicolac64.com/public/materiale_amatoriale.php";
 
 print "load ".$url2."\n";
 
-$query = implode ('', file($url2));
+$query = get_data($url2);
 $query = explode('<table ', $query);
 $query = explode('</TABLE>', $query[1]);
 $query = explode('<tr>', $query[0]);

@@ -14,7 +14,7 @@ for ($page = 1; $page < $max; $page++)
 {
 	$dir = "http://zxdemo.org/productions/?count=200&page=".$page;
 	print "load: ".$dir."\n";
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('<tr class="',$query);
 	array_splice($query, 0, 1);
 
@@ -71,7 +71,7 @@ for ($page = 1; $page < $max; $page++)
 					$old++;
 				}
 
-				$notFound=false;
+				$notFound = false;
 	        }
 		}
 	}
