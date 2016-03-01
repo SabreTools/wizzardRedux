@@ -19,9 +19,11 @@ foreach ($newfiles as $newfile)
 	load_dir($newfile);
 }
 
+print "\n\nnew: ".$new." old: ".$old."\n";
+
 foreach ($found as $new)
 {
-	print "<a href='".$new[0]."'>".$new[1]."</a>\n";
+	print "<a href='".$new[0]."'>".$new[1]."</a> (".$new[0].")\n";
 }
 
 function load_dir($dir)
@@ -38,7 +40,7 @@ function load_dir($dir)
 	{
 		if (!$founddirs[$subdir])
 		{
-			print "found dir: ".$subdir."\n";
+			//print "found dir: ".$subdir."\n";
 			$founddirs[$subdir] = true;
 			load_dir($baseURL.$subdir);
 		}
@@ -51,10 +53,10 @@ function load_dir($dir)
 	{
 		if (!$r_query[$dir."&".$file])
 		{
-			print "found: ".$dir."&".urldecode($file)."\n";
+			//print "found: ".$dir."&".urldecode($file)."\n";
 			$new++;
 			$name = explode("=", $file);
-			$name = name[1];
+			$name = urldecode($name[1]);
 			$found[] = array($dir."&".$file, $name);
 		}
 		else

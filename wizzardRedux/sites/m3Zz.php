@@ -29,7 +29,7 @@ function loadDir($dir)
 	$folder = 0;
 
 	print "open ".$dir."\n";
-	$query = implode('', file("https://api2.wuala.com/previewSorted/".$dir."?il=1&ff=0&key=ROMCollections"));
+	$query = get_data("https://api2.wuala.com/previewSorted/".$dir."?il=1&ff=0&key=ROMCollections");
 
 	$publicFolders = explode('publicFolders', $query);
 	$publicFolders = explode('breadcrumb', $publicFolders[1]);

@@ -8,7 +8,7 @@ $start=1;
 
 for ($x = $start; $x < $start + 100; $x++)
 {
-	$query = implode('', file("http://karpez.ucoz.ru/load/0-".$x));
+	$query = get_data("http://karpez.ucoz.ru/load/0-".$x);
 	$query = explode('<div class="eTitle" style="text-align:left;"><a href="http://karpez.ucoz.ru/load/', $query);
 	$query[0] = null;
 	
@@ -40,7 +40,7 @@ foreach ($found as $newfile)
 {
 	$id = explode('-', $newfile);
 	$id = $id[count($id) - 1];
-	$url = implode('', file("http://karpez.ucoz.ru/load/".$newfile));
+	$url = get_data("http://karpez.ucoz.ru/load/".$newfile);
  	$url = explode('-'.$id.'-20"', $url);
  	$url = explode('http://karpez.ucoz.ru/load/', $url[0]);
  	$url = $url[count($url) - 1];

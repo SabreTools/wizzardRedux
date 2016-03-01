@@ -22,7 +22,7 @@ $urls = array(
 foreach ($urls as $url)
 {
 	print "load: ".$url."\n";
-	$query = implode('', file($url));
+	$query = get_data($url);
 	$query = explode("/ficha/?id=", $query);
 
 	$query[0] = null;
@@ -48,7 +48,7 @@ $old = 0;
 foreach ($found as $page)
 {
 	sleep(1);
-	$query = implode('', file("http://www.konamito.com/ficha/?id=".$page));
+	$query = get_data("http://www.konamito.com/ficha/?id=".$page);
 
 	if (!$query)
 	{

@@ -22,12 +22,6 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
-		"i-mockery",
-		"Import64",						// Empty checker page?
-		"Kamming",
-		"karpez",
-		"Konamito",
-		"m3Zz",
 		"magicrip",
 		"MagyarC64HQ",
 		"manosoft",
@@ -139,6 +133,14 @@ $fixed = array(
 		"hackedroms",
 		"heranbago",
 		"HHUG",
+		"i-mockery",
+		"Import64",						// Empty checker page?
+		"Kamming",
+		"karpez",
+		"Konamito",
+		"m3Zz",
+		
+		"ntscene",
 );
 
 // Sites that are probably dead
@@ -147,6 +149,9 @@ $dead = array(
 		"8BitCommodoreItalia",
 		"Atarimania",
 		"Cas2Rom",
+		"Import64",
+		"Konamito",
+		"m3Zz",
 );
 
 if (!isset($_GET["source"]))
