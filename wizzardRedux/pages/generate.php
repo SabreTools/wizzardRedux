@@ -44,7 +44,8 @@ if ($system == "" && $source == "" && $mega != "1")
 	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
 		FROM systems
 		JOIN games
-			ON systems.id=games.system";
+			ON systems.id=games.system
+		ORDER BY systems.manufacturer, systems.system";
 	$result = mysqli_query($link, $query);
 	
 	echo "<h3>Available Systems</h3>\n";
