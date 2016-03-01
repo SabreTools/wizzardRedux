@@ -5,6 +5,7 @@ Import an existing DAT into the system
 
 Requires:
 	filename	File name in the format of "Manufacturer - SystemName (Source .*)\.dat"
+	size		Sort the list by size of the DAT file (handy for multiple imports)
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
 ------------------------------------------------------------------------------------ */
@@ -14,15 +15,29 @@ echo "<h2>Import From Datfile</h2>";
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
 
 $auto = isset($_GET["auto"]) && $_GET["auto"] == "1";
+$size = isset($_GET["size"]) && $_GET["size"] == "1";
 
 if (!isset($_GET["filename"]))
 {
 	// List all files, auto-generate links to proper pages
-	echo "<p><a href='?page=import&auto=1'>Automatically add all DATs</a></p>\n";
+	echo "<p><a href='?page=import&auto=1".($size ? "&size=1" : "")."'>Automatically add all DATs</a><br/>\n".
+			"<a href='?page=import'>Sort list by name</a><br/>\n".
+			"<a href='?page=import&size=1'>Sort list by size</a></p>\n";
 	
 	$files = scandir("../temp/");
 	if (sizeof($files) != 0)
 	{
+		if ($size)
+		{
+			usort($files, function ($a, $b)
+			{
+				$size_a = filesize("../temp/".$a);
+				$size_b = filesize("../temp/".$b);
+				
+				return $size_a - $size_b;
+			});
+		}
+		
 		foreach ($files as $file)
 		{
 			if (preg_match("/^.*\.dat$/", $file))
@@ -31,11 +46,11 @@ if (!isset($_GET["filename"]))
 				if ($auto)
 				{
 					import_dat($file, $link);
-					echo "<script type='text/javascript'>window.location='?page=import&auto=1'</script>";
+					echo "<script type='text/javascript'>window.location='?page=import&auto=1".($size ? "&size=1" : "")."'</script>";
 				}
 				else
 				{
-					echo "<a href=\"?page=import&filename=".$file."\">".htmlspecialchars($file)."</a> (".filesize("../temp/".$file)." bytes)<br/>\n";
+					echo "<a href=\"?page=import&filename=".$file.($size ? "&size=1" : "")."\">".htmlspecialchars($file)."</a> (".filesize("../temp/".$file)." bytes)<br/>\n";
 				}
 			}
 		}
@@ -44,7 +59,7 @@ if (!isset($_GET["filename"]))
 else
 {
 	import_dat($_GET["filename"], $link);
-	echo "<script type='text/javascript'>window.location='?page=import'</script>";
+	echo "<script type='text/javascript'>window.location='?page=import".($size ? "&size=1" : "")."'</script>";
 }
 
 function import_dat($filename, $link)
@@ -58,14 +73,14 @@ function import_dat($filename, $link)
 	if (!file_exists("../temp/".$filename))
 	{
 		echo "<b>The file you supply must be in /wod/temp/</b><br/>";
-		echo "<a href='index.php'>Return to home</a>";
+		echo "<a href='?page=import".($size ? "&size=1" : "")."'>Go back to import page</a>";
 	
 		return;
 	}
 	elseif (!preg_match($datpattern, $filename, $fileinfo))
 	{
 		echo "<b>DAT not in the proper pattern! (Manufacturer - SystemName (Source .*)\.dat)</b><br/>\n";
-		echo "<a href='index.php'>Return to home</a>";
+		echo "<a href='?page=import".($size ? "&size=1" : "")."'>Go back to import page</a>";
 	
 		return;
 	}
