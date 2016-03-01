@@ -13,7 +13,7 @@ for ($x = 1; $x <= 10; $x++)
 
 	print "load: ".$url."\n";
 
-	$query = implode('', file($url));
+	$query = get_data($url);
 	$query = explode("<a href=\"uploads/dumps/", str_replace("\r\n", '', $query));
 	$query[0] = null;
 	foreach ($query as $row)

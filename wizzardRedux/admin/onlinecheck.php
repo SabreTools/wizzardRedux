@@ -10,7 +10,6 @@ TODO: Retool existing onlinecheck.php files to follow the new format. 2) replace
 TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
 TODO: Remember to replace GLOBALS GET and POST with the proper $_GET, $_POST
 TODO: Document all required GET and POST vars for each page
-TODO: Direct connect to EAB with FTP (ftp:any@ftp.grandis.nu)
 TODO: Comment all of the code...
 TODO: Some loadDir functions are useless because they are only used once. Put their code where it should be
 TODO: Maybe look at NES-CartDatabase for No-Intro parsing
@@ -23,12 +22,6 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
-		"Fandal",
-		"Gamebase64",
-		"GratisSaugen",
-		"hackedroms",
-		"heranbago",
-		"HHUG",
 		"i-mockery",
 		"Import64",						// Empty checker page?
 		"Kamming",
@@ -140,6 +133,12 @@ $fixed = array(
 		"Edicolac64",
 		"EludeVisibility",
 		"ep128hu",
+		"Fandal",
+		"Gamebase64",
+		"GratisSaugen",
+		"hackedroms",
+		"heranbago",
+		"HHUG",
 );
 
 // Sites that are probably dead

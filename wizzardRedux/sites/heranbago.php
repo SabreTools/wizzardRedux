@@ -6,13 +6,14 @@ print "<pre>";
 
 $newfiles = array(
 	'http://heranbago.com/hax/hax/hack.htm',
-	'http://sonar.heranbago.com/top.html',
+	//'http://sonar.heranbago.com/top.html',
+	'http://sonar.lostsig.com/top.html',
 );
 
 foreach ($newfiles as $newfile)
 {
 	print "load ".$newfile."\n";
-	$query = implode('', file($newfile));
+	$query = get_data($newfile);
  	$query = explode('<a href="', str_replace('&amp;', '&', $query));
 	$query[0] = null;
 

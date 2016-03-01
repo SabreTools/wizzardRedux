@@ -9,9 +9,9 @@ $start = $r_query[0];
 
 print "\nSearch for new uploads\n\n";
 
-for ($x = $start; $x < $start + 1000; $x++)
+for ($x = $start; $x >= $start; $x++)
 {
-	$query = implode('', file("http://a8.fandal.cz/detail.php?files_id=".$x));
+	$query = get_data("http://a8.fandal.cz/detail.php?files_id=".$x);
 
 	$gametitle = explode('<div align="center"><br>', $query);
 	$gametitle = explode('<br>', $gametitle[1]);
@@ -53,7 +53,7 @@ if ($last)
 
 print "\nnext startnr\t<a href=?action=onlinecheck&source=fandal&start=".($start).">".$start."</a>\n\n";
 
-$query = implode('', file("http://a8.fandal.cz/stuff.php"));
+$query = get_data("http://a8.fandal.cz/stuff.php");
 $query = explode('<span class="d13">', $query);
 $query[0] = null;
 

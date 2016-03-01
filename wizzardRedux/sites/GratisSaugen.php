@@ -16,7 +16,7 @@ foreach ($pages as $page)
 {
 	print "load ".$page."\n";
 
-	$content = implode('', file($page));
+	$content = get_data($page);
 	$content = str_replace("\r\n", '', $content);
 	$content = explode('<a href="', $content);
 	$content[0] = null;

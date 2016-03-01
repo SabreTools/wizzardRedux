@@ -17,7 +17,7 @@ if ($_GET["sub"] == 'list')
 
 	foreach ($r_query as $side_id)
 	{
-		$query = implode('', file("http://www.gamebase64.com/game.php?id=".$side_id));
+		$query = get_data("http://www.gamebase64.com/game.php?id=".$side_id);
 
 		$title = explode('<table cellpadding=0 cellspacing=0 border=0 width=100%><tr><td width=50%><font size="4"><b>', $query);
 		$title = explode('</b>', $title[1]);
@@ -64,7 +64,7 @@ elseif($_GET["sub"] == 'ids')
 
 	for ($x = $start; $x < $start + 50; $x++)
 	{
-		$query=implode('', file("http://www.gamebase64.com/game.php?id=".$x));
+		$query = get_data("http://www.gamebase64.com/game.php?id=".$x);
 
 		$title = explode('<table cellpadding=0 cellspacing=0 border=0 width=100%><tr><td width=50%><font size="4"><b>', $query);
 		$title = explode('</b>', $title[1]);
@@ -125,12 +125,12 @@ elseif($_GET["sub"] == 'ids')
 	}
 	print "</td></tr></table>";
 
-	print "\nnext startnr\t<a href=?action=onlinecheck&source=Gamebase64&sub=ids&start=".($start).">".$start."</a>\n";
+	print "\nnext startnr\t<a href=?page=onlinecheck&source=Gamebase64&sub=ids&start=".($start).">".$start."</a>\n";
 }
 elseif ($_GET["sub"] == 'dir')
 {
-	$r_query = implode ('', file("../sites/".$source."_urls.txt"));
-	$r_query = explode ("\r\n", "\r\n".$r_query);
+	$r_query = implode('', file("../sites/".$source."_urls.txt"));
+	$r_query = explode("\r\n", "\r\n".$r_query);
 
 	$dirs = array();
 	$files = array();
@@ -168,7 +168,7 @@ elseif ($_GET["sub"] == 'dir')
 
 		print "load:".$main.$row."\n";
 
-		$query2 = implode('', file($main.$row));
+		$query2 = get_data($main.$row);
 		$query2 = explode('<li><a href="', $query2);
 		$query2[0] = null;
 		$query2[1] = null;
@@ -185,7 +185,7 @@ elseif ($_GET["sub"] == 'dir')
 					$id = explode('_', $url);
 	 				$id = $id[1];
 	
-					$query = implode('', file("http://www.gamebase64.com/game.php?id=".$id));
+					$query = get_data("http://www.gamebase64.com/game.php?id=".$id);
 			
 					$title = explode('<table cellpadding=0 cellspacing=0 border=0 width=100%><tr><td width=50%><font size="4"><b>', $query);
 					$title = explode('</b>', $title[1]);
@@ -238,8 +238,8 @@ elseif ($_GET["sub"] == 'dir')
 }
 else
 {
-	print 	"<a href=?action=onlinecheck&source=Gamebase64&sub=ids>ids</a>\n".
-			"<a href=?action=onlinecheck&source=Gamebase64&sub=dir>dir</a>\n".
-			"<a href=?action=onlinecheck&source=Gamebase64&sub=list>list</a> (to get the title by IDs)\n";
+	print 	"<a href=?page=onlinecheck&source=Gamebase64&sub=ids>ids</a>\n".
+			"<a href=?page=onlinecheck&source=Gamebase64&sub=dir>dir</a>\n".
+			"<a href=?page=onlinecheck&source=Gamebase64&sub=list>list</a> (to get the title by IDs)\n";
 }
 ?>
