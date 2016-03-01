@@ -17,7 +17,7 @@ foreach ($pages as $page)
 	$new = 0;
 
 	print "load ".$page."\n";
-	$query = implode('', file($page));
+	$query = get_data($page);
 	$query = explode('<TR><TD><FONT COLOR="#FFFF00"><A HREF="../files/pokeysoft/', $query);
 	$query[0] = null;
 
@@ -56,7 +56,7 @@ foreach ($pages as $page)
 						}
 					}
 
-					if (!$found[$id])
+					if (!$r_query[$id])
 					{
 						$found[$id] = array();
 						$found[$id][url] = $id;

@@ -10,34 +10,9 @@ print "<pre>check folders:\n\n";
 
 foreach ($dirs as $dir)
 {
-	listDir($dir);
-}
-
-print "\nnew urls:\n\n";
-
-print "<table><tr><td><pre>";
-
-foreach ($found as $url)
-{
-	print "<a href=\"".$url[1]."\">".$url[0]."</a>\n";
-}
-
-print "</td><td><pre>";
-
-foreach ($found as $url)
-{
-	print $url[1]."\n";
-}
-
-print "</td></tr></table>";
-
-function listDir($dir)
-{
-	GLOBAL $found, $r_query;
-
 	print "load: ".$dir."\n";
 
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('<div class="wpfilebase-fileicon"><a href="', $query);
 	$query[0] = null;
 
@@ -70,5 +45,23 @@ function listDir($dir)
 	print "close: ".$dir."\n";
 	print "new: ".$new.", old: ".$old."\n";
 }
+
+print "\nnew urls:\n\n";
+
+print "<table><tr><td><pre>";
+
+foreach ($found as $url)
+{
+	print "<a href=\"".$url[1]."\">".$url[0]."</a>\n";
+}
+
+print "</td><td><pre>";
+
+foreach ($found as $url)
+{
+	print $url[1]."\n";
+}
+
+print "</td></tr></table>";
 
 ?>

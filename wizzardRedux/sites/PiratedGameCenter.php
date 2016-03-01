@@ -9,7 +9,7 @@ $old = 0;
 
 for ($x = 1; $x < 6; $x++)
 {
-	$query = implode('', file("http://blog.naver.com/PostList.nhn?from=postList&blogId=kevinhwsohn&currentPage=".$x));
+	$query = get_data("http://blog.naver.com/PostList.nhn?from=postList&blogId=kevinhwsohn&currentPage=".$x);
 	$query = explode("encodedAttachFileUrl': '", $query);
 	$query[0] = null;
 	foreach ($query as $row)

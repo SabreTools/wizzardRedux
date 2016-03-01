@@ -23,13 +23,6 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 $checked = array (
 		"NES-CartDatabase",
 		
-		"NewRom",
-		"NintendoPlayer",
-		"Panprase",
-		"PiratedGameCenter",
-		"PokemonGBAroms",
-		"PokemonMiniNet",
-		"pokeysoft",
 		"Retro64Games",
 		"RetroPrograms",
 		"RH",
@@ -140,8 +133,14 @@ $fixed = array(
 		"NanoWasp",
 		
 		"newgame",
-		
+		"NewRom",
+		"NintendoPlayer",
 		"ntscene",
+		"Panprase",
+		"PiratedGameCenter",
+		"PokemonGBAroms",
+		"PokemonMiniNet",
+		"pokeysoft",
 );
 
 // Sites that are probably dead
@@ -153,6 +152,8 @@ $dead = array(
 		"Import64",
 		"Konamito",
 		"m3Zz",
+		"PiratedGameCenter",			// Not technically dead, just all posts gone
+		"PokemonGBAroms",
 );
 
 if (!isset($_GET["source"]))

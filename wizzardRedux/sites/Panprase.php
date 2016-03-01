@@ -11,7 +11,7 @@ print "\nSearch for new uploads\n\n";
 
 for ($x = $start; $x < $start + 50; $x++)
 {
-	$query = implode('', file("http://atari.panprase.cz/?action=detail&co=".$x));
+	$query = get_data("http://atari.panprase.cz/?action=detail&co=".$x);
 
 	$gametitle = explode("<h2 class='titulek'>", $query);
 	$gametitle = explode('</h2>', $gametitle[1]);
