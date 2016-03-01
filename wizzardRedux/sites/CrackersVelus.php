@@ -1,8 +1,6 @@
 <?php
 
 $r_query = array_flip($r_query);
-$r_query = implode($r_query);
-$r_query = explode ("\r\n", htmlentities($r_query));
 	
 foreach ($r_query as $row)
 {
@@ -19,9 +17,11 @@ print "<pre>Search for new uploads, start by ".$start."\n\n";
 $new = 0;
 $old = 0;
 
-for ($x = $start; $x < $start + 50; $x++)
+$lastone = false;
+$x = $start;
+while (!$lastone)
 {
-	$query = trim(implode('', file("http://www.velus.be/cpc-".$x.".html")));
+	$query = trim(get_data("http://www.velus.be/cpc-".$x.".html"));
 
 	$info = array();
 
@@ -49,18 +49,27 @@ for ($x = $start; $x < $start + 50; $x++)
 
 	$gametitle = implode(" ", $info);
 
+	if ($dl == "")
+	{
+		$lastone = true;
+	}
 	if (!$r_query[$dl])
 	{
 		print $x."\t".$dl."\t".$gametitle."\n";
 		$r_query[$dl] = true;
 		$new++;
+		$found[] = array($gametitle, $dl);
 	}
 	else
 	{
 		$old++;
 	}
+	$x++;
 }
 
-print "\nnew: ".$new.",old: ".$old."\n<a href=CrackersVelus/xml.php>xml</a>";
-
+print "found:<br/><br/>";
+foreach ($found as $item)
+{
+	print "<a href='http://www.velus.be/download".$item[1]."'>".$item[0]."</a><br/>";
+}
 ?>

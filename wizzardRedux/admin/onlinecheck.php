@@ -25,11 +25,6 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
-		"CPC-Power",					// "full" is no longer active
-		"CPC-Rulez",
-		"CrackersVelus",
-		"csdb",
-		"DC",
 		"Demotopia",
 		"DigitalDream",
 		"DigitalDungeon",
@@ -142,6 +137,11 @@ $fixed = array(
 		"computeremuzone",
 		"CPC-Crackers",
 		"CPC-GameReviews",
+		"CPC-Power",					// "full" is no longer active
+		"CPC-Rulez",
+		"CrackersVelus",
+		"csdb",
+		"DC",
 );
 
 // Sites that are probably dead

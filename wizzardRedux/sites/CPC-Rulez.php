@@ -64,7 +64,43 @@ foreach ($Dirs as $Dir)
 {
 	foreach ($Lists as $List)
 	{
-		loadDir($Dir, $List, 0);
+		$page = 0;
+		if ($page < 10) {
+			$curDir = "http://cpcrulez.fr/".$Dir."/index.php?list=".$List; //."&p=".$page;
+			print "load ".$curDir."\n";
+			$query = get_data($curDir);
+		
+			$new = 0;
+			$old = 0;
+		
+			$DLs = explode('<a href="/', $query);
+		
+			foreach ($DLs as $DL)
+			{
+				$DL = explode('/index.php?download=', $DL);
+				if ($DL[1])
+				{
+					$DL_Dir = str_replace('http:CPCrulez.fr', '', str_replace('/', '', $DL[0]));
+		
+					$DL = explode('"', $DL[1]);
+					$DL = explode('&', $DL[0]);
+					$DL = $DL[0];
+		
+					if (!$r_query[$DL_Dir.'*'.$DL])
+					{
+						$found[] = array($DL_Dir, $DL);
+						$r_query[$DL_Dir.'*'.$DL] = true;
+						$new++;
+					}
+					else
+					{
+						$old++;
+					}
+				}
+			}
+		
+			print "new: ".$new.", old: ".$old."\n";
+		}
 	}
 }
 
@@ -107,7 +143,7 @@ foreach ($Dirs as $Dir)
 	$old = 0;
 	$curDir = "http://cpcrulez.fr/".$Dir.".htm";
 	print "load ".$curDir."\n";
-	$query = implode('', file($curDir));
+	$query = get_data($curDir);
 	$query = str_replace('<a href="/', '<a href="', $query);
 	$query = explode('<a href="', $query);
 	foreach ($query as $row)
@@ -135,7 +171,7 @@ foreach ($DLPages as $Dir)
 {
 	$curDir = "http://cpcrulez.fr/".$Dir.".htm";
 	print "load ".$curDir."\n";
-	$query = implode('', file($curDir));
+	$query = get_data($curDir);
 	$query = str_replace('../', '', $query);
 
 	$new = 0;
@@ -170,7 +206,6 @@ foreach ($DLPages as $Dir)
 	print "new: ".$new.", old: ".$old."\n";
 }
 
-/*
 print "\nnew dl-pages:\n\n";
 
 print "<table><tr><td><pre>";
@@ -179,7 +214,6 @@ foreach ($DLPages as $row)
 	print $row."\n";
 }
 print "</td></tr></table>";
-*/
 
 print "\nnew urls:\n\n";
 
@@ -189,55 +223,5 @@ foreach ($found as $row)
 	print "<a href=\"http://cpcrulez.fr/".$row[0]."/index.php?download=".$row[1]."\" target=_blank>".$row[0].'*'.$row[1]."</a>\n";
 }
 print "</td></tr></table>";
-
-function loadDir($Dir, $List, $page)
-{
-	GLOBAL $r_query, $found;
-
-	if ($page < 10) {
-		$curDir = "http://cpcrulez.fr/".$Dir."/index.php?list=".$List; //."&p=".$page;
-		print "load ".$curDir."\n";
-		$query = implode('', file($curDir));
-
-		$new = 0;
-		$old = 0;
-
-		$DLs = explode('<a href="/', $query);
-
-		foreach ($DLs as $DL)
-		{
-			$DL = explode('/index.php?download=', $DL);
-			if ($DL[1])
-			{
-				$DL_Dir = str_replace('http:CPCrulez.fr', '', str_replace('/', '', $DL[0]));
-
-				$DL = explode('"', $DL[1]);
-				$DL = explode('&', $DL[0]);
-				$DL = $DL[0];
-
-				if (!$r_query[$DL_Dir.'*'.$DL])
-				{
-					$found[] = array($DL_Dir, $DL);
-					$r_query[$DL_Dir.'*'.$DL] = true;
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
-			}
-		}
-
-		print "new: ".$new.", old: ".$old."\n";
-
-		/*
-		$next = explode('>Page suivante &raquo;<', $query);
-		if ($next[1])
-		{
-			loadDir($Dir, $List, ++$page);
-		}
-		*/
-	}
-}
 	
 ?>

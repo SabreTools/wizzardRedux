@@ -17,6 +17,7 @@ $searchs = array(
 	'2' => array('Editeur:'	,'Auteur:'	,'Editeurs:'	,'Auteurs:'	,'Version:'),
 );
 
+/*
 $runs = implode('', file($_GET["source"]."/run.txt"));
 $runs = explode ("\n", $runs);
 
@@ -25,19 +26,22 @@ foreach ($runs as $run)
 	$run = explode("\t", $run);
 	$sides[$run[0]][1] = $run[1];
 }
+*/
 
 print "<pre>";
 
 foreach ($sides as $key => $side)
 {
-	print "<a href=?action=onlinecheck&source=DC&system=".$key.">".$key."</a> ".$side[1]."\n";
+	print "<a href=?page=onlinecheck&source=DC&system=".$key.">".$key."</a> ".$side[1]."\n";
 }
 
 if ($_GET["system"])
 {
+	/*
 	$fp = fopen("../sites/".$source."_run.txt", "a");
 	fwrite($fp,	$_GET["system"]."\t".date('d.m.Y')."\n");
 	fclose($fp);
+	*/
 
 	if ($sides[$_GET["system"]][2] == 4)
 	{
@@ -119,7 +123,7 @@ if ($_GET["system"])
 		if ($sides[$_GET["system"]][2] == 1 || $sides[$_GET["system"]][2] == 3)
 		{
 			print "\nload ".$_GET["system"]." ".$sides[$_GET["system"]][0]."\n";
-			$t_query = implode('', file($sides[$_GET["system"]][0]));
+			$t_query = get_data($sides[$_GET["system"]][0]);
 			$t_query = explode('<li class="niveau0">Titre', $t_query);
 			$t_query = explode('</ul>', $t_query[1]);
 			$t_query = explode('<a href="', $t_query[0]);
@@ -146,7 +150,7 @@ if ($_GET["system"])
 				$dir[count($dir) - 1] = null;
 				$dir = implode("/", $dir);
 
-				$query = implode('', file($url));
+				$query = get_data($url);
 
 				if ($sides[$_GET["system"]][2] == 1)
 				{
@@ -179,7 +183,7 @@ if ($_GET["system"])
 						$row = $sides[$_GET["system"]][3].$row[0];
 						print $dir.$row."\n";
 
-						$b_query = implode('', file($dir.$row));
+						$b_query = get_data($dir.$row);
 
 						if ($sides[$_GET["system"]][2] == 1)
 						{

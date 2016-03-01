@@ -2,6 +2,8 @@
 
 // Original code: The Wizard of DATz
 
+// TODO: Find what start should be...
+
 print "<pre>";
 
 if($_GET["start"])
@@ -14,16 +16,17 @@ else
 }
 
 print "\nSearch for new uploads\n\n";
-	
-for ($x = 0; $x < 100; $x++)
+
+while (true)
+//for ($x = 0; $x < 100; $x++)
 {
-	$query = implode('', file ("http://csdb.dk/navigate.php?type=release&action=prev&id=".$start));
+	$query = get_data("http://csdb.dk/navigate.php?type=release&action=prev&id=".$start);
 
 	$temp = explode('/navigate.php?type=release&action=next&id=', $query);
 	$temp = explode('"', $temp[1]);
 	$temp = $temp[0];
 	
-	if( $temp)
+	if ($temp)
 	{
 		$start = $temp;
 		print "load: ".$start.", ";
