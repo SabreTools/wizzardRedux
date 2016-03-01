@@ -45,7 +45,7 @@ if (!isset($_GET["filename"]))
 				// If we want to import everything in the folder...
 				if ($auto)
 				{
-					import_dat($file, $link);
+					import_dat($file);
 					echo "<script type='text/javascript'>window.location='?page=import&auto=1".($size ? "&size=1" : "")."'</script>";
 				}
 				else
@@ -58,13 +58,13 @@ if (!isset($_GET["filename"]))
 }
 else
 {
-	import_dat($_GET["filename"], $link);
+	import_dat($_GET["filename"]);
 	echo "<script type='text/javascript'>window.location='?page=import".($size ? "&size=1" : "")."'</script>";
 }
 
-function import_dat($filename, $link)
+function import_dat($filename)
 {
-	global $normalize_chars, $search_pattern;
+	global $link, $normalize_chars, $search_pattern;
 	
 	// First, get the pattern of the file name. This is required for organization.
 	$datpattern = "/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/";
@@ -189,15 +189,15 @@ function import_dat($filename, $link)
 					$xml = simplexml_load_string($line.(strpos($line, "<machine")?"</machine>":"</game>"));
 					$machinename = $xml->attributes()["name"];
 					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
-					$gameid = add_game($sysid, $machinename, $sourceid, $link);
+					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
 				elseif (strpos($line, "<rom") !== false && $machinefound)
 				{
-					add_rom($line, $machinename, $link, "rom", $gameid, $date);
+					add_rom($line, $machinename, "rom", $gameid, $date);
 				}
 				elseif (strpos($line, "<disk") !== false && $machinefound)
 				{
-					add_rom($line, $machinename, $link, "disk", $gameid, $date);
+					add_rom($line, $machinename, "disk", $gameid, $date);
 				}
 				elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false))
 				{			
@@ -217,15 +217,15 @@ function import_dat($filename, $link)
 					$xml = simplexml_load_string($line."</software>");
 					$machinename = $xml->attributes()["name"];
 					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
-					$gameid = add_game($sysid, $machinename, $sourceid, $link);
+					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
 				elseif (strpos($line, "<rom") !== false)
 				{
-					add_rom($line, $machinename, $link, "rom", $gameid, $date);
+					add_rom($line, $machinename, "rom", $gameid, $date);
 				}
 				elseif (strpos($line, "<disk") !== false)
 				{
-					add_rom($line, $machinename, $link, "disk", $gameid, $date);
+					add_rom($line, $machinename, "disk", $gameid, $date);
 				}
 				elseif (strpos($line, "</software>") !== false)
 				{
@@ -249,15 +249,15 @@ function import_dat($filename, $link)
 					preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
 					$machinename = $machinename[1];
 					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
-					$gameid = add_game($sysid, $machinename, $sourceid, $link);
+					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
 				elseif (strpos($line, "rom (") !== false && $machinefound)
 				{
-					add_rom_old($line, $machinename, $link, "rom", $gameid, $date);
+					add_rom_old($line, $machinename, "rom", $gameid, $date);
 				}
 				elseif (strpos($line, "disk (") !== false && $machinefound)
 				{
-					add_rom_old($line, $machinename, $link, "disk", $gameid, $date);
+					add_rom_old($line, $machinename, "disk", $gameid, $date);
 				}
 				elseif (strpos($line, ")") !== false)
 				{
@@ -282,10 +282,17 @@ function import_dat($filename, $link)
 	}
 }
 
-function add_game ($sysid, $machinename, $sourceid, $link)
+function add_game ($sysid, $machinename, $sourceid)
 {
+	global $link, $normalize_chars, $search_pattern;
+	
 	// WoD gets rid of anything past the first "(" as the name, we will do the same
 	$machinename = preg_replace("/^(.*?) (\(|\[).*$/", "\1", $machinename);
+	
+	// Run the name through the filters to make sure that it's correct
+	$machinename = strtr($machinename, $normalize_chars);
+	$machinename = ru2lat($machinename);
+	$machinename = str_replace($search_pattern["EXT"], $search_pattern["REP"], $machinename);
 	
 	$query = "SELECT id
 	FROM games
@@ -310,15 +317,15 @@ function add_game ($sysid, $machinename, $sourceid, $link)
 	return $gameid;
 }
 
-function add_rom ($line, $machinename, $link, $romtype, $gameid, $date)
+function add_rom ($line, $machinename, $romtype, $gameid, $date)
 {
 	$xml = simplexml_load_string($line);
-	add_rom_helper($machinename, $link, $romtype, $gameid, $xml->attributes()["name"], $date, 
+	add_rom_helper($machinename, $romtype, $gameid, $xml->attributes()["name"], $date, 
 			$xml->attributes()["size"], $xml->attributes()["crc"], $xml->attributes()["md5"],
 			$xml->attributes()["sha1"]);
 }
 	
-function add_rom_old($line, $machinename, $link, $romtype, $gameid, $date)
+function add_rom_old($line, $machinename, $romtype, $gameid, $date)
 {
 	preg_match("/name \"(.*)\"/", $line, $name);
 	$name = $name[1];
@@ -346,11 +353,22 @@ function add_rom_old($line, $machinename, $link, $romtype, $gameid, $date)
 		}
 	}
 	
-	add_rom_helper($machinename, $link, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1);
+	add_rom_helper($machinename, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1);
 }
 	
-function add_rom_helper($machinename, $link, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1)
+function add_rom_helper($machinename, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1)
 {
+	global $link, $normalize_chars, $search_pattern;
+	
+	// Run the name through the filters to make sure that it's correct
+	$name = strtr($name, $normalize_chars);
+	$name = ru2lat($name);
+	$name = str_replace($search_pattern["EXT"], $search_pattern["REP"], $name);
+	
+	// WOD origninally stripped out any subdirs from the imported files, we do the same
+	$name = explode("\\", $name);
+	$name = $name[-1];
+	
 	if ($romtype != "rom" && $romtype != "disk")
 	{
 		$romtype = "rom";
