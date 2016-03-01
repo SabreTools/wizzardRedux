@@ -11,7 +11,7 @@ for ($x = 1; $x < 100; $x++)
 
 	$page = "http://smartlip.com/symbian/flist.php?cat=roms/&sort=date&red=&b=".$x;
 	print "load ".$page."\n";
-	$query = implode('', file($page));
+	$query = get_data($page);
  	$query = explode('download.php?file=', str_replace('&amp;', '&', $query));
 	array_splice($query, 0, 1);
 

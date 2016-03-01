@@ -4,7 +4,7 @@
 
 print "<pre>";
 
-$query = implode('', file('http://russianroms.ru/'));
+$query = get_data('http://russianroms.ru/');
 $query = explode('?page_id=', $query);
 $query[0] = null;
 
@@ -22,7 +22,7 @@ foreach ($query as $row)
 foreach ($urls as $newfile)
 {
 	print "load ".$newfile."\n";
-	$query = implode('', file("http://russianroms.ru/?page_id=".$newfile));
+	$query = get_data("http://russianroms.ru/?page_id=".$newfile);
  	$query = explode('"><img src="http://russianroms.narod.ru/linkware.gif"', $query);
 	$query[count($query) - 1] = null;
 

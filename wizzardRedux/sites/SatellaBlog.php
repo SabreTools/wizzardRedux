@@ -12,7 +12,7 @@ for ($x = 1; $x < 4; $x++)
 	$old = 0;
 
 	print "load: ".$murl.$x."\n";
-	$query = implode('', file($murl.$x));
+	$query = get_data($murl.$x);
 	$query = explode('<h2 class="posttitle"><a href="', $query);
 	$query[0] = null;
 
@@ -61,7 +61,7 @@ $new = 0;
 $old = 0;
 
 print "load: ".$murl."\n";
-$query = implode('', file($murl));
+$query = get_data($murl);
 $query = explode("<div class='wdgpo wdgpo_standard_count'>", $query);
 $query = explode('<div id="sidebar">', $query[1]);
 

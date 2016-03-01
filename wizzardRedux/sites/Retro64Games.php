@@ -6,7 +6,7 @@ print "<pre>";
 
 $found=Array();
 
-$dirs = implode('', file("http://retro64games.net/C64files/"));
+$dirs = get_data("http://retro64games.net/C64files/");
 $dirs = explode('<a href="', $dirs);
 
 foreach ($dirs as $dir)
@@ -23,7 +23,7 @@ foreach ($dirs as $dir)
 		$old = 0;
 
 		print "load: ".$dir."\n";
-		$query = implode('', file("http://retro64games.net/C64files/".$dir));
+		$query = get_data("http://retro64games.net/C64files/".$dir);
 		$query = explode('<table width="100%" cellspacing="2" cellpadding="0">', html_entity_decode($query));
 		array_splice($query,0,1);
 
@@ -93,7 +93,7 @@ function listDir($dir)
 
 	print "load: ".$dir."\n";
 
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('> Parent Directory<', html_entity_decode($query));
 	if ($query[1])
 	{

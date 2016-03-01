@@ -6,12 +6,34 @@ print "<pre>";
 
 $r_query = array_flip($r_query);
 $start = $r_query[0];
+$r_query = array_flip($r_query);
 
 print "\nSearch for new uploads\n\n";
 
+$query = get_data("http://robert.hurst-ri.us/downloads/");
+
+preg_match_all("/href=\"(http:\/\/robert\.hurst-ri\.us\/files\/.*)\/\"/", $query, $dls);
+
+$new = 0;
+$old = 0;
+foreach ($dls[1] as $dl)
+{
+	if (!$r_query[$dl])
+	{
+		$new++;
+		print "found: <a href='".$dl."'>".$dl."</a>\n";
+	}
+	else
+	{
+		$old++;
+	}
+}
+
+/*
+// Original code, no longer applicable
 for ($x = $start; $x < $start + 10; $x++)
 {
-	$query = implode('', file("http://robert.hurst-ri.us/downloads/?did=".$x));
+	$query = get_data("http://robert.hurst-ri.us/downloads/?did=".$x);
 
 	$gametitle = explode('<h3 class="download-info-heading">', $query);
 	$gametitle = explode('<', $gametitle[1]);
@@ -35,5 +57,6 @@ if ($last)
 }
 
 print "\nnext startnr\t<a href=?action=onlinecheck&source=RH&start=".($start).">".$start."</a>\n\n";
+*/
 
 ?>
