@@ -4,7 +4,7 @@
 
 print "<pre>";
 	
-$query = implode('', file("http://mapy.atari8.info/"));
+$query = get_data("http://mapy.atari8.info/");
 $query = explode('<td height="216" background="gfx/menumenu.gif" valign="top">', $query);
 $query = explode("</td>", $query[1]);
 $query = explode("href=\"", $query[0]);
@@ -22,7 +22,7 @@ foreach ($query as $row)
 		
 		if (!$r_query[$url])
 		{
-			$queryb = implode('', file("http://mapy.atari8.info/".$url));
+			$queryb = get_data("http://mapy.atari8.info/".$url);
 
 			$name = explode("<strong>:: ", $queryb);
 			$name = explode("</strong>", $name[1]);

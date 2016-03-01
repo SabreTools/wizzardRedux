@@ -16,7 +16,7 @@ foreach ($pages as $page)
 {
 	print "load ".$page."\n";
 
-	$content = implode('', file($page));
+	$content = get_data($page);
 	$content = explode('<a href="', $content);
 	$content[0] = null;
 
@@ -55,22 +55,22 @@ foreach ($pages as $page)
 	}
 
 	print "found new ".$new.", old ".$old."\n";
-
-	print "<table><tr><td><pre>";
-	
-	foreach ($found as $row)
-	{
-		print $row[0]."\n";
-	}
-	
-	print "</td><td><pre>";
-	
-	foreach ($found as $row)
-	{
-		print "<a href=\"".$row[0]."\" target=_blank>".$row[1]."</a>\n";
-	}
-	
-	print "</td></tr></table>";
 }
+
+print "<table><tr><td><pre>";
+
+foreach ($found as $row)
+{
+	print $row[0]."\n";
+}
+
+print "</td><td><pre>";
+
+foreach ($found as $row)
+{
+	print "<a href=\"".$row[0]."\" target=_blank>".$row[1]."</a>\n";
+}
+
+print "</td></tr></table>";
 
 ?>

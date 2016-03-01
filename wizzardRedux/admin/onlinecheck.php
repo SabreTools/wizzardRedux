@@ -22,12 +22,6 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
-		"magicrip",
-		"MagyarC64HQ",
-		"manosoft",
-		"Mapy",
-		"Marcos64",
-		"MCBremakes",
 		"MSXbasic",
 		"MSXcassettes",
 		"MyVG5000",
@@ -134,11 +128,17 @@ $fixed = array(
 		"heranbago",
 		"HHUG",
 		"i-mockery",
-		"Import64",						// Empty checker page?
+		"Import64",						// Empty checker page
 		"Kamming",
 		"karpez",
 		"Konamito",
 		"m3Zz",
+		"magicrip",
+		"MagyarC64HQ",
+		"manosoft",
+		"Mapy",
+		"Marcos64",
+		"MCBremakes",
 		
 		"ntscene",
 );

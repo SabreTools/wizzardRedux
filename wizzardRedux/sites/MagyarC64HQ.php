@@ -4,8 +4,8 @@
 
 print "<pre>";
 
-$pages = implode('', file("http://c64hq.hu/menu.htm"));
-$pages = explode ('<A HREF="games/',$pages);
+$pages = get_data("http://c64hq.hu/menu.htm");
+$pages = explode('<A HREF="games/', $pages);
 $pages[0] = null;
 
 $otherPages = array();
@@ -53,7 +53,7 @@ function loadPage($page)
 
 	$page = "http://c64hq.hu/games/".$page;
 	print "load ".$page."\n";
-	$query = implode('', file($page));
+	$query = get_data($page);
 	$query = str_replace(
 			array("\n", "\r", "<br>", "<BR>", 'href="JavaScript', 'href="javascript', 'href="http', '</a>', '<a href="'),
 			array('', '', '', '', '', '', '', '</A>', '<A HREF="'), $query);

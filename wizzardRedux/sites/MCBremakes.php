@@ -7,7 +7,7 @@ print "<pre>";
 $new = 0;
 $old = 0;
 
-$query = implode('', file("http://mcbremakes.blogspot.com/search?max-results=100"));
+$query = get_data("http://mcbremakes.blogspot.com/search?max-results=100");
 $query = explode("<h3 class='post-title entry-title' itemprop='name'>\n<a href='", $query);
 $query[0] = null;
 foreach ($query as $row)

@@ -330,3 +330,8 @@ files/roms/trans/Combat_Cars_Rus_NewGame_p1.7z
 files/roms/trans/Crusader_of_Centy_Rus_Shedevr_p1.7z
 files/roms/trans/Terminator_Rus_NewGame_p1.7z
 files/roms/trans/Zero_Tolerance_Rus_NewGame_p1.7z
+trans_gba.html
+new_other.html
+hacks_other.html
+trans_other.html
+trans_gba_other.html
