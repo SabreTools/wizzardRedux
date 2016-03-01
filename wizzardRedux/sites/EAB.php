@@ -2,21 +2,24 @@
 
 // Original code: The Wizard of DATz
 
-$drive = "Z:/"; // Local drive where EAB is mounted
-
 // Use this to replace drive calls
-$remote = getFtpConnection("ftp://ftp:any@ftp.grandis.nu/");
+$server = "grandis.nu";
+$resource = ftp_connect($server) or die("Couldn't connect to ".$server);
+if (!ftp_login($resource, "ftp", "any"))
+{
+	die("Could not log in to ".$server);
+}
 
 $dirs = array(
 	'Atari',
-	'Commodore_Amiga',
-	'Commodore_C128',
-	'Commodore_C16,_C116_&_Plus-4',
-	'Commodore_C64',
-	'Commodore_C65',
-	'Commodore_MAX_Machine_&_VIC10',
-	'Commodore_PET',
-	'Commodore_VIC20', 
+//	'Commodore_Amiga',
+//	'Commodore_C128',
+//	'Commodore_C16,_C116_&_Plus-4',
+//	'Commodore_C64',
+//	'Commodore_C65',
+//	'Commodore_MAX_Machine_&_VIC10',
+//	'Commodore_PET',
+//	'Commodore_VIC20', 
 );
 
 $skip_query = implode('', file("../sites/".$source."_skip.txt"));
@@ -35,11 +38,15 @@ foreach ($dirs as $dir)
 	}
 }
 
+ftp_close($resource);
+
 if ($search_ok)
 {
+	/*
 	$fp = fopen("../sites/".$source."_skip.txt", "w");
 	fwrite($fp, "");
 	fclose($fp);
+	*/
 }
 
 print "\nnew urls:\n\n";
@@ -53,7 +60,7 @@ function listDir($dir)
 {
 	sleep(1);
 
-	GLOBAL $drive, $r_query, $found, $skip_query, $search_ok;
+	GLOBAL $r_query, $found, $skip_query, $search_ok, $resource;
 
 	print "open: ".$dir."\n";
 
@@ -62,93 +69,77 @@ function listDir($dir)
 	$old = 0;
 	$folder = 0;
 
-	$handle = opendir($drive.$dir);
-
-	if(!$handle)
+	if(!ftp_chdir($resource, $dir))
 	{
 		$search_ok = false;
 	}
 	else
 	{
-		while (false != ($file = readdir($handle)))
+		$pwd = ftp_pwd($resource);
+		$files = ftp_nlist($resource, $pwd);
+		
+		foreach ($files as $file)
 		{
-			$file2 = "{".str_replace("/", "}{", $dir)."}".$file;
-
-			if ($r_query[$file2])
+			// If the file already exists, skip it
+			if ($r_query[$file])
 			{
+				//print "found old: ".$file."\n";
 				$old++;
 			}
+			// Otherwise, either add it to the list or go into the new directory
 			else
 			{
-				$filetype = filetype($drive.$dir."/".$file);
-
-				if ($filetype && $search_ok)
+				// If the item is a directory, move into it and parse
+				if (is_ftp_dir($file))
 				{
-					if ($filetype == "file" && $file != ".listing")
+					$folder++;
+					if (!$skip_query[$file])
 					{
-						$found[] = array($dir."/".$file, $file2);
-						$new++;
+						listDir($file);
 					}
-					elseif ($filetype == "dir" && $file != "." && $file != "..")
+					else
 					{
-						$folder++;
-						if (!$skip_query[$dir."/".$file])
-						{
-							listDir($dir."/".$file);
-						}
-						else
-						{
-							print "skip: ".$dir."/".$file."\n";
-						}
+						print "skip: ".$file."\n";
 					}
 				}
+				// Otherwise, it's a file that should be checked
 				else
 				{
-					$search_ok = false;
-					break;
+					print "found: ".$file."\n";
+					$found[] = $file;
+					$new++;
+					die();
 				}
 			}
 		}
-		closedir($handle);
 	}
 
 	if ($search_ok)
 	{
 		print "close: ".$dir."\n";
 		print "new: ".$new.", old: ".$old.", folder:".$folder."\n";
+		/*
 		$fp = fopen("../sites/".$source."_skip.txt", "a");
 		fwrite($fp, $dir."\n");
 		fclose($fp);
+		*/
 	}
 }
 
-//http://php.net/manual/en/function.ftp-connect.php
-function getFtpConnection($uri)
+function is_ftp_dir($dirname)
 {
-	// Split FTP URI into:
-	// $match[0] = ftp://username:password@sld.domain.tld/path1/path2/
-	// $match[1] = ftp://
-	// $match[2] = username
-	// $match[3] = password
-	// $match[4] = sld.domain.tld
-	// $match[5] = /path1/path2/
-	preg_match("/ftp:\/\/(.*?):(.*?)@(.*?)(\/.*)/i", $uri, $match);
-
-	// Set up a connection
-	$conn = ftp_connect($match[1] . $match[4] . $match[5]);
-
-	// Login
-	if (ftp_login($conn, $match[2], $match[3]))
+	GLOBAL $resource;
+	
+	$pwd = ftp_pwd($resource);
+	if (@ftp_chdir($resource, $dirname))
 	{
-		// Change the dir
-		ftp_chdir($conn, $match[5]);
-
-		// Return the resource
-		return $conn;
+		ftp_chdir($resource, $pwd);
+		return true;
 	}
-
-	// Or retun null
-	return null;
+	else
+	{
+		return false;
+	}
 }
 
 ?>
