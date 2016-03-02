@@ -105,19 +105,16 @@ elseif (!file_exists("../sites/".$_GET["source"].".php"))
 
 $source = $_GET["source"];
 
-if (in_array($source, $sites) || in_array($source, $fixed))
-{
-	echo "<h2>Loading pages and links...</h2>";
-	
-	$r_query = implode('', file("../sites/".$source.".txt"));
-	$r_query = explode("\r\n", $r_query);
-	$r_query = array_flip($r_query);
-	
-	$found = array();
+echo "<h2>Loading pages and links...</h2>";
 
-	// Original code: The Wizard of DATz
-	include_once("../sites/".$source.".php");
-}
+$r_query = implode('', file("../sites/".$source.".txt"));
+$r_query = explode("\r\n", $r_query);
+$r_query = array_flip($r_query);
+
+$found = array();
+
+// Original code: The Wizard of DATz
+include_once("../sites/".$source.".php");
 
 //http://nadeausoftware.com/articles/2007/06/php_tip_how_get_web_page_using_curl
 //http://stackoverflow.com/questions/4372710/php-curl-https
