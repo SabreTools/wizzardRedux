@@ -4,11 +4,11 @@
 
 print "<pre>";
 
-$found=Array();
+$found = array();
 
-$dir="http://whatisthe2gs.apple2.org.za/";
+$dir = "http://whatisthe2gs.apple2.org.za/";
 print "load: ".$dir."\n";
-$query = implode('', file($dir));
+$query = get_data($dir);
 $query = explode('<ul id="catNav">', $query);
 $query = explode('<li><a href="', $query[1]);
 array_splice($query, 0, 1);
@@ -23,7 +23,7 @@ foreach ($query as $row)
 
 	$dir = "http://whatisthe2gs.apple2.org.za/".$section;
 	print "load:  ".$dir."\n";
-	$queryb = implode('', file($dir));
+	$queryb = get_data($dir);
 	$queryb = explode("<td class='caption'><a href='", $queryb);
 	array_splice($queryb, 0, 1);
 
@@ -34,7 +34,7 @@ foreach ($query as $row)
 
 		$dir = "http://whatisthe2gs.apple2.org.za/".$page;
 		print "load:   ".$dir."\n";
-		$queryc = implode('', file($dir));
+		$queryc = get_data($dir);
 
 		$title = explode("<h1>", $queryc);
 		$title = explode("<", $title[1]);

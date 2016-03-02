@@ -5,146 +5,43 @@ Check for new downloadable ROMs from all available sites
 
 Requires:
 	source		The sourcename to check against (in sites/<source>.php)
+	
+Notes:
+	Below are a list of sites with things of note about them:
+	- c64gamescom				Empty checker page
+	- CPC-Power					"full" is no longer active
+	- Import64					Empty checker page
+	- NES-CartDatabase			Needs more testing
+	- PiratedGameCenter			Not technically dead, just all posts gone
+	- SpecialProgramSipe		Goes through MEGA now, not via the site itself
+	- ssrg						Needs special attention because of possible login
+	- Tiddles					Output needs verification
+	- vic20it					Needs special attention because of possible login
+	- VideopacNL				Need to test cookie usage
+	- VimmsLair					See download link todo
+	- Vizzed					Possible cookie usage
 
-TODO: Retool existing onlinecheck.php files to follow the new format. 2) replace stuff with cURL 3) check code flow to try to optimize
+TODO: Retool existing onlinecheck.php files to follow the new format. 3) check code flow to try to optimize
 TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
-TODO: Remember to replace GLOBALS GET and POST with the proper $_GET, $_POST
 TODO: Document all required GET and POST vars for each page
 TODO: Comment all of the code...
-TODO: Some loadDir functions are useless because they are only used once. Put their code where it should be
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
-TODO: VimmsLair uses wget.exe currently. Can this be reamped to use cURL instead (since it's built into PHP)?
 TODO: Can we run all online checks in a coherent way (in series, that is)?
-TODO: Auto-generate the list of sources, link to the ones that have checkers and list the rest separately
- ------------------------------------------------------------------------------------ */
+------------------------------------------------------------------------------------ */
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
 
-// Site whose checkers have been once-overed (not all checked for dead)
-$checked = array (
-		"NES-CartDatabase",
+// Populate list if sources
+$query = "SELECT name FROM sources";
+$result = mysqli_query($link, $query);
+$result = mysqli_fetch_all($result);
+$sites = array();
+foreach ($result as $item)
+{
+	$sites[] = array_shift($item);
+}
 
-		"vic20it",
-		"VideopacNL",
-		"VimmsLair",
-		"VirtualTR-DOS",
-		"Vizzed",
-		"Vjetnam",
-		"webbedspace",
-		"WhatIsThe2gs",
-		"WinWorld",
-		"WorldOfDragon",
-		"WorldOfSpectrum",
-		"z80ne",
-		"zxAAA",
-);
-
-// Sites that have been given a second look over (all sites checked for dead)
-$fixed = array(
-		"6502dude",
-		"8BitChip",
-		"8BitCommodoreItalia",
-		"AcornPreservation",
-		"alexvampire",
-		"AmstradESP",
-		"ANN",
-		"Apple2Online",
-		"AppleIIgsInfo",
-		"Arise64",
-		"AtariAge",
-		"Atarimania",
-		"AtariOnline",
-		"BananaRepublic",
-		"bjars",
-		"BrutalDeluxeSoftware",
-		"c16de",
-		"C64ch",
-		"c64com",
-		"c64gamescom",					// Empty checker page?
-		"c64gamesde",
-		"C64Heaven",
-		"C64intros",
-		"c64rulez",
-		"C64Tapes",
-		"C64Warez",
-		"CaH4e3",
-		"Cas2Rom",
-		"CasArchive",
-		"computeremuzone",
-		"CPC-Crackers",
-		"CPC-GameReviews",
-		"CPC-Power",					// "full" is no longer active
-		"CPC-Rulez",
-		"CrackersVelus",
-		"csdb",
-		"DC",
-		"Demotopia",
-		"DigitalDream",
-		"DigitalDungeon",
-		"EAB",
-		"Edicolac64",
-		"EludeVisibility",
-		"ep128hu",
-		"Fandal",
-		"Gamebase64",
-		"GratisSaugen",
-		"hackedroms",
-		"heranbago",
-		"HHUG",
-		"i-mockery",
-		"Import64",						// Empty checker page
-		"Kamming",
-		"karpez",
-		"Konamito",
-		"m3Zz",
-		"magicrip",
-		"MagyarC64HQ",
-		"manosoft",
-		"Mapy",
-		"Marcos64",
-		"MCBremakes",
-		"MSXbasic",
-		"MSXcassettes",
-		"MyVG5000",
-		"NanoWasp",
-		
-		"newgame",
-		"NewRom",
-		"NintendoPlayer",
-		"ntscene",
-		"Panprase",
-		"PiratedGameCenter",
-		"PokemonGBAroms",
-		"PokemonMiniNet",
-		"pokeysoft",
-		"Retro64Games",
-		"RetroPrograms",
-		"RH",
-		"rufnoiz",
-		"russianroms",
-		"SacNewsNet",
-		"SatellaBlog",
-		"smartlip",
-		"SMS-Power",
-		"soniccenter",
-		"sonicretro",
-		"SpecialProgramSipe",			// Goes through MEGA now, not via the site itself
-		"spectrum4ever",
-		"ssrg",							// Needs special attention because of possible login
-		"Stadium64",
-		"StairwayToHell",
-		"Symlink",
-		"TapProject",
-		"Tiddles",						// Output needs verification
-		"tomcat",
-		"TRS80CoCoArchive",
-		"TZXvault",
-		"UltimateC64TP",
-		"UnofficialCD32Ports",
-		"vgdb",
-);
-
-// Sites that are probably dead
+// Sites that are dead
 $dead = array(
 		"8BitChip",
 		"8BitCommodoreItalia",
@@ -153,7 +50,7 @@ $dead = array(
 		"Import64",
 		"Konamito",
 		"m3Zz",
-		"PiratedGameCenter",			// Not technically dead, just all posts gone
+		"PiratedGameCenter",
 		"PokemonGBAroms",
 		"smartlip",
 );
@@ -170,8 +67,28 @@ if (!isset($_GET["source"]))
 		{
 			$file = substr($file, 0, sizeof($file) - 5);
 			echo "<a href=\"?page=onlinecheck&source=".$file."\">".htmlspecialchars($file).
-				"</a>".(in_array($file, $dead) ? " (Dead)" : "")."<br/>";
+				"</a>".(in_array($file, $dead) ? " (Dead)" : "")."<br/>\n";
 		}
+	}
+	
+	// List all sites that don't have checkers
+	echo "<h2>Sites With No Checker</h2>\n";
+	
+	// Normalize the arrays because some names don't match 1:1
+	$newsites = array();
+	foreach ($sites as $site)
+	{
+		$newsites[] = strtolower($site);
+	}
+	$newfiles = array();
+	foreach ($files as $file)
+	{
+		$newfiles[] = strtolower($file);
+	}
+	$newfiles = str_replace(".php", "", $newfiles);
+	foreach (array_diff($newsites, $newfiles) as $key => $site)
+	{
+		echo $sites[$key]."<br/>\n";
 	}
 
 	echo "<br/><a href='".$path_to_root."/index.php'>Return to home</a>";
@@ -188,7 +105,7 @@ elseif (!file_exists("../sites/".$_GET["source"].".php"))
 
 $source = $_GET["source"];
 
-if (in_array($source, $checked) || in_array($source, $fixed))
+if (in_array($source, $sites) || in_array($source, $fixed))
 {
 	echo "<h2>Loading pages and links...</h2>";
 	

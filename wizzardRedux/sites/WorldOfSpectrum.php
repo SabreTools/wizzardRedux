@@ -2,10 +2,9 @@
 
 // Original code: The Wizard of DATz
 
-print "<pre>check folders:\n\n";
+print "<pre>check folders:\n";
 
 $dirs = array(
-	'',
 	'alchemist-software',
 	'books',
 	'compilations',
@@ -13,7 +12,7 @@ $dirs = array(
 	'demos',
 	'disks-inform',
 	'games',
-	'games-extras',
+	'games-extras/',
 	'interface2-roms',
 	'magazines',
 	'misc',
@@ -24,69 +23,72 @@ $dirs = array(
 	'zx81/games',
 );
 
-$dirs = array_flip($dirs);
+$badexts = array(
+		".doc",
+		".gif",
+		".jpg",
+		".pdf",
+		".png",
+		".rtf",
+		".tif",
+		".txt",
+);
 
-//$directory = implode('', file($_GET["source"]."/ls-lR"));
-$directory = implode('', file("ftp://ftp.worldofspectrum.org/pub/sinclair/ls-lR"));
-$directory = explode("\n", $directory);
+$new = 0;
+$bad = 0;
+$old = 0;
 
-$curdir = "";
-$lastdir = "#";
-$check = false;
-
-foreach ($directory as $curentry)
+foreach ($dirs as $dir)
 {
-	if (substr($curentry, 0, 2) == "./")
-	{
-		if ($lastdir != "#")
-		{
-			print "close: ".$curdir."\n";
-			print "new: ".$new.", old: ".$old."\n";
-		}
-		$curdir = substr($curentry, 2, -1);
+	checkdir($dir);
+}
 
-		if ($dirs[$curdir])
-		{
-			print "open: ".$curdir."\n";
-			$lastdir = $curdir;
-			$check = true;
-		}
-		elseif(strpos('*'.$curdir, $lastdir))
-		{
-			print "open: ".$curdir."\n";
-		}
-		else
-		{
-			print "ignore: ".$curdir."\n";
-			$lastdir = "#";
-			$check = false;
-		}
-		$new = 0;
-		$old = 0;
-    }
-    elseif (strtolower(substr($curentry, -4)) == ".zip" && $check)
-    {
-		$curfile = explode(":", $curentry);
-		$curfile = substr($curfile[1], 3);
-		$curfile = "pub/sinclair/".$curdir."/".$curfile;
+function checkdir($url)
+{
+	global $badexts, $badnames, $r_query, $found, $dirs, $new, $bad, $old;
+
+	$directory = get_data("http://www.worldofspectrum.org/pub/sinclair/".$url);
+	preg_match_all("/<li><a href=\"(.*)\">.*<\/a><\/li>/", $directory, $urls);
+	
+	foreach ($urls[1] as $curentry)
+	{
+		$isfile = strpos(strrev($curentry), "/") !== 0;
+		$newurl = $url.(strpos($curentry, "/") === 0 || strpos(strrev($url), "/") === 0 ? "" : "/").$curentry;
 		
-		if ($r_query[$curfile])
+		if ($isfile)
 		{
-			$old++;
+			$ext = strtolower(substr($curentry, sizeof($curentry) - 5));
+			
+			if (in_array($ext, $badexts))
+			{
+				$bad++;
+			}
+			elseif (!$r_query["pub/sinclair/".$newurl])
+			{
+				//print "found: ".$newurl."\n";
+				$found[] = $newurl;
+				$new++;
+			}
+			else
+			{
+				$old++;
+			}
 		}
-		else
+		elseif (strpos($curentry, "/") !== 0)
 		{
-			$found[] = $curfile;
-			$new++;
+			//print "dir: ".$newurl."\n";
+			checkdir($newurl);
 		}
 	}
 }
+
+print "\nnew: ".$new." bad: ".$bad." old: ".$old;
 
 print "\nnew urls:\n\n";
 
 foreach ($found as $url)
 {
-	print "<a href=\"ftp://ftp.worldofspectrum.org/".str_replace('#','%23',$url)."\">".$url."</a>\n";
+	print "<a href=\"http://www.worldofspectrum.org/".str_replace('#','%23',$url)."\">".$url."</a>\n";
 }
 
 ?>

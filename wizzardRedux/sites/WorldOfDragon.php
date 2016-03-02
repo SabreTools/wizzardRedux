@@ -32,7 +32,7 @@ function listDir($dir)
 	GLOBAL $found, $r_query;
 
 	print "load: ".$dir."\n";
-	$query = implode('', file("http://archive.worldofdragon.org/archive/index.php?dir=".$dir));
+	$query = get_data("http://archive.worldofdragon.org/archive/index.php?dir=".$dir);
 	$query = explode('<table class="autoindex_table">',$query);
 	$query = explode('<a class="autoindex_a" href="/archive/index.php?dir=', $query[1]);
 	$query[0] = null;

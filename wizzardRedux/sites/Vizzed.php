@@ -55,10 +55,10 @@ print "<pre>";
 
 if (!$_GET["type"])
 {
-	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=full>full</a>\n";
-	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=system>system</a>\n";
-	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=full2>full proxy</a>\n";
-	print "load <a href=?action=onlinecheck&source=".$_GET["source"]."&type=system2>system proxy</a>\n";
+	print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=full>full</a>\n";
+	print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=system>system</a>\n";
+	print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=full2>full proxy</a>\n";
+	print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=system2>system proxy</a>\n";
 }
 elseif ($_GET["type"] == "full2")
 {
@@ -145,10 +145,10 @@ elseif ($_GET["type"] == "full2")
 		$start = $last + 1;
 	}
 
-	print "</table>\nnext startnr\t<a href=?action=onlinecheck&source=".$_GET["source"]."&type=full2&start=".($start).">".$start."</a>";
+	print "</table>\nnext startnr\t<a href=?page=onlinecheck&source=".$_GET["source"]."&type=full2&start=".($start).">".$start."</a>";
 	if ($last != $x)
 	{
-		print "\nignore last startnr\t<a href=?action=onlinecheck&source=".$_GET["source"]."&type=full2&start=".($x).">".($x)."</a>";
+		print "\nignore last startnr\t<a href=?page=onlinecheck&source=".$_GET["source"]."&type=full2&start=".($x).">".($x)."</a>";
 	}
 }
 elseif ($_GET["type"] == "full")
@@ -231,10 +231,10 @@ elseif ($_GET["type"] == "full")
 		$start = $last + 1;
 	}
 
-	print "</table>\nnext startnr\t<a href=?action=onlinecheck&source=".$_GET["source"]."&type=full&start=".($start).">".$start."</a>";
+	print "</table>\nnext startnr\t<a href=?page=onlinecheck&source=".$_GET["source"]."&type=full&start=".($start).">".$start."</a>";
 	if ($last != $x)
 	{
-		print "\nignore last startnr\t<a href=?action=onlinecheck&source=".$_GET["source"]."&type=full&start=".($x).">".($x)."</a>";
+		print "\nignore last startnr\t<a href=?page=onlinecheck&source=".$_GET["source"]."&type=full&start=".($x).">".($x)."</a>";
 	}
 }
 elseif ($_GET["type"] == "system")
@@ -255,7 +255,7 @@ elseif ($_GET["type"] == "system")
 		$counterArray = array();
 
 		// http://www.vizzed.com/p/?page=1&sort=1&system=dc
-		$query = implode('', file ("http://www.vizzed.com/p/?page=".$page."&sort=id&system=".$_GET["system"]."&search=".$_GET["search"]));
+		$query = get_data ("http://www.vizzed.com/p/?page=".$page."&sort=id&system=".$_GET["system"]."&search=".$_GET["search"]);
 
 		$counter = explode('<b>Page ', $query);
 		$counter = explode('</b>', $counter[1]);
@@ -269,7 +269,7 @@ elseif ($_GET["type"] == "system")
 
 		if (!$query)
 		{
-			break;
+			return;
 		}
 
 		$found = false;
@@ -349,12 +349,12 @@ elseif ($_GET["type"] == "system")
 	
 		if ($query)
 		{
-			print "\nnext page <a href=?action=onlinecheck&source=".$_GET["source"]."&type=system&ig=".$_GET["ig"]."&system=".$_GET["system"]."&page=".($page+1).">".($page+1)."</a>";
+			print "\nnext page <a href=?page=onlinecheck&source=".$_GET["source"]."&type=system&ig=".$_GET["ig"]."&system=".$_GET["system"]."&page=".($page+1).">".($page+1)."</a>";
 	
 			if (false)
 			{
 				print "<script>
-				window.open('?action=onlinecheck&source=".$_GET["source"]."&type=system&ig=".$_GET["ig"]."&system=".$_GET["system"]."&page=".($page+1)."','_blank');
+				window.open('?page=onlinecheck&source=".$_GET["source"]."&type=system&ig=".$_GET["ig"]."&system=".$_GET["system"]."&page=".($page+1)."','_blank');
 				</script>";
 			}
 		}
@@ -363,7 +363,7 @@ elseif ($_GET["type"] == "system")
 	{
 		foreach ($systems as $system)
 		{
-	   		print "<a href=?action=onlinecheck&source=".$_GET["source"]."&type=system&system=".$system[0].">".$system[1]."</a>\n";
+	   		print "<a href=?page=onlinecheck&source=".$_GET["source"]."&type=system&system=".$system[0].">".$system[1]."</a>\n";
 		}
 		
 		print"<form method=\"get\" action=\"?\">
@@ -397,7 +397,7 @@ elseif ($_GET["type"] == "system2")
 		
 		$counterArray = array();
 
-		$query = implode('', file("http://two.webproxy.at/surf/browse.php?u=".urlencode("http://www.vizzed.com/playonlinegames/index.php?page=".$page."&sort=id&system=".$_GET["system"]."&search=".$_GET["search"])."&b=4"));
+		$query = get_data("http://two.webproxy.at/surf/browse.php?u=".urlencode("http://www.vizzed.com/playonlinegames/index.php?page=".$page."&sort=id&system=".$_GET["system"]."&search=".$_GET["search"])."&b=4");
 
 		$counter = explode('<b>Page ', $query);
 		$counter = explode('</b>', $counter[1]);
@@ -410,7 +410,7 @@ elseif ($_GET["type"] == "system2")
 		
 		if (!$query)
 		{
-			break;
+			return;
 		}
 
 		$found = false;
@@ -433,7 +433,7 @@ elseif ($_GET["type"] == "system2")
 				}
 				else
 				{
-					$query_s = implode('', file("http://two.webproxy.at/surf/browse.php?u=".urlencode("http://www.vizzed.com/playonlinegames/play.php?id=".$row)."&b=4"));
+					$query_s = get_data("http://two.webproxy.at/surf/browse.php?u=".urlencode("http://www.vizzed.com/playonlinegames/play.php?id=".$row)."&b=4");
 				}
 
 				if (strrpos($query_s, "Game doesn't exist."))
@@ -490,14 +490,14 @@ elseif ($_GET["type"] == "system2")
 
 		if ($query)
 		{
-			print "\nnext page <a href=?action=onlinecheck&source=".$_GET["source"]."&type=system2&ig=".$_GET["ig"]."&system=".$_GET["system"]."&page=".($page+1).">".($page+1)."</a>";
+			print "\nnext page <a href=?page=onlinecheck&source=".$_GET["source"]."&type=system2&ig=".$_GET["ig"]."&system=".$_GET["system"]."&page=".($page+1).">".($page+1)."</a>";
 		}
 	}
 	else
 	{
 		foreach ($systems as $system)
 		{
-	   		print "<a href=?action=onlinecheck&source=".$_GET["source"]."&type=system2&system=".$system[0].">".$system[1]."</a>\n";
+	   		print "<a href=?page=onlinecheck&source=".$_GET["source"]."&type=system2&system=".$system[0].">".$system[1]."</a>\n";
 		}
 
 		print"<form method=\"get\" action=\"?\">
@@ -515,6 +515,6 @@ elseif ($_GET["type"] == "system2")
 	}
 }
 
-print "\n\n <a href=?action=onlinecheck&source=".$_GET["source"].">back to top</a>\n";
+print "\n\n <a href=?page=onlinecheck&source=".$_GET["source"].">back to top</a>\n";
 
 ?>

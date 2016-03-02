@@ -2,6 +2,8 @@
 
 // Original code: The Wizard of DATz
 
+// Either takes a long time OR it's broken. Either way, nothing is showing up...
+
 print "<pre>";
 
 $r_query = array_flip($r_query);
@@ -12,7 +14,7 @@ $r_query = array_flip($r_query);
 
 for ($id = $start; $id < $start + 50; $id++)
 {
-	$query = implode('', file("http://bootgod.dyndns.org:7777/profile.php?id = ".$id));
+	$query = get_data("http://bootgod.dyndns.org:7777/profile.php?id = ".$id);
 	$query = str_replace("&nbsp;", " ", $query);
 	$query = html_entity_decode($query);
 	$query = str_replace("\n", "", $query);
@@ -21,7 +23,7 @@ for ($id = $start; $id < $start + 50; $id++)
 	$title = explode('</td>', $title[1]);
 	$title = trim(strip_tags($title[0]));
 	
-	$info = Array();
+	$info = array();
 	
 	$Catalog = explode('<th >Catalog ID</th>', $query);
 	$Catalog = explode('</td>', $Catalog[1]);

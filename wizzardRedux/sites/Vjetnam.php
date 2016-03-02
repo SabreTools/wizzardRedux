@@ -4,7 +4,7 @@
 
 print "<pre>";
 
-$query = implode('', file("http://vjetnam.hopto.org/index.php?frame=games"));
+$query = get_data("http://vjetnam.hopto.org/index.php?frame=games");
 $query = explode("HREF='index.php?frame=lett&dir=", $query);
 $query[0] = null;
 
@@ -16,9 +16,9 @@ foreach ($query as $row)
 {
 	if ($row)
 	{
-		$dir = explode('&',$row);
-		$dir=$dir[0];
-		$dirArray[$dir]=$dir;
+		$dir = explode('&', $row);
+		$dir = $dir[0];
+		$dirArray[$dir] = $dir;
 		print " ".$dir;
 	}
 }
@@ -29,14 +29,14 @@ foreach ($dirArray as $dir)
 {
 	for ($page = 0; $page < 100; $page++)
 	{
-		$query = implode('', file("http://vjetnam.hopto.org/index.php?frame=lett&dir=".$dir."&page=".$page));
+		$query = get_data("http://vjetnam.hopto.org/index.php?frame=lett&dir=".$dir."&page=".$page);
 		$query = explode("<span class='name'>&nbsp;", $query);
 
 		if ($query[1])
 		{
 			$query[0] = null;
 
-			$found = 0;
+			$total = 0;
 			$new = 0;
 		
 			foreach ($query as $row)
@@ -75,7 +75,7 @@ foreach ($dirArray as $dir)
 						$gametitle=$gametitle." (".$year.")";
 					}
 		
-					$found++;
+					$total++;
 				
 					if (!$r_query[$url])
 					{
@@ -85,7 +85,7 @@ foreach ($dirArray as $dir)
 				}
 			}
 	
-			print "load ".$dir.", page ".$page.", found ".$found.", new ".$new."\n";
+			print "load ".$dir.", page ".$page.", found ".$total.", new ".$new."\n";
 		}
 		else
 		{

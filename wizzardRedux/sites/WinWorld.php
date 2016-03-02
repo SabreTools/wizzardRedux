@@ -34,7 +34,7 @@ else
 {
 */
 	print "<pre>check folders:\n\n";
-	listDir("library","library", $_GET["cookie"], 1);
+	listDir("library", "library", $_GET["cookie"], 1);
 //}
 
 print "\nnew urls:\n\n";

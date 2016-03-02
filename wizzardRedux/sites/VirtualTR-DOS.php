@@ -6,7 +6,7 @@ print "<pre>";
 
 $dirs = array("http://trd.speccy.cz/gs.php");
 
-$query = implode('', file("http://trd.speccy.cz/skin/g_top.htm"));
+$query = get_data("http://trd.speccy.cz/skin/g_top.htm");
 $query = explode('href="', $query);
 array_splice($query, 0, 1);
 foreach ($query as $url)
@@ -15,7 +15,7 @@ foreach ($query as $url)
 	$dirs[] = "http://trd.speccy.cz".$url[0];
 }
 
-$query = implode('', file("http://trd.speccy.cz/demos/top.htm"));
+$query = get_data("http://trd.speccy.cz/demos/top.htm");
 $query = explode('href="', $query);
 array_splice($query, 0, 1);
 foreach ($query as $url)
@@ -27,7 +27,7 @@ foreach ($query as $url)
 	}
 	else
 	{
-		$query2 = implode('', file("http://trd.speccy.cz/demos/".$url[0]));
+		$query2 = get_data("http://trd.speccy.cz/demos/".$url[0]);
 		$query2 = explode('href="', $query2);
 		array_splice($query2, 0, 1);
 		foreach ($query2 as $url2)
@@ -38,7 +38,7 @@ foreach ($query as $url)
 	}
 }
 
-$query = implode('', file("http://trd.speccy.cz/games.php?l=down"));
+$query = get_data("http://trd.speccy.cz/games.php?l=down");
 $query = explode('games.php?', $query);
 array_splice($query, 0, 1);
 foreach ($query as $url)
@@ -50,7 +50,7 @@ foreach ($query as $url)
 foreach ($dirs as $dir)
 {
 	print "load: ".$dir."\n";
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = ru2lat($query);
 	$query = str_replace("&nbsp;", " ", $query);
 	$query = str_replace("\n", " ", $query);
@@ -121,7 +121,7 @@ $dirs = array(
 foreach ($dirs as $dir)
 {
 	print "load: ".$dir."\n";
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = ru2lat($query);
 	$query = explode("\n", $query);
 	array_splice($query, 0, 1);
@@ -169,7 +169,7 @@ $dirs = array(
 foreach ($dirs as $dir)
 {
 	print "load: ".$dir."\n";
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = ru2lat($query);
 	$query = explode("<li>", $query);
 	array_splice($query, 0, 1);
@@ -211,7 +211,7 @@ foreach ($dirs as $dir)
 
 $dir = "http://trd.speccy.cz/press.php";
 print "load: ".$dir."\n";
-$queryd = implode('', file($dir));
+$queryd = get_data($dir);
 $queryd = explode("/press.php?l=", $queryd);
 array_splice($queryd, 0, 1);
 
@@ -223,7 +223,7 @@ foreach ($queryd as $rowd)
 	$dir = "http://trd.speccy.cz/press.php?l=".$rowd;
 	print "load: ".$dir."\n";
 
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = ru2lat($query);
 	$query = str_replace("&nbsp;", " ", $query);
 	$query = str_replace("\n"," ",$query);

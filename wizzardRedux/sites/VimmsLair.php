@@ -2,6 +2,8 @@
 
 // Original code: The Wizard of DATz
 
+// TODO: Change printout of wget statement to cURL download link
+
 print "<pre>";
 
 $sections = array(
@@ -34,7 +36,7 @@ $sections = array(
 	"Z",
 );
 
-$query = implode('', file("http://vimm.net/?p=vault"));
+$query = get_data("http://vimm.net/?p=vault");
 $query = explode('?system=', $query);
 array_splice($query, 0, 1);
 
@@ -49,7 +51,7 @@ foreach ($query as $system)
 		$old = 0;
 		$other = 0;
 		print "load ".$section."\n";
-		$ids = implode('', file("http://vimm.net/vault/?p=list&action=settings&section=".$section."&system=".$system."&v_us=1&v_hacked=1&v_prototype=1&v_foreign=1&v_translated=1&v_unlicensed=1"));
+		$ids = get_data("http://vimm.net/vault/?p=list&action=settings&section=".$section."&system=".$system."&v_us=1&v_hacked=1&v_prototype=1&v_foreign=1&v_translated=1&v_unlicensed=1");
 		$ids = explode('"?p=details&amp;id=', $ids);
 		array_splice($ids, 0, 1);
 		foreach ($ids as $id)
@@ -60,7 +62,7 @@ foreach ($query as $system)
 			if (!$r_query[$id])
 			{
 				print "load ".$id."\n";
-				$page = implode('', file("http://vimm.net/vault/?p=details&id=".$id));
+				$page = get_data("http://vimm.net/vault/?p=details&id=".$id);
 				$page = explode('name="download"', $page);
 
 				if ($page[1])

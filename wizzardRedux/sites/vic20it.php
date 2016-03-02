@@ -2,6 +2,8 @@
 
 // Original code: The Wizard of DATz
 
+// TODO: This site requires a login now
+
 $dirs = array(
 	array('PaperSoft Prima serie','http://vic20.it/papersoft/1-1.html?ckattempt=1'),
 	array('PaperSoft Prima serie','http://vic20.it/papersoft/1-2.html?ckattempt=1'),
@@ -13,7 +15,51 @@ print "<pre>check folders:\n\n";
 
 foreach ($dirs as $dir)
 {
-	listDir($dir);
+	print "load: ".$dir[1]."\n";
+
+	$query = getHTML($dir[1]);
+	$query = str_replace('<div style="text-align: center;">','<p>', $query);
+	$query = explode('<p><strong><font face="Verdana"><font size="3">', $query);
+	$query[0] = null;
+
+	$new = 0;
+	$old = 0;
+
+	foreach ($query as $row)
+	{
+		if ($row)
+		{
+			$title = explode('<a', $row);
+			$title = $dir[0]." - ".trim(strip_tags($title[0]));
+
+			$urls = explode('"http://files.vic20.it/papersoft/programs/', $row);
+			$urls[0] = null;
+				
+			foreach ($urls as $url)
+			{
+				if ($url)
+				{
+					$url = explode('"', $url);
+					$url = $url[0];
+
+					$split = explode('.', $url);
+
+					if (!$r_query[$url])
+					{
+						$found[] = array($title.' ('.$split[0].').'.$split[1], $url);
+						$new++;
+					}
+					else
+					{
+						$old++;
+					}
+				}
+			}
+		}
+	}
+
+	print "close: ".$dir[1]."\n";
+	print "new: ".$new.", old: ".$old."\n";
 }
 
 print "\nnew urls:\n\n";
@@ -95,57 +141,6 @@ function getHTML($target)
 	fclose( $socket );
 
 	return $ret;
-}
-
-function listDir($dir)
-{
-	GLOBAL $found, $r_query;
-
-	print "load: ".$dir[1]."\n";
-
-	$query = getHTML($dir[1]);
-	$query = str_replace('<div style="text-align: center;">','<p>', $query);
-	$query = explode('<p><strong><font face="Verdana"><font size="3">', $query);
-	$query[0] = null;
-
-	$new = 0;
-	$old = 0;
-
-	foreach ($query as $row)
-	{
-		if ($row)
-		{
-			$title = explode('<a', $row);
-			$title = $dir[0]." - ".trim(strip_tags($title[0]));
-
-			$urls = explode('"http://files.vic20.it/papersoft/programs/', $row);
-			$urls[0] = null;
-				
-			foreach ($urls as $url)
-			{
-				if ($url)
-				{
-					$url = explode('"', $url);
-					$url = $url[0];
-
-					$split = explode('.', $url);
-
-					if (!$r_query[$url])
-					{
-						$found[] = array($title.' ('.$split[0].').'.$split[1], $url);
-						$new++;
-					}
-					else
-					{
-						$old++;
-					}
-				}
-			}
-		}
-	}
-
-	print "close: ".$dir[1]."\n";
-	print "new: ".$new.", old: ".$old."\n";
 }
 
 ?>
