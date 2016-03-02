@@ -367,7 +367,7 @@ function add_rom_helper($machinename, $romtype, $gameid, $name, $date, $size, $c
 	
 	// WOD origninally stripped out any subdirs from the imported files, we do the same
 	$name = explode("\\", $name);
-	$name = $name[-1];
+	$name = $name[sizeof($name) - 1];
 	
 	if ($romtype != "rom" && $romtype != "disk")
 	{
