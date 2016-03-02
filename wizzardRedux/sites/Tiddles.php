@@ -2,6 +2,8 @@
 
 // Original code: The Wizard of DATz
 
+// TODO: Investigate output (seems... odd)
+
 print "<pre>";
 
 $Versions = array('130810');
@@ -10,7 +12,7 @@ $Values = array();
 
 foreach ($Versions as $Version)
 {
-	$query = implode('', file("http://www.tiddles.org/s3c/customiser/?v=".$Version));
+	$query = get_data("http://www.tiddles.org/s3c/customiser/?v=".$Version);
 	$query = explode('<form ', $query);
 	$query = explode('<input ', $query[1]);
 	foreach ($query as $row)
@@ -36,6 +38,8 @@ print_r($Values);
 
 $Valueskeys = array_keys($Values);
 
+LoadKey('', 0);
+
 function LoadKey($prev, $pos)
 {
 	GLOBAL $Values, $Valueskeys;
@@ -56,8 +60,6 @@ function LoadKey($prev, $pos)
 	}
 }
 
-LoadKey('', 0);
-
 /*
 $dirs=array();
 
@@ -69,7 +71,7 @@ for ($pagetype = 0; $pagetype < 2; $pagetype++)
 	{
 		$dir = "http://zxaaa.untergrund.net/view_demos.php?t=".$pagetype."&np=".$page;
 		print "load: ".$dir."\n";
-		$query = implode('', file($dir));
+		$query = get_data($dir));
 		$query = explode('  <tr', $query);
 		array_splice($query, 0, 1);
 	
@@ -177,7 +179,7 @@ foreach ($dirs as $dir)
 {
 	print "load: ".$dir."\n";
 
-	$query = implode('', file($dir));
+	$query = get_data($dir));
 	$query = explode('<td><a href="', $query);
 	array_splice($query, 0, 1);
 
@@ -199,7 +201,7 @@ foreach ($dirsb as $dir)
 	$new = 0;
 	$old = 0;
 
-	$query = implode('', file($cdir));
+	$query = get_data($cdir));
 	$query = str_replace("alt='", 'alt="', $query);
 	$query = str_replace("'>", '">', $query);
 	$query = explode('<a href="', $query);
@@ -248,7 +250,7 @@ $dirsc = array();
 
 $dir = "http://zxaaa.untergrund.net/GAME.html";
 print "load: ".$dir."\n";
-$query = implode('', file($dir));
+$query = get_data($dir));
 $query = explode("<a href=\"javascript:jumpto('", $query);
 array_splice($query, 0, 1);
 
@@ -266,7 +268,7 @@ foreach ($dirsc as $dir)
 	$new = 0;
 	$old = 0;
 
-	$query = implode('', file($cdir));
+	$query = get_data($cdir));
 	$query = explode('<a href="', $query);
 	array_splice($query, 0, 1);
 

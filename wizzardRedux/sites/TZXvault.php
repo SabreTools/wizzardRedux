@@ -4,7 +4,7 @@
 
 print "<pre>";
 
-$mainPages=Array(
+$mainPages = array(
 	"http://www.tzxvault.org/index.htm",
 	"http://www.tzxvault.org/Amstrad/index.htm",
 	"http://www.tzxvault.org/C16/index.htm",
@@ -17,7 +17,7 @@ $pages = array();
 foreach ($mainPages as $page)
 {
 	print "load ".$page."\n";
-	$content = implode('', file($page));
+	$content = get_data($page);
 	$content = explode('href="', $content);
 	array_splice($content, 0, 1);
 
@@ -39,7 +39,7 @@ foreach ($pages as $page)
 	$new = 0;
 	$old = 0;
 
-	$content = implode('', file($page));
+	$content = get_data($page);
 	$content = str_replace('&nbsp;', ' ', $content);
 
 	$content2 = explode('<font color="#FF0000">', $content);

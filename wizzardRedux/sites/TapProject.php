@@ -6,7 +6,7 @@ print "<pre>";
 
 $dirs = array();
 
-$query = implode('', file("http://biotoxin.speccy.org/index.html"));
+$query = get_data("http://biotoxin.speccy.org/index.html");
 $query = explode('<td><b><a href="', $query);
 array_splice($query, 0, 1);
 foreach ($query as $url)
@@ -18,7 +18,7 @@ foreach ($query as $url)
 foreach ($dirs as $dir)
 {
 	print "load: ".$dir."\n";
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('<tr>', $query);
 	array_splice($query, 0, 1);
 

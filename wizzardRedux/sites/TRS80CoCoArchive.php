@@ -26,7 +26,7 @@ function listDir($dir, $add)
 
 	print "load: ".$dir."\n";
 
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = explode('>Parent Directory<', $query);
 	$query = explode(' href="', $query[1]);
 	$query[0] = null;

@@ -15,6 +15,7 @@ TODO: Some loadDir functions are useless because they are only used once. Put th
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
 TODO: VimmsLair uses wget.exe currently. Can this be reamped to use cURL instead (since it's built into PHP)?
 TODO: Can we run all online checks in a coherent way (in series, that is)?
+TODO: Auto-generate the list of sources, link to the ones that have checkers and list the rest separately
  ------------------------------------------------------------------------------------ */
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
@@ -22,16 +23,7 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 // Site whose checkers have been once-overed (not all checked for dead)
 $checked = array (
 		"NES-CartDatabase",
-		
-		"Symlink",
-		"TapProject",
-		"Tiddles",
-		"tomcat",
-		"TRS80CoCoArchive",
-		"TZXvault",
-		"UltimateC64TP",
-		"UnofficialCD32Ports",
-		"vgdb",
+
 		"vic20it",
 		"VideopacNL",
 		"VimmsLair",
@@ -138,9 +130,18 @@ $fixed = array(
 		"sonicretro",
 		"SpecialProgramSipe",			// Goes through MEGA now, not via the site itself
 		"spectrum4ever",
-		"ssrg",
+		"ssrg",							// Needs special attention because of possible login
 		"Stadium64",
 		"StairwayToHell",
+		"Symlink",
+		"TapProject",
+		"Tiddles",						// Output needs verification
+		"tomcat",
+		"TRS80CoCoArchive",
+		"TZXvault",
+		"UltimateC64TP",
+		"UnofficialCD32Ports",
+		"vgdb",
 );
 
 // Sites that are probably dead

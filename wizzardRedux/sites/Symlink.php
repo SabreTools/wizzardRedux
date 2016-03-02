@@ -16,7 +16,7 @@ foreach ($pages as $page)
 {
 	print "load ".$page."\n";
 
-	$content = implode('', file($page));
+	$content = get_data($page);
 	$content = explode('<tr><td><a href="?action=info&amp;id=', $content);
 	$content[0] = null;
 

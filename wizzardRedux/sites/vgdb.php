@@ -10,7 +10,7 @@ print "load: ".$dir."\n";
 $new = 0;
 $old = 0;
 
-$query = implode('', file($dir));
+$query = get_data($dir);
 $query = explode('<td bgcolor="#DBDBDB" height="19"><font color="#000000" ><b>Code</b></font> </td>', $query);
 
 $query = explode('</center>', $query[1]);
@@ -42,7 +42,7 @@ foreach ($query as $row)
 	if ($url)
 	{
 		print '<span style="display:none" >';
-		$dl = implode('', file($dir.$url));
+		$dl = get_data($dir.$url);
 		print '</span>';
 		$dl = explode('<a href="../ROMS/', $dl);
 		if ($dl[1])

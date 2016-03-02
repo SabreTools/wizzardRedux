@@ -9,9 +9,9 @@ $page="http://tapes.c64.no/main_tapelist.php?group=all&orderby=title";
 
 print "load ".$page."\n";
 
-$content=implode ('', file ($page));
-$content=explode ('<table border=0 cellpadding=0 cellspacing=0 bgcolor="#000000" width="100%">',$content);
-$content=explode ('<tr ',$content[1]);
+$content = get_data($page);
+$content = explode('<table border=0 cellpadding=0 cellspacing=0 bgcolor="#000000" width="100%">', $content);
+$content = explode('<tr ', $content[1]);
 $content[0]=null;
 
 $new = 0;
