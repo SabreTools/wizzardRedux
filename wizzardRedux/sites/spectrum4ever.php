@@ -7,7 +7,7 @@ print "<pre>";
 $dir="http://spectrum4ever.org/fulltape.php?go=releases&scr=1";
 
 print "load: ".$dir."\n";
-$query = implode('', file($dir));
+$query = get_data($dir);
 $query = ru2lat($query);
 $query = str_replace("\r\n", "", $query);
 $query = explode('<div id="littletipwrapper">', $query);
@@ -67,7 +67,7 @@ print "new: ".$new.", old: ".$old."\n";
 
 $dir = "http://spectrum4ever.org/fulltape.php?go=studios";
 print "load: ".$dir."\n";
-$query = implode('', file($dir));
+$query = get_data($dir);
 $query = ru2lat($query);
 $query = explode('fulltape.php?go=studio&id=', $query);
 array_splice($query, 0, 1);
@@ -81,7 +81,7 @@ foreach ($query as $row)
 	$title = trim($title[1]);
 	$dir2 = "http://spectrum4ever.org/fulltape.php?go=studio&id=".$id;
 	print "load: ".$dir2."\n";
-	$query2 = implode('', file($dir2));
+	$query2 = get_data($dir2);
 	$query2 = ru2lat($query2);
 	$query2 = explode('<div class="cian">', $query2);
 	array_splice($query2, 0, 1);

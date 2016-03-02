@@ -10,7 +10,7 @@ print "<pre>check folders:\n\n";
 $dir = "/gameinfos/gameinfos.htm";
 print "load: ".$dir."\n";
 
-$query = implode('', file($base_URL.$dir));
+$query = get_data($base_URL.$dir);
 $query = explode("\n<A HREF=\"", str_replace('<a href="', '<A HREF="', $query));
 $query[0] = null;
 
@@ -26,7 +26,7 @@ foreach ($query as $row)
 		$row = $row[0];
 		print "load: ".$row."\n";
 
-		$query2 = implode('', file($base_URL."/gameinfos/".$row));
+		$query2 = get_data($base_URL."/gameinfos/".$row);
 		$query2 = explode("\n<A HREF=\"", str_replace('<a href="', '<A HREF="', $query2));
 		$query2[0] = null;
 
@@ -136,7 +136,68 @@ foreach ($dirs as $dir)
 {
 	if ($dir)
 	{
-		listDir($dir);
+		$query = get_data($base_URL.$dir);
+		$query = explode('<table border=0 cellspacing=0 cellpadding=0><center>',
+				str_replace('""', '"',
+						str_replace(array("\r\n", "<a href=", 'Number Of Players:', ': <font color="ffff40">Unknown'),
+								array(null, "<a href=\"", null, null),
+								$query)
+						)
+				);
+		$query[0] = null;
+	
+		$dir = explode('/', $dir);
+		$dir[count($dir) - 1] = null;
+		$dir = implode('/', $dir);
+	
+		$new = 0;
+		$old = 0;
+	
+		foreach ($query as $row)
+		{
+			if ($row)
+			{
+				$url = explode('.zip', $row);
+				if ($url[1])
+				{
+					$title = explode('<', $url[1]);
+					$title = explode('>', $title[0]);
+					$title = $title[1];
+					$url = explode('"', $url[0]);
+					$url = $dir.$url[count($url) - 1].'.zip';
+					$infos = explode(': <font color="ffff40">', $row);
+					$infos[0] = null;
+					$add = array();
+	
+					foreach ($infos as $info)
+					{
+						if ($info)
+						{
+							$info = explode('</font>', $info);
+							$add[] = str_replace(array('(', ')', '/'), array('', '', ', '), trim(strip_tags($info[0])));
+						}
+					}
+	
+					if ($add)
+					{
+						$title = $title." (".implode(") (", $add).")";
+					}
+	
+					if (!$r_query[$url])
+					{
+						$found[] = array($url, $title.".zip");
+						$r_query[$url] = true;
+						$new++;
+					}
+					else
+					{
+						$old++;
+					}
+				}
+			}
+		}
+	
+		print "new: ".$new.", old: ".$old."\n";
 	}
 }
 
@@ -158,73 +219,5 @@ foreach ($found as $row)
 
 print "</td></tr></table>";
 
-function listDir($dir)
-{
-	GLOBAL $found, $r_query, $base_URL;
-
-	print "load: ".$dir."\n";
-	$query = implode('', file($base_URL.$dir));
-	$query = explode('<table border=0 cellspacing=0 cellpadding=0><center>',
-			str_replace('""', '"',
-					str_replace(array("\r\n", "<a href=", 'Number Of Players:', ': <font color="ffff40">Unknown'),
-							array(null, "<a href=\"", null, null),
-							$query)
-					)
-			);
-	$query[0] = null;
-
-	$dir = explode('/', $dir);
-	$dir[count($dir) - 1] = null;
-	$dir = implode('/', $dir);
-
-	$new = 0;
-	$old = 0;
-
-	foreach ($query as $row)
-	{
-		if ($row)
-		{
-			$url = explode('.zip', $row);
-			if ($url[1])
-			{
-				$title = explode('<', $url[1]);
-				$title = explode('>', $title[0]);
-				$title = $title[1];
-				$url = explode('"', $url[0]);
-				$url = $dir.$url[count($url) - 1].'.zip';
-				$infos = explode(': <font color="ffff40">', $row);
-				$infos[0] = null;
-				$add = array();
-
-				foreach ($infos as $info)
-				{
-					if ($info)
-					{
-						$info = explode('</font>', $info);
-						$add[] = str_replace(array('(', ')', '/'), array('', '', ', '), trim(strip_tags($info[0])));
-					}
-				}
-
-				if ($add)
-				{
-					$title = $title." (".implode(") (", $add).")";
-				}
-
-				if (!$r_query[$url])
-				{
-					$found[] = array($url, $title.".zip");
-					$r_query[$url] = true;
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
-			}
-		}
-	}
-
-	print "new: ".$new.", old: ".$old."\n";
-}
 
 ?>

@@ -23,14 +23,6 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 $checked = array (
 		"NES-CartDatabase",
 		
-		"SMS-Power",
-		"soniccenter",
-		"sonicretro",
-		"SpecialProgramSipe",
-		"spectrum4ever",
-		"ssrg",
-		"Stadium64",
-		"StairwayToHell",
 		"Symlink",
 		"TapProject",
 		"Tiddles",
@@ -141,6 +133,14 @@ $fixed = array(
 		"SacNewsNet",
 		"SatellaBlog",
 		"smartlip",
+		"SMS-Power",
+		"soniccenter",
+		"sonicretro",
+		"SpecialProgramSipe",			// Goes through MEGA now, not via the site itself
+		"spectrum4ever",
+		"ssrg",
+		"Stadium64",
+		"StairwayToHell",
 );
 
 // Sites that are probably dead

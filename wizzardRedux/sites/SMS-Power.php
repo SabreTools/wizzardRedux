@@ -8,7 +8,7 @@ $hack_dir = 'http://www.smspower.org/Hacks/Index';
 
 print "<pre>check folders:".$dev_dir."\n\n";
 
-$query = implode('', file($dev_dir));
+$query = get_data($dev_dir);
 $query = str_replace('?', "'", $query);
 $query = explode("<a class='wikilink' href='http://www.smspower.org/Homebrew/", $query);
 array_splice($query, 0, 1);
@@ -29,7 +29,7 @@ foreach ($query as $dir)
 
 print "<pre>check folders:".$hack_dir."\n\n";
 
-$query = implode('', file($hack_dir));
+$query = get_data($hack_dir);
 $query = str_replace('?', "'", $query);
 $query = explode("<a class='wikilink' href='http://www.smspower.org/Hacks/", $query);
 array_splice($query, 0, 1);
@@ -50,7 +50,7 @@ foreach ($query as $dir)
 
 print "<pre>check folders:".$trans_dir."\n\n";
 
-$tquery = implode('', file($trans_dir));
+$tquery = get_data($trans_dir);
 $tquery = str_replace('?', "'", $tquery);
 $tquery = explode("<li class='frame' style='display: inline-block; text-align: center; padding: 1em; margin: 1em;'><a class='wikilink' href='", $tquery);
 $tquery[0] = null;
@@ -64,7 +64,7 @@ foreach ($tquery as $tdir)
 
 		print "<pre>check folders:".$tdir."\n\n";
 
-		$query = implode('', file($tdir));
+		$query = get_data($tdir);
 		$query = str_replace('?', "'", $query);
 		$query = explode("<div><a class='wikilink' href='", $query);
 		$query[0] = null;
@@ -96,7 +96,7 @@ $dump_dir = 'http://www.smspower.org/Dumps/Index';
 
 print "<pre>check folders:".$dump_dir."\n\n";
 
-$query = implode('', file($dump_dir));
+$query = get_data($dump_dir);
 $query = str_replace('?', "'", $query);
 $query = explode("<div class='fpltemplate'>", $query);
 $query = explode("</div>", $query[1]);
@@ -115,7 +115,7 @@ foreach ($query as $url)
 
 		// print $url."\n";
 
-		$query2 = implode('', file($url));
+		$query2 = get_data($url);
 
 		$crc = explode("CRC32</dt><dd>", $query2);
 		$crc = explode("\n", $crc[1]);
@@ -153,7 +153,7 @@ function listDir($dir)
 	GLOBAL $found, $r_query;
 
 	print "load: ".$dir."\n";
-	$query = implode('', file($dir));
+	$query = get_data($dir);
 	$query = str_replace('?', "'", $query);
 	$query = explode(" href='", $query);
 

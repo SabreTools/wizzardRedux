@@ -31,7 +31,7 @@ $dirs = array(
 foreach ($dirs as $dir)
 {
 	print $dir[0]."\n";
-	$query2 = implode('', file($dir[0]));
+	$query2 = get_data($dir[0]);
 	$query2 = explode('href="', $query2);
 	$query2[0] = null;
 
@@ -93,7 +93,7 @@ for ($page = 1; $page < 93; $page++)
 	$new = 0;
 	$old = 0;
 	
-	$query2 = implode('', file($dir));
+	$query2 = get_data($dir);
 	$title = explode("<h1 id='page_title'>", $query2);
 	$title = explode("<", $title[1]);
 	$title = $title[0];
@@ -198,7 +198,7 @@ for ($page = 1; $page < 93; $page++)
 	$new = 0;
 	$old = 0;
 	
-	$query2 = implode('', file($dir));
+	$query2 = get_data($dir);
 	$title = explode("<h1 id='page_title'>", $query2);
 	$title = explode("<", $title[1]);
 	$title = $title[0];
@@ -266,7 +266,7 @@ for ($page = 1; $page < 42; $page++)
 	$new = 0;
 	$old = 0;
 	
-	$query2 = implode('', file($dir));
+	$query2 = get_data($dir);
 	$title = explode("<h1 id='page_title'>", $query2);
 	$title = explode("<", $title[1]);
 	$title = $title[0];

@@ -30,7 +30,7 @@ foreach ($pages as $page)
 {
 	print "load ".$page[0]."\n";
 
-	$content = implode('', file($page[0]));
+	$content = get_data($page[0]);
 	$content = explode('<A HREF="', preg_replace('/\s+/', ' ', str_replace(
 						array("href=", "\n", "</a>", "<a "),
 						array('HREF=', '', '</A>', '<A '), $content)));
