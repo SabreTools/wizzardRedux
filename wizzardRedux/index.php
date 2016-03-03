@@ -17,7 +17,7 @@ if (!$link)
 	die('Error: Could not connect: ' . mysqli_error($link));
 }
 
-echo "Connection established!<br/>\n";
+//echo "Connection established!<br/>\n";
 
 // Ensure the temp folder exists with the right subfolders
 if (!file_exists("temp/imported/"))
