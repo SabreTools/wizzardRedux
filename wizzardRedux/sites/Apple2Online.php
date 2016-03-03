@@ -2,8 +2,6 @@
 
 // Original code: The Wizard of DATz
 
-print "<pre>";
-
 $dir = "http://apple2online.com/";
 print "load: ".$dir."\n";
 $query = get_data($dir);

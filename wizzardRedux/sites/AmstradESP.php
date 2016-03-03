@@ -28,103 +28,89 @@ $dirs = array(
 	'http://amstrad.es/publicaciones/publicaciones/cintas/index.html',
 );
 
-print "<pre>check folders:\n\n";
-
+echo "<table>\n";
 foreach ($dirs as $dir)
 {
-	if ($dir)
+	echo "<tr><td>".$dir."</td>";
+	$query = str_replace("\r\n", '', get_data($dir));
+	$query = explode('<p>  <a href="', $query);
+
+	if (!$query[1])
 	{
-		print "load: ".$dir."\n";
-		$query = str_replace("\r\n", '', get_data($dir));
-		$query = explode('<p>  <a href="', $query);
-	
-		if (!$query[1])
+		$query = explode('<a class="teaserlink" href="', $query[0]);
+	}
+
+	$query[0] = null;
+
+	$t_dir = explode("/", $dir);
+	$t_dir[count($t_dir) - 1] = null;
+	$t_dir = implode("/", $t_dir);
+
+	foreach ($query as $row)
+	{
+		$new = 0;
+		$old = 0;
+
+		$url = explode('"', $row);
+		$url = $t_dir.$url[0];
+
+		//print "found: ".$url."\n";
+
+		$text = explode('</a>', $row);
+		$ext = explode('<', $text[1]);
+		$text = explode('>', $text[0]);
+		$text = trim($text[1]);
+		$ext = trim($ext[0]);
+		$text = strtr($text.' ('.str_replace(', ',') (',$ext).')', $normalize_chars);
+		$query2 = get_data($url);
+		$query2 = explode('<a href="', $query2);
+		$query2[0] = null;
+
+		$dl_dir = explode("/", $url);
+		$dl_dir[count($dl_dir) - 1] = null;
+		$dl_dir = implode("/", $dl_dir);
+
+		foreach ($query2 as $dl)
 		{
-			$query = explode('<a class="teaserlink" href="', $query[0]);
-		}
-	
-		$query[0] = null;
-	
-		$t_dir = explode("/", $dir);
-		$t_dir[count($t_dir) - 1] = null;
-		$t_dir = implode("/", $t_dir);
-	
-		foreach ($query as $row)
-		{
-			if ($row)
-			{
-				$new = 0;
-				$old = 0;
-	
-				$url = explode('"', $row);
-				$url = $t_dir.$url[0];
-	
-				print "found: ".$url."\n";
-	
-				$text = explode('</a>', $row);
-				$ext = explode('<', $text[1]);
-				$text = explode('>', $text[0]);
-				$text = trim($text[1]);
-				$ext = trim($ext[0]);
-				$text = strtr($text.' ('.str_replace(', ',') (',$ext).')', $normalize_chars);
-				$query2 = get_data($url);
-				$query2 = explode('<a href="', $query2);
-				$query2[0] = null;
-	
-				$dl_dir = explode("/", $url);
-				$dl_dir[count($dl_dir) - 1] = null;
-				$dl_dir = implode("/", $dl_dir);
-	
-				foreach ($query2 as $dl)
+				$url2 = explode('"', $dl);
+				$url2 = $dl_dir.$url2[0];
+					
+				$ext = explode(".", $url2);
+				$ext = $ext[count($ext) - 1];
+
+				$dltext = explode('</a>', $dl);
+				$dltext = trim(strip_tags('<a href="'.$dltext[0]));
+
+				if ($dltext && $dltext != 'Share')
 				{
-					if ($dl)
+					if (!$r_query[$url2])
 					{
-						$url2 = explode('"', $dl);
-						$url2 = $dl_dir.$url2[0];
-							
-						$ext = explode(".", $url2);
-						$ext = $ext[count($ext) - 1];
-	
-						$dltext = explode('</a>', $dl);
-						$dltext = trim(strip_tags('<a href="'.$dltext[0]));
-	
-						if ($dltext && $dltext != 'Share')
-						{
-							if (!$r_query[$url2])
-							{
-								$found[] = array($url2,$text.' {'.$dltext.'}.'.$ext);
-								$new++;
-							}
-							else
-							{
-								$old++;
-							}
-						}
+						$found[] = array($url2,$text.' {'.$dltext.'}.'.$ext);
+						$new++;
+					}
+					else
+					{
+						$old++;
 					}
 				}
-	
-				print "new: ".$new.", old: ".$old."\n";
-			}
 		}
+
+		echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 	}
 }
 
-print "\nnew urls:\n\n";
+echo "</table>\n";
 
-print "<table><tr><td><pre>";
-
-foreach($found as $row)
+if (sizeof($found) > 0)
 {
-	print $row[0]."\n";
+	echo "<h2>New files:</h2>";
 }
 
-print "</td><td><pre>";
-
-foreach($found as $row)
+foreach ($found as $row)
 {
-	print "<a href=\"".$row[0]."\" target=_blank>".$row[1]."</a>\n";
+	echo "<a href='".$row[0]."'>".$row[1]."</a><br/>\n";
 }
 
-print "</td></tr></table>";
+echo "<br/>\n";
 
 ?>

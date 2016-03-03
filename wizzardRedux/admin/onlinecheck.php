@@ -22,9 +22,7 @@ Notes:
 	- Vizzed					Possible cookie usage
 
 TODO: Retool existing onlinecheck.php files to follow the new format. 3) check code flow to try to optimize
-TODO: Most explode/implode can probably be changed to preg_match, just need to decipher them
 TODO: Document all required GET and POST vars for each page
-TODO: Comment all of the code...
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
 TODO: Can we run all online checks in a coherent way (in series, that is)?
 ------------------------------------------------------------------------------------ */
@@ -45,6 +43,7 @@ foreach ($result as $item)
 $dead = array(
 		"8BitChip",
 		"8BitCommodoreItalia",
+		"AcornPreservation",
 		"Atarimania",
 		"Cas2Rom",
 		"Import64",
@@ -55,9 +54,12 @@ $dead = array(
 		"smartlip",
 );
 
+// If we don't have a source set, show the generic page
 if (!isset($_GET["source"]))
 {
 	echo "<h2>Please Choose a Site</h2>\n";
+	
+	echo "Note: got to Apple2Online<br/><br/>\n";
 	
 	// List all files, auto-generate links to proper pages
 	$files = scandir("../sites/", SCANDIR_SORT_NONE);
@@ -71,7 +73,7 @@ if (!isset($_GET["source"]))
 		}
 	}
 	
-	// List all sites that don't have checkers
+	// List all sources that don't have checkers
 	echo "<h2>Sites With No Checker</h2>\n";
 	
 	// Normalize the arrays because some names don't match 1:1
@@ -86,6 +88,8 @@ if (!isset($_GET["source"]))
 		$newfiles[] = strtolower($file);
 	}
 	$newfiles = str_replace(".php", "", $newfiles);
+	
+	// Print out the source names with proper capitalization
 	foreach (array_diff($newsites, $newfiles) as $key => $site)
 	{
 		echo $sites[$key]."<br/>\n";
@@ -95,6 +99,7 @@ if (!isset($_GET["source"]))
 
 	die();
 }
+/// If the checker requested doesn't exist, tell the user
 elseif (!file_exists("../sites/".$_GET["source"].".php"))
 {
 	echo "<b>The file you supply must be in /sites/</b><br/>";
@@ -103,6 +108,7 @@ elseif (!file_exists("../sites/".$_GET["source"].".php"))
 	die();
 }
 
+// Otherwise, we assume the soruce is good, and we attempt to load it
 $source = $_GET["source"];
 
 echo "<h2>Loading pages and links...</h2>";

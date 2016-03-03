@@ -32,11 +32,14 @@ $pages = array(
 		'http://armas.cbm8bit.com/ztaps.html',
 );
 
+echo "<table>\n";
 foreach ($pages as $newfile)
 {
+	echo "<tr><td>".$newfile."</td>";
 	$query = get_data($newfile); // Read the whole page into one string
-	$query = preg_replace('/(\s+)/',' ', $query); // Remove all whitespace
+	$query = preg_replace('/(\s+)/',' ', $query); // Replace all whitespace with a single space
 	$query = preg_replace('/(href=)("?)(\S+?)("?)(>)/','\1"\3"\5', $query); // Make sure all hrefs are quoted properly
+	
 	$query = explode ('<tr ',$query); // Separate lines based on table rows
 	unset($query[0]); // The first item is never a match so unset it
 
@@ -46,51 +49,47 @@ foreach ($pages as $newfile)
 	// For each table row, process and get links
 	foreach ($query as $row)
 	{
-		// If the row is not empty or null
-		if ($row)
+		$row = explode('<td', $row); // Separate lines based on table cells
+		$title = trim(str_replace(" ( NO SCAN YET )", "", strip_tags('<td'.$row[1]))); // Extract the title from the row
+		$info = trim(strip_tags('<td'.$row[2])); // Extract the information from the row
+		$dls = explode('tapescans/victaps/', $row[3]); // Get any downloads that can be found in the row
+		unset($dls[0]); // The first item is never a match so unset it
+
+		// For each download found, see if we've included it already
+		foreach ($dls as $dl)
 		{
-			$row = explode('<td', $row); // Separate lines based on table cells
-			$title = trim(str_replace(" ( NO SCAN YET )", "", strip_tags('<td'.$row[1]))); // Extract the title from the row
-			$info = trim(strip_tags('<td'.$row[2])); // Extract the information from the row
-			$dls = explode('tapescans/victaps/', $row[3]); // Get any downloads that can be found in the row
-			unset($dls[0]); // The first item is never a match so unset it
+			$dl = explode('"', $dl);
+			$dl = $dl[0];
+				
+			$ext = explode('.', $dl);
+			$ext = $ext[count($ext)-1];
 
-			// For each download found, see if we've included it already
-			foreach ($dls as $dl)
+			if ($r_query[$dl] != "")
 			{
-				// If the download is not empty or null
-				if ($dl)
-				{
-					$dl = explode('"', $dl);
-					$dl = $dl[0];
-						
-					$ext = explode('.', $dl);
-					$ext = $ext[count($ext)-1];
-
-					if ($r_query[$dl] != "")
-					{
-						$old++;
-					}
-					else
-					{
-						$found[] = array($dl, $title." (".$info.").".$ext);
-						$new++;
-					}
-				}
+				$old++;
+			}
+			else
+			{
+				$found[] = array($dl, $title." (".$info.").".$ext);
+				$new++;
 			}
 		}
 	}
-
-	echo "Loading ".$newfile.$tab;
-	echo "Found new: ".$new.", old: ".$old."<br/>";
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
-echo "\n";
+echo "</table>\n";
+
+if (sizeof($found) > 0)
+{
+	echo "<h2>New files:</h2>";
+}
 
 foreach ($found as $row)
 {
-	echo htmlspecialchars($row)."<br/>";
-	echo "<a href='http://armas.cbm8bit.com/tapescans/victaps/".$row[0]."'>".$row[0]."</a><br/>";
+	echo "<a href='http://armas.cbm8bit.com/tapescans/victaps/".$row[0]."'>".$row[1]."</a><br/>\n";
 }
+
+echo "<br/>\n";
 
 ?>

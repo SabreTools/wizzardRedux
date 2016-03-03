@@ -2,7 +2,7 @@
 
 // Original code: The Wizard of DATz
 
-$pages = Array(
+$pages = array(
 	"http://www.acornpreservation.org/main_tapes_games.html",
 	"http://www.acornpreservation.org/main_discs_games.html",
 );
@@ -17,40 +17,42 @@ foreach ($pages as $page)
 
 	$content = get_data($page);
 	$content = explode('HREF="', $content);
-	$content[0] = null;
+	unset($content[0]);
 
 	foreach ($content as $row)
 	{
-		if ($row)
-		{
-			$url = explode('"', $row);
-			$url = $url[0];
-			$ext = explode('.', $url);
+		$url = explode('"', $row);
+		$url = $url[0];
+		$ext = explode('.', $url);
 
-			if (strtolower($ext[count($ext)-1])=='zip')
+		if (strtolower($ext[count($ext)-1])=='zip')
+		{
+			if (!$r_query[$url])
 			{
-				if (!$r_query[$url])
-				{
-					$found[] = $url;
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
+				$found[] = $url;
+				$new++;
 			}
 			else
 			{
-				$other++;
+				$old++;
 			}
+		}
+		else
+		{
+			$other++;
 		}
 	}
 
 	print "new ".$new.", old ".$old.", other ".$other."<br/>\n";
 }
 
+if (sizeof($found) > 0)
+{
+	echo "<h2>New files:</h2>";
+}
+
 foreach ($found as $row)
 {
-	print "<a href=\"http://www.acornpreservation.org/".$row."\">".$row."</a><br/>\n";
+	echo "<a href='http://www.acornpreservation.org/".$row."'>".$row."</a><br/>\n";
 }
 ?>

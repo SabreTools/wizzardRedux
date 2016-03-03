@@ -74,7 +74,7 @@ for ($xpage = 0; $xpage < $max; $xpage++)
 	
 					if (!$r_query[$url])
 					{
-						$found[] = array($title."{".$add."}.".$ext, $url);
+						$found[] = array($url, $title."{".$add."}.".$ext);
 						$new++;
 					}
 					else
@@ -94,21 +94,14 @@ for ($xpage = 0; $xpage < $max; $xpage++)
 	print "new: ".$new.", old: ".$old."\n";
 }
 
-print "\nnew urls:\n\n";
-print "<table><tr><td><pre>";
-
-foreach ($found as $url)
+if (sizeof($found) > 0)
 {
-	print $url[1]."\n";
+	echo "<h2>New files:</h2>";
 }
 
-print "</td><td><pre>";
-
-foreach ($found as $url)
+foreach ($found as $row)
 {
-	print "<a href=\"http://www.8bitchip.info".$url[1]."\">".$url[0]."</a>\n";
+	echo "<a href='http://www.8bitchip.info".$row[0]."'>".$row[1]."</a><br/>\n";
 }
-
-print "</td></tr></table>";
 
 ?>

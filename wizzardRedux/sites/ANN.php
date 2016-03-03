@@ -6,53 +6,54 @@ $dirs = array(
 	'http://ann.hollowdreams.com/anndisks.html',
 );
 
-print "<pre>check folders:\n\n";
-
+echo "<table>\n";
 foreach ($dirs as $dir)
 {
-	if ($dir)
+	echo "<tr><td>".$dir."</td>";
+	$query = get_data($dir);
+	$query = explode(' href="', $query);
+	$query[0] = null;
+
+	$new = 0;
+	$old = 0;
+
+	foreach ($query as $row)
 	{
-		print "load: ".$dir."\n";
-		$query = get_data($dir);
-		$query = explode(' href="', $query);
-		$query[0] = null;
-	
-		$new = 0;
-		$old = 0;
-	
-		foreach ($query as $row)
+		if ($row)
 		{
-			if ($row)
+			$url = explode('"', $row);
+			$url = $url[0];
+
+			$ext = explode('.', $url);
+
+
+			if (!$r_query[$url])
 			{
-				$url = explode('"', $row);
-				$url = $url[0];
-	
-				$ext = explode('.', $url);
-	
-	
-				if (!$r_query[$url])
-				{
-					$found[] = $url;
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
-	
+				$found[] = $url;
+				$new++;
 			}
+			else
+			{
+				$old++;
+			}
+
 		}
-	
-		print "close: ".$dir."\n";
-		print "new: ".$new.", old: ".$old."\n";
 	}
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
-print "\nnew urls:\n\n";
+echo "</table>\n";
 
-foreach ($found as $url)
+if (sizeof($found) > 0)
 {
-	print "<a href=\"http://ann.hollowdreams.com/".$url."\">".$url."</a>\n";
+	echo "<h2>New files:</h2>";
 }
+
+foreach ($found as $row)
+{
+	echo "<a href='".$row."'>".$row."</a><br/>\n";
+}
+
+echo "<br/>\n";
 
 ?>

@@ -6,9 +6,10 @@ $newfiles = array(
 	'https://alexvampire.wordpress.com/feed/',
 );
 
+echo "<table>\n";
 foreach ($newfiles as $newfile)
 {
-	print "load ".$newfile."<br/>\n";
+	echo "<tr><td>".$newfile."</td>";
 	$query = get_data($newfile);
  	$query = explode('<link>', $query);
 	$query[0] = null;
@@ -34,13 +35,21 @@ foreach ($newfiles as $newfile)
 			}
 		}
 	}
-
-	foreach ($found as $row)
-	{
-		print "<a href=\"".$row."\">".$row."</a><br/>\n";
-	}
-
-	print "found new:".$new.", old:".$old."<br/>\n<br/>\n";
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
+
+echo "</table>\n";
+
+if (sizeof($found) > 0)
+{
+	echo "<h2>New files:</h2>";
+}
+
+foreach ($found as $row)
+{
+	echo "<a href='".$row."'>".$row."</a><br/>\n";
+}
+
+echo "<br/>\n";
 
 ?>
