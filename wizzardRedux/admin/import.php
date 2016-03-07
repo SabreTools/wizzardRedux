@@ -6,9 +6,20 @@ Import an existing DAT into the system
 Requires:
 	filename	File name in the format of "Manufacturer - SystemName (Source .*)\.dat"
 	size		Sort the list by size of the DAT file (handy for multiple imports)
+	type		If defined, sets the mapping to use on DAT import
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
+TODO: Finish code that will enable source type import (TOSEC, Redump)
 ------------------------------------------------------------------------------------ */
+
+// Special import types
+$type = array(
+		"mame",
+		"nointro",
+		"redump",
+		"tosec",
+		"trurip",
+);
 
 echo "<h2>Import From Datfile</h2>";
 
@@ -16,6 +27,15 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 
 $auto = isset($_GET["auto"]) && $_GET["auto"] == "1";
 $size = isset($_GET["size"]) && $_GET["size"] == "1";
+$type = isset($_GET["type"]) && in_array($_GET["type"], $type) ? $_GET["type"] : "";
+$importroot = "../temp/import/";
+$importdone = "../temp/imported/";
+
+// If there's a type defined, set the root accordingly
+if ($type != "")
+{
+	$importroot .= $type."/";
+}
 
 if (!isset($_GET["filename"]))
 {
@@ -24,15 +44,16 @@ if (!isset($_GET["filename"]))
 			"<a href='?page=import'>Sort list by name</a><br/>\n".
 			"<a href='?page=import&size=1'>Sort list by size</a></p>\n";
 	
-	$files = scandir("../temp/");
+	$files = scandir($importroot);
 	if (sizeof($files) != 0)
 	{
 		if ($size)
 		{
 			usort($files, function ($a, $b)
 			{
-				$size_a = filesize("../temp/".$a);
-				$size_b = filesize("../temp/".$b);
+				global $importroot;
+				$size_a = filesize($importroot.$a);
+				$size_b = filesize($importroot.$b);
 				
 				return $size_a - $size_b;
 			});
@@ -50,7 +71,7 @@ if (!isset($_GET["filename"]))
 				}
 				else
 				{
-					echo "<a href=\"?page=import&filename=".$file.($size ? "&size=1" : "")."\">".htmlspecialchars($file)."</a> (".filesize("../temp/".$file)." bytes)<br/>\n";
+					echo "<a href=\"?page=import&filename=".$file.($size ? "&size=1" : "")."\">".htmlspecialchars($file)."</a> (".filesize($importroot.$file)." bytes)<br/>\n";
 				}
 			}
 		}
@@ -64,15 +85,15 @@ else
 
 function import_dat($filename)
 {
-	global $link, $normalize_chars, $search_pattern;
+	global $link, $normalize_chars, $search_pattern, $importroot, $importdone;
 	
 	// First, get the pattern of the file name. This is required for organization.
 	$datpattern = "/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/";
 	
 	// Check the file is valid
-	if (!file_exists("../temp/".$filename))
+	if (!file_exists($importroot.$filename))
 	{
-		echo "<b>The file you supply must be in /wod/temp/</b><br/>";
+		echo "<b>The file you supply must be in ".$importroot."</b><br/>";
 		echo "<a href='?page=import".($size ? "&size=1" : "")."'>Go back to import page</a>";
 	
 		return;
@@ -128,7 +149,7 @@ function import_dat($filename)
 	}
 	
 	// Then, parse the file and read in the information. Echo it out for safekeeping for now.
-	$handle = fopen("../temp/".$filename, "r");
+	$handle = fopen($importroot.$filename, "r");
 	if ($handle)
 	{
 		$format = "";
@@ -188,7 +209,6 @@ function import_dat($filename)
 					$machinefound = true;
 					$xml = simplexml_load_string($line.(strpos($line, "<machine")?"</machine>":"</game>"));
 					$machinename = $xml->attributes()["name"];
-					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
 					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
 				elseif (strpos($line, "<rom") !== false && $machinefound)
@@ -200,7 +220,7 @@ function import_dat($filename)
 					add_rom($line, $machinename, "disk", $gameid, $date);
 				}
 				elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false))
-				{			
+				{
 					$machinefound = false;
 					$machinename = "";
 					$description = "";
@@ -216,7 +236,6 @@ function import_dat($filename)
 					$machinefound = true;
 					$xml = simplexml_load_string($line."</software>");
 					$machinename = $xml->attributes()["name"];
-					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
 					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
 				elseif (strpos($line, "<rom") !== false)
@@ -239,17 +258,9 @@ function import_dat($filename)
 			// Process original style RomVault DATs
 			elseif ($format == "romvault")
 			{
-				if (strpos($line, "game (") !== false)
-				{
-					$old = true;
-				}
-				elseif (strpos($line, "name") !== false && !$machinefound)
+				if (strpos($line, "game") !== false && !$machinefound)
 				{
 					$machinefound = true;
-					preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
-					$machinename = $machinename[1];
-					$machinename = preg_replace($search_pattern['EXT'], $search_pattern['REP'], $machinename);
-					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
 				elseif (strpos($line, "rom (") !== false && $machinefound)
 				{
@@ -258,6 +269,12 @@ function import_dat($filename)
 				elseif (strpos($line, "disk (") !== false && $machinefound)
 				{
 					add_rom_old($line, $machinename, "disk", $gameid, $date);
+				}
+				elseif (strpos($line, "name") !== false && $machinefound)
+				{
+					preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
+					$machinename = $machinename[1];
+					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
 				elseif (strpos($line, ")") !== false)
 				{
@@ -271,7 +288,7 @@ function import_dat($filename)
 		echo "</table><br/>\n";
 		
 		fclose($handle);
-		rename("../temp/".$filename, "../temp/imported/".$filename);
+		rename($importroot.$filename, $importdone.$filename);
 		
 		return;
 	}
@@ -292,7 +309,7 @@ function add_game ($sysid, $machinename, $sourceid)
 	// Run the name through the filters to make sure that it's correct
 	$machinename = strtr($machinename, $normalize_chars);
 	$machinename = ru2lat($machinename);
-	$machinename = str_replace($search_pattern["EXT"], $search_pattern["REP"], $machinename);
+	$machinename = preg_replace($search_pattern["EXT"], $search_pattern["REP"], $machinename);
 	
 	$query = "SELECT id
 	FROM games
