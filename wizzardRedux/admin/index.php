@@ -9,6 +9,7 @@
 <?php
 
 include_once("../css/style.php");
+include_once("../includes/remapping.php");
 
 // Connect to the database so it doesn't have to be done in every page
 $link = mysqli_connect('localhost', 'root', '', 'wod');

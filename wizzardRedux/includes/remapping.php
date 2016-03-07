@@ -1,10 +1,27 @@
 <?php
 
-/*
- * ------------------------------------------------------------------------------------
- * Map all known external sets to "Manufacturer - System" combos
- * ------------------------------------------------------------------------------------
- */
+/*------------------------------------------------------------------------------------
+ Map all known external sets to "Manufacturer - System" combos
+ -----------------------------------------------------------------------------------*/
+
+// Ensure the temp folder exists with the right subfolders
+$subfolders = array(
+		"import",
+		"import/mame",
+		"import/nointro",
+		"import/redump",
+		"import/tosec",
+		"import/trurip",
+		"imported",
+		"output",
+);
+foreach ($subfolders as $folder)
+{
+	if (!file_exists("temp/".$folder."/"))
+	{
+		mkdir("temp/".$folder, "0777", true);
+	}
+}
 
 // MAME softlist mapping
 $mapping_mame = array (

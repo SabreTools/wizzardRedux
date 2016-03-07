@@ -9,6 +9,7 @@
 <?php
 
 include_once("css/style.php");
+include_once("includes/remapping.php");
 
 // Connect to the database so it doesn't have to be done in every page
 $link = mysqli_connect('localhost', 'root', '', 'wod');
@@ -18,16 +19,6 @@ if (!$link)
 }
 
 //echo "Connection established!<br/>\n";
-
-// Ensure the temp folder exists with the right subfolders
-if (!file_exists("temp/imported/"))
-{
-	mkdir("temp/imported", "0777", true);
-}
-if (!file_exists("temp/output/"))
-{
-	mkdir("temp/output", "0777", true);
-}
 
 if ($_GET["page"] && file_exists("pages/".str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
 {
