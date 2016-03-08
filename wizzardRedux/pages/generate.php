@@ -186,7 +186,7 @@ else
 	}
 	
 	// Process the roms
-	$roms = process_roms($roms, $system, $source);
+	$roms = process_roms($roms);
 	
 	// If we're in debug mode, print out the entire DAT to screen
 	if ($debug)
@@ -301,8 +301,10 @@ else
 }
 
 // Change duplicate names and remove duplicates (merged only)
-function process_roms($roms, $system, $source)
+function process_roms($roms)
 {	
+	GLOBAL $system, $source, $mega;
+	
 	// First sort all roms by name and game
 	usort($roms, function ($a, $b)
 	{
@@ -361,9 +363,9 @@ function process_roms($roms, $system, $source)
 		}
 	}
 	
-	// If we're in merged mode, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
-	if ($system == "" xor $source == "")
-	{
+	// If we're in a merged mode, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
+	if ($system == "" || $source != "")
+	{		
 		$roms = $newroms;
 		unset($newroms);
 		
@@ -455,11 +457,11 @@ function process_roms($roms, $system, $source)
 		
 		// Then rename the sets to include the proper source
 		foreach ($newroms as &$rom)
-		{
+		{			
 			$rom["game"] = $rom["game"].
 				($system != "" && $source == "" ? " [".$rom["source"]."]" : "").
 				($system == "" && $source != "" ? " [".$rom["manufacturer"]." - ".$rom["system"]."]" : "").
-				($system == "" && $source == "" ? " [".$rom["manufacturer"]." - ".$rom["system"]." (".$rom["source"].")]" : "");
+				($system == "" && $source == "" ? " [".$rom["manufacturer"]." - ".$rom["system"]." (".$rom["source"].")]" : "");	
 		}
 	}
 	
