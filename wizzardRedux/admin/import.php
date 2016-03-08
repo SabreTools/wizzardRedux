@@ -380,7 +380,8 @@ function add_game ($sysid, $machinename, $sourceid)
 	global $link, $normalize_chars, $search_pattern;
 	
 	// WoD gets rid of anything past the first "(" or "[" as the name, we will do the same
-	$machinename = preg_replace("/^(.*)( []\(|\[]*.*)$/", "\1", $machinename);
+	preg_match("/([^([]*)/", $machinename, $machinename);
+	$machinename = $machinename[1];
 	
 	// Run the name through the filters to make sure that it's correct
 	$machinename = strtr($machinename, $normalize_chars);
@@ -396,16 +397,16 @@ function add_game ($sysid, $machinename, $sourceid)
 	}
 	
 	$query = "SELECT id
-	FROM games
-	WHERE system=".$sysid."
-	AND name='".$machinename."'
-	AND source=".$sourceid;
+			FROM games
+			WHERE system=".$sysid."
+			AND name='".$machinename."'
+			AND source=".$sourceid;
 	
 	$result = mysqli_query($link, $query);
 	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
 		$query = "INSERT INTO games (system, name, source)
-		VALUES (".$sysid.", '".htmlspecialchars($machinename)."', ".$sourceid.")";
+					VALUES (".$sysid.", '".htmlspecialchars($machinename)."', ".$sourceid.")";		
 		$result = mysqli_query($link, $query);
 		$gameid = mysqli_insert_id($link);
 	}
