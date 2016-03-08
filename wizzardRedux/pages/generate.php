@@ -226,7 +226,7 @@ else
 							"\tname \"".$rom["game"]."\"\n";
 			}
 			$state = $state."\t".$rom["type"]." ( name \"".$rom["name"]."\"".
-					($rom["size"] != "" ? " size ".$rom["size"] : "").
+					($rom["size"] != "0" ? " size ".$rom["size"] : "").
 					($rom["crc"] != "" ? " crc ".$rom["crc"] : "").
 					($rom["md5"] != "" ? " md5 ".$rom["md5"] : "").
 					($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
