@@ -91,7 +91,7 @@ else
 	echo "<script type='text/javascript'>window.location='?page=import".($size ? "&size=1" : "")."'</script>";
 }
 
-function import_dat($filename)
+function import_dat ($filename)
 {
 	global $link, $normalize_chars, $search_pattern, $importroot, $importdone, $type;
 	
@@ -425,7 +425,7 @@ function add_rom ($line, $machinename, $romtype, $gameid, $date)
 			$xml->attributes()["sha1"]);
 }
 	
-function add_rom_old($line, $machinename, $romtype, $gameid, $date)
+function add_rom_old ($line, $machinename, $romtype, $gameid, $date)
 {
 	preg_match("/name \"(.*)\"/", $line, $name);
 	
@@ -457,7 +457,7 @@ function add_rom_old($line, $machinename, $romtype, $gameid, $date)
 	add_rom_helper($machinename, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1);
 }
 	
-function add_rom_helper($machinename, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1)
+function add_rom_helper ($machinename, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1)
 {
 	global $link, $normalize_chars, $search_pattern;
 	
