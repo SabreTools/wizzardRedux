@@ -344,7 +344,7 @@ function import_dat($filename)
 				{
 					add_rom_old($line, $machinename, "disk", $gameid, $date);
 				}
-				elseif (strpos($line, "name") !== false && $machinefound)
+				elseif (strpos($line, "name \"") !== false && $machinefound)
 				{
 					preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
 					$machinename = $machinename[1];
@@ -385,6 +385,13 @@ function add_game ($sysid, $machinename, $sourceid)
 	$machinename = ru2lat($machinename);
 	$machinename = preg_replace($search_pattern["EXT"], $search_pattern["REP"], $machinename);
 	
+	// This is an issue, apparently
+	if (trim($machinename) == "")
+	{
+		echo "</table><br/>\n";
+		die("Machinename is blank!");
+	}
+	
 	$query = "SELECT id
 	FROM games
 	WHERE system=".$sysid."
@@ -419,6 +426,7 @@ function add_rom ($line, $machinename, $romtype, $gameid, $date)
 function add_rom_old($line, $machinename, $romtype, $gameid, $date)
 {
 	preg_match("/name \"(.*)\"/", $line, $name);
+	
 	$name = $name[1];
 	$rominfo = explode(" ", $line);
 	$size = ""; $crc = ""; $md5 = ""; $sha1 = ""; 
@@ -471,36 +479,42 @@ function add_rom_helper($machinename, $romtype, $gameid, $name, $date, $size, $c
 	FROM files
 	JOIN checksums
 	ON files.id=checksums.file
-	WHERE files.name='".addslashes($name)."'
-		AND files.type='".$romtype."'
-		AND files.setid=".$gameid."
-		AND checksums.size=".$size."
-		AND checksums.crc='".$crc."'
-		AND checksums.md5='".$md5."'
-		AND checksums.sha1='".$sha1."'";
+	WHERE files.name='".addslashes($name)."' ".
+		"AND files.type='".$romtype."' ".
+		"AND files.setid=".$gameid." ".
+		($size != "" ? " AND checksums.size=".$size : "").
+		($crc != "" ? " AND checksums.crc='".$crc."'" : "").
+		($md5 != "" ? " AND checksums.md5='".$md5."'" : "").
+		($sha1 != "" ? " AND checksums.sha1='".$sha1."'" : "");
+	
 	$result = mysqli_query($link, $query);
-	if (gettype($result)=="boolean" || mysqli_num_rows($result) == 0)
+	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
-		$query = "SELECT files.id FROM files WHERE files.name='".addslashes($name)."'";
-		$result = mysqli_query($link, $query);
-
 		$query = "INSERT INTO files (setid, name, type, lastupdated)
 		VALUES (".$gameid.",
 		'".addslashes($name)."',
 		'".$romtype."',
 		'".$date."')";
+		
 		$result = mysqli_query($link, $query);
 
-		if (gettype($result)=="boolean" && $result)
+		if (gettype($result) == "boolean" && $result)
 		{
 			$romid = mysqli_insert_id($link);
 
-			$query = "INSERT INTO checksums (file, size, crc, md5, sha1)
-		VALUES (".$romid.",
-				".$size.",
-				'".$crc."',
-				'".$md5."',
-				'".$sha1."')";
+			$query = "INSERT INTO checksums (file".
+						($size != "" ? ", size" : "").
+						($crc != "" ? ", crc" : "").
+						($md5!= "" ? ", md5" : "").
+						($sha1 != "" ? ", sha1" : "").
+					")
+					VALUES (".$romid.
+						($size != "" ? ", ".$size : "").
+						($crc != "" ? ", '".$crc."'" : "").
+						($md5 != "" ? ", '".$md5."'" : "").
+						($sha1 != "" ? ", '".$sha1."'" : "").
+					")";
+			
 			$result = mysqli_query($link, $query);
 
 			if (gettype($result)=="boolean" && $result)
