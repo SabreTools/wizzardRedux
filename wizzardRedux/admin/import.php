@@ -85,13 +85,6 @@ if (!isset($_GET["filename"]))
 			}
 		}
 	}
-	elseif (!isset($_GET["rt"]))
-	{
-		echo "<script type='text/javascript'>window.location='?page=import&rt=1".
-				($size ? "&size=1" : "").
-				($type != "" ? "&type=".$type : "").
-				"'</script>";
-	}
 }
 else
 {
