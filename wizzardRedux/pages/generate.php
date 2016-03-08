@@ -26,6 +26,13 @@ foreach ($getvars as $var)
 	$$var = (isset($_GET[$var]) ? trim($_GET[$var]) : "");
 }
 
+// Specifically deal with MEGA being set
+if ($mega == "1")
+{
+	$system = "";
+	$source = "";
+}
+
 // Use dropdown value to override others, if applicable
 if ($dats != "" && $dats != "0")
 {
