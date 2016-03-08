@@ -346,7 +346,7 @@ function import_dat($filename)
 				}
 				elseif (strpos($line, "name \"") !== false && $machinefound)
 				{
-					preg_match("/^\s*name \"(.*)\"$/", $line, $machinename);
+					preg_match("/^\s*name \"(.*)\"/", $line, $machinename);
 					$machinename = $machinename[1];
 					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
