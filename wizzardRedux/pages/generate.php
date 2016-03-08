@@ -50,7 +50,7 @@ if ($system == "" && $source == "" && $mega != "1")
 	
 	echo "<h3>Available Systems</h3>\n";
 	
-	$systems = Array();
+	$systems = array();
 	while($system = mysqli_fetch_assoc($result))
 	{
 		array_push($systems, $system);
@@ -149,7 +149,7 @@ else
 	}
 	
 	// Get all roms from the result for processing
-	$roms = Array();
+	$roms = array();
 	while($rom = mysqli_fetch_assoc($result))
 	{
 		array_push($roms, $rom);
@@ -293,7 +293,7 @@ function process_roms($roms, $system, $source)
 	
 	// Next, go through and rename any necessary
 	$lastname = ""; $lastgame = "";
-	$newroms = Array();
+	$newroms = array();
 	foreach ($roms as $rom)
 	{
 		if ($lastname == "")
@@ -368,7 +368,7 @@ function process_roms($roms, $system, $source)
 		});
 		
 		$lastsize = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lasttype = "";
-		$newroms = Array();
+		$newroms = array();
 		foreach ($roms as $rom)
 		{
 			if ($lastsize == "")
@@ -431,8 +431,8 @@ function process_roms($roms, $system, $source)
 		foreach ($newroms as &$rom)
 		{
 			$rom["game"] = $rom["game"]." [".
-				($system == "" && $source != "" ? $rom["source"]."]" : "").
-				($system != "" && $source == "" ? $rom["manufacturer"]." - ".$rom["system"] : "");
+				($system != "" && $source == "" ? $rom["source"]."]" : "").
+				($system == "" && $source != "" ? $rom["manufacturer"]." - ".$rom["system"] : "");
 		}
 	}
 	
