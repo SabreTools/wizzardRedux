@@ -404,9 +404,6 @@ function add_game ($sysid, $machinename, $sourceid)
 			AND name='".addslashes($machinename)."'
 			AND source=".$sourceid;
 	
-	var_dump($query);
-	die();
-	
 	$result = mysqli_query($link, $query);
 	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
