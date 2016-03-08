@@ -40,9 +40,9 @@ if ($type != "")
 if (!isset($_GET["filename"]))
 {
 	// List all files, auto-generate links to proper pages
-	echo "<p><a href='?page=import&auto=1".($size ? "&size=1" : "")."'>Automatically add all DATs</a><br/>\n".
-			"<a href='?page=import'>Sort list by name</a><br/>\n".
-			"<a href='?page=import&size=1'>Sort list by size</a></p>\n";
+	echo "<p><a href='?page=import&auto=1".($size ? "&size=1" : "").($type != "" ? "&type=".$type : "")."'>Automatically add all DATs</a><br/>\n".
+			"<a href='?page=import".($type != "" ? "&type=".$type : "")."'>Sort list by name</a><br/>\n".
+			"<a href='?page=import&size=1".($type != "" ? "&type=".$type : "")."'>Sort list by size</a></p>\n";
 	
 	$files = scandir($importroot);
 	if (sizeof($files) != 0)
@@ -61,17 +61,23 @@ if (!isset($_GET["filename"]))
 		
 		foreach ($files as $file)
 		{
-			if (preg_match("/^.*\.dat$/", $file))
+			if (preg_match("/^.*\.dat$/", $file) || preg_match("/^.*\.xml$/", $file))
 			{
 				// If we want to import everything in the folder...
 				if ($auto)
 				{
 					import_dat($file);
-					echo "<script type='text/javascript'>window.location='?page=import&auto=1".($size ? "&size=1" : "")."'</script>";
+					echo "<script type='text/javascript'>window.location='?page=import&auto=1".
+						($size ? "&size=1" : "").
+						($type != "" ? "&type=".$type : "").
+						"'</script>";
 				}
 				else
 				{
-					echo "<a href=\"?page=import&filename=".$file.($size ? "&size=1" : "")."\">".htmlspecialchars($file)."</a> (".filesize($importroot.$file)." bytes)<br/>\n";
+					echo "<a href=\"?page=import&filename=".$file.
+						($size ? "&size=1" : "").
+						($type != "" ? "&type=".$type : "").
+						"\">".htmlspecialchars($file)."</a> (".filesize($importroot.$file)." bytes)<br/>\n";
 				}
 			}
 		}
@@ -85,10 +91,30 @@ else
 
 function import_dat($filename)
 {
-	global $link, $normalize_chars, $search_pattern, $importroot, $importdone;
+	global $link, $normalize_chars, $search_pattern, $importroot, $importdone, $type;
 	
 	// First, get the pattern of the file name. This is required for organization.
-	$datpattern = "/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/";
+	switch ($type)
+	{
+		case "mame":
+			$datpattern = "/^(.*)\.xml$/";
+			break;
+		case "nointro":
+			$datpattern = "/^(.*?) \((\d{8}-\d{6})_CM\)\.dat$/";
+			break;
+		case "redump":
+			$datpattern = "/^(.*?) \((\d{8} \d{2}-\d{2}-\d{2})\)\.dat$/";
+			break;
+		case "tosec":
+			$datpattern = "/^(.*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/";
+			break;
+		case "trurip":
+			$datpattern = "/^(.*?) - .* \(trurip_XML\)\.dat$/";
+			break;
+		default:
+			$datpattern = "/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/";
+			break;
+	}
 	
 	// Check the file is valid
 	if (!file_exists($importroot.$filename))
@@ -109,12 +135,60 @@ function import_dat($filename)
 	echo "<p>The file ".$filename." has a proper pattern!</p>\n";
 	
 	// Next, get information from the database on the current machine
-	$manufacturer = $fileinfo[1];
-	$system = $fileinfo[2];
-	$source = $fileinfo[3];
-	$datestring = $fileinfo[4];
-	preg_match("/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/", $datestring, $date);
-	$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
+	switch ($type)
+	{
+		case "mame":
+			preg_match("/^(.*) - (.*)$/", $mapping_mame[$fileinfo[1]], $name);
+			$manufacturer = $name[1];
+			$system = $name[2];
+			$source = "MAME";
+			$datestring = filemtime($importroot.$filename);
+			$date = date("Y-m-d G:i:s", $datestring);
+			break;
+		case "nointro":
+			preg_match("/^(.*) - (.*)$/", $mapping_nointro[$fileinfo[1]], $name);
+			$manufacturer = $name[1];
+			$system = $name[2];
+			$source = "no-Intro";
+			$datestring = $fileinfo[2];
+			preg_match("/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/", $datestring, $date);
+			$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
+			break;
+		case "redump":
+			preg_match("/^(.*) - (.*)$/", $mapping_redump[$fileinfo[1]], $name);
+			$manufacturer = $name[1];
+			$system = $name[2];
+			$source = "Redump";
+			$datestring = $fileinfo[2];
+			preg_match("/(\d{4})(\d{2})(\d{2}) (\d{2})-(\d{2})-(\d{2})/", $datestring, $date);
+			$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
+			break;
+		case "tosec":
+			preg_match("/^(.*) - (.*)$/", $mapping_tosec[$fileinfo[1]], $name);
+			$manufacturer = $name[1];
+			$system = $name[2];
+			$source = "TOSEC";
+			$datestring = $fileinfo[2];
+			preg_match("/(\d{4})-(\d{2})-(\d{2}))/", $datestring, $date);
+			$date = $date[1]."-".$date[2]."-".$date[3]." 00:00:00";
+			break;
+		case "trurip":
+			preg_match("/^(.*) - (.*)$/", $mapping_trurip[$fileinfo[1]], $name);
+			$manufacturer = $name[1];
+			$system = $name[2];
+			$source = "trurip";
+			$datestring = filemtime($importroot.$filename);
+			$date = date("Y-m-d G:i:s", $datestring);
+			break;
+		default:
+			$manufacturer = $fileinfo[1];
+			$system = $fileinfo[2];
+			$source = $fileinfo[3];
+			$datestring = $fileinfo[4];
+			preg_match("/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/", $datestring, $date);
+			$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
+			break;
+	}
 	
 	$query = "SELECT id
 		FROM systems
