@@ -50,8 +50,6 @@ $query = "DELETE FROM checksums
 				SELECT *
 				FROM files
 				WHERE checksums.file = files.id)";
-
-$query = "SELECT * FROM sources";
 $result = mysqli_query($link, $query);
 if (gettype($result) == "boolean" && $result)
 {
