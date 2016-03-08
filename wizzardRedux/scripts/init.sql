@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2016 at 03:19 AM
+-- Generation Time: Mar 08, 2016 at 05:16 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.2
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `wod`
 --
+CREATE DATABASE IF NOT EXISTS `wod` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `wod`;
 
 -- --------------------------------------------------------
 
@@ -26,6 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `checksums`
 --
 
+DROP TABLE IF EXISTS `checksums`;
 CREATE TABLE IF NOT EXISTS `checksums` (
   `file` int(11) NOT NULL,
   `size` int(11) NOT NULL,
@@ -41,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `checksums` (
 -- Table structure for table `files`
 --
 
+DROP TABLE IF EXISTS `files`;
 CREATE TABLE IF NOT EXISTS `files` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `setid` int(11) NOT NULL,
@@ -50,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `files` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`),
   KEY `FK_games_files_Cascade` (`setid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=42824 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -58,6 +62,7 @@ CREATE TABLE IF NOT EXISTS `files` (
 -- Table structure for table `games`
 --
 
+DROP TABLE IF EXISTS `games`;
 CREATE TABLE IF NOT EXISTS `games` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `system` int(11) NOT NULL,
@@ -66,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `games` (
   `source` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22535 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -74,6 +79,7 @@ CREATE TABLE IF NOT EXISTS `games` (
 -- Table structure for table `parent`
 --
 
+DROP TABLE IF EXISTS `parent`;
 CREATE TABLE IF NOT EXISTS `parent` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(1024) NOT NULL,
@@ -86,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `parent` (
 -- Table structure for table `sources`
 --
 
+DROP TABLE IF EXISTS `sources`;
 CREATE TABLE IF NOT EXISTS `sources` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(767) NOT NULL,
@@ -95,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `sources` (
   UNIQUE KEY `name` (`name`),
   KEY `name_2` (`name`),
   KEY `name_3` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=207 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=208 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -103,13 +110,14 @@ CREATE TABLE IF NOT EXISTS `sources` (
 -- Table structure for table `systems`
 --
 
+DROP TABLE IF EXISTS `systems`;
 CREATE TABLE IF NOT EXISTS `systems` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `manufacturer` varchar(1024) NOT NULL,
   `system` varchar(1024) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=410 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=431 DEFAULT CHARSET=latin1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
