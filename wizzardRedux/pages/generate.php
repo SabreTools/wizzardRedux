@@ -432,7 +432,8 @@ function process_roms($roms, $system, $source)
 		{
 			$rom["game"] = $rom["game"]." [".
 				($system != "" && $source == "" ? $rom["source"]."]" : "").
-				($system == "" && $source != "" ? $rom["manufacturer"]." - ".$rom["system"] : "");
+				($system == "" && $source != "" ? $rom["manufacturer"]." - ".$rom["system"] : "").
+				($system == "" && $source == "" ? $rom["manufacturer"]." - ".$rom["system"]." (".$rom["source"].")" : "");
 		}
 	}
 	
