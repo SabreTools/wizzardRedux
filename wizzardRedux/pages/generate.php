@@ -7,6 +7,11 @@ TODO: Create an "auto-generate all available"? Would it need to filter on things
 		TOSEC or Redump? Harder than just clicking links?
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
+TODO: Clean up the database by using the created DATs
+	It turns out that the WoD sets weren't exactly clean to begin with.
+	There are NUMEROUS remenants of poorly formatted names in the game names, including having brackets ( and [ floating there.
+	Check to make sure that the import and generate code can catch these.
+	At the very least, fix by hand =(
  ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
