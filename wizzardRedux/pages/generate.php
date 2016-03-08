@@ -141,7 +141,7 @@ else
 	$result = mysqli_query($link, $query);
 	
 	// If there are no games for this set of parameters, tell the user
-	if (gettype($result) == "boolean" || mysql_num_rows($result) == 0)
+	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
 		echo "No games could be found with those inputs. Please check and try again.<br/>";
 		echo "<a href='?page=generate'>Go Back</a>";
