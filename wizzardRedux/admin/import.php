@@ -401,14 +401,17 @@ function add_game ($sysid, $machinename, $sourceid)
 	$query = "SELECT id
 			FROM games
 			WHERE system=".$sysid."
-			AND name='".htmlspecialchars($machinename)."'
+			AND name='".addslashes($machinename)."'
 			AND source=".$sourceid;
+	
+	var_dump($query);
+	die();
 	
 	$result = mysqli_query($link, $query);
 	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
 		$query = "INSERT INTO games (system, name, source)
-					VALUES (".$sysid.", '".htmlspecialchars($machinename)."', ".$sourceid.")";		
+					VALUES (".$sysid.", '".addslashes($machinename)."', ".$sourceid.")";		
 		$result = mysqli_query($link, $query);
 		$gameid = mysqli_insert_id($link);
 	}
