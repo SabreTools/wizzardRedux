@@ -380,8 +380,10 @@ function add_game ($sysid, $machinename, $sourceid)
 	global $link, $normalize_chars, $search_pattern;
 	
 	// WoD gets rid of anything past the first "(" or "[" as the name, we will do the same
-	preg_match("/([^([]*)/", $machinename, $machinename);
+	preg_match("/(([[(].*[\)\]] )?([^([]+))/", $machinename, $machinename);
 	$machinename = $machinename[1];
+	var_dump($machinename);
+	die();
 	
 	// Run the name through the filters to make sure that it's correct
 	$machinename = strtr($machinename, $normalize_chars);
