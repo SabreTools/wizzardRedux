@@ -8,6 +8,7 @@ TODO: Create an "auto-generate all available"? Would it need to filter on things
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
+TODO: Figure out why MEGA doesn't name games properly
  ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
@@ -450,8 +451,7 @@ function process_roms($roms, $system, $source)
 				$lastsha1 = $rom["sha1"];
 				$lasttype = $rom["type"];
 			}
-		}
-		
+		}		
 		
 		// Then rename the sets to include the proper source
 		foreach ($newroms as &$rom)
