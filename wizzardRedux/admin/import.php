@@ -9,7 +9,6 @@ Requires:
 	type		If defined, sets the mapping to use on DAT import
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
-TODO: Finish code that will enable source type import (TOSEC, Redump)
 ------------------------------------------------------------------------------------ */
 
 // Special import types
