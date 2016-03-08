@@ -52,6 +52,7 @@ if ($mega == "1")
 {
 	$system = "";
 	$source = "";
+	ini_set("memory_limit", "512M");
 }
 
 // Use dropdown value to override others, if applicable
