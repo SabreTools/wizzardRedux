@@ -9,6 +9,7 @@ TODO: emuload - For CMP, a virtual parent can be created as an empty set and the
 	each set that has it as a parent sets it as cloneof
 TODO: Add ability to include a header reference (see No-Intro NES)
 	Will need to have a mapping of system to header
+TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
  ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
@@ -20,6 +21,24 @@ $getvars = array(
 		"old",				// set this to 1 for the old style output
 		"dats",				// systems.id-sources.id
 		"mega",				// override to create complete merged DAT
+);
+
+// Map systems to headers for datfile creation
+$headers = array(
+		"a7800" => "a7800.xml",
+		"fds" => "fds.xml",
+		"lynx" => "lynx.xml",
+		"n64-BADC" => "n64-BADC.xml",
+		"n64-DCBA" => "n64-DCBA.xml",
+		"n64" => "n64.xml",
+		"nes" => "nes.xml",
+		"No-Intro_A7800" => "No-Intro_A7800.xml",
+		"No-Intro_FDS" => "No-Intro_FDS.xml",
+		"No-Intro_LNX" => "No-Intro_LNX.xml",
+		"no-intro_NES" => "No-Intro_NES.xml",
+		"nongoodnes" => "nongoodnes.xml",
+		"psid" => "psid.xml",
+		"spc" => "spc.xml",
 );
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
@@ -195,6 +214,7 @@ else
 	name \"".$datname."\"
 	description \"".$datname."\"
 	version \"".$version."\"
+	".($system != "" && array_key_exists($system, $headers) ? " header \"".$headers[$system]."\"" : "")."
 	comment \"\"
 	author \"The Wizard of DATz\"
 )\n";
@@ -210,11 +230,7 @@ else
 			<version>".$version."</version>
 			<date>".$version."</date>
 			<author>The Wizard of DATz</author>
-			<email></email>
-			<homepage></homepage>
-			<url></url>
-			<comment></comment>
-			<clrmamepro/>
+			<clrmamepro".($system != "" && array_key_exists($system, $headers) ? " header=\"".$headers[$system]."\"" : "")."/>
 		</header>\n";
 	
 	$footer = "\n</datafile>";
