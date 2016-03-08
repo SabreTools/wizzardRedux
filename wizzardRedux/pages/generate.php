@@ -25,6 +25,8 @@ $getvars = array(
 		"mega",				// override to create complete merged DAT
 );
 
+ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
+
 //Get the values for all parameters
 foreach ($getvars as $var)
 {
