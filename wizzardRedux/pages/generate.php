@@ -430,10 +430,10 @@ function process_roms($roms, $system, $source)
 		// Then rename the sets to include the proper source
 		foreach ($newroms as &$rom)
 		{
-			$rom["game"] = $rom["game"]." [".
-				($system != "" && $source == "" ? $rom["source"]."]" : "").
-				($system == "" && $source != "" ? $rom["manufacturer"]." - ".$rom["system"] : "").
-				($system == "" && $source == "" ? $rom["manufacturer"]." - ".$rom["system"]." (".$rom["source"].")" : "");
+			$rom["game"] = $rom["game"].
+				($system != "" && $source == "" ? " [".$rom["source"]."]" : "").
+				($system == "" && $source != "" ? " [".$rom["manufacturer"]." - ".$rom["system"]."]" : "").
+				($system == "" && $source == "" ? " [".$rom["manufacturer"]." - ".$rom["system"]." (".$rom["source"].")]" : "");
 		}
 	}
 	
