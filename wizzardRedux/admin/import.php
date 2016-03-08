@@ -414,7 +414,6 @@ function add_game ($sysid, $machinename, $sourceid)
 	}
 	else
 	{
-		var_dump($result); die();
 		$gameid = mysqli_fetch_assoc($result);
 		$gameid = $gameid["id"];
 	}
