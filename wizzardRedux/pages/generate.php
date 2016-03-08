@@ -7,8 +7,6 @@ TODO: Create an "auto-generate all available"? Would it need to filter on things
 	TOSEC or Redump? Harder than just clicking links?
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
-TODO: Add ability to include a header reference (see No-Intro NES)
-	Will need to have a mapping of system to header
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
  ------------------------------------------------------------------------------------ */
 
