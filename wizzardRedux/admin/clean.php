@@ -60,4 +60,48 @@ else
 	echo "Deleting checksum orphans failed!<br/>\n".mysqli_error($link);
 }
 
+// Fix the names of games that have spacing issues
+$query = "SELECT * FROM games
+			WHERE name LIKE  ' %'
+			ORDER BY name ASC";
+$result = mysqli_query($link, $query);
+
+while ($line = mysqli_fetch_assoc($result))
+{
+	$query = "UPDATE games
+			SET name='".trim($line["name"])."'
+			WHERE id=".$line["id"];
+	$result2 = mysqli_query($link, $query);
+	if (gettype($result2) == "boolean" && $result2)
+	{
+		echo "Trimming game names succeeded!<br/>\n";
+	}
+	else
+	{
+		echo "Trimming game names failed!<br/>\n".mysqli_error($link);
+	}
+}
+
+// Fix the names of files that have spacing issues
+$query = "SELECT * FROM files
+			WHERE name LIKE  ' %'
+			ORDER BY name ASC";
+$result = mysqli_query($link, $query);
+
+while ($line = mysqli_fetch_assoc($result))
+{
+	$query = "UPDATE files
+			SET name='".trim($line["name"])."'
+			WHERE id=".$line["id"];
+	$result2 = mysqli_query($link, $query);
+	if (gettype($result2) == "boolean" && $result2)
+	{
+		echo "Trimming file names succeeded!<br/>\n";
+	}
+	else
+	{
+		echo "Trimming file names failed!<br/>\n".mysqli_error($link);
+	}
+}
+
 ?>
