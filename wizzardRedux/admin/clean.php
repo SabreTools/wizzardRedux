@@ -44,6 +44,22 @@ else
 	echo "Deleting file dupes failed!<br/>\n".mysqli_error($link);
 }
 
+// Delete orphaned files
+$query = "DELETE FROM files
+			WHERE NOT EXISTS (
+				SELECT *
+				FROM games
+				WHERE files.setid = games.id)";
+$result = mysqli_query($link, $query);
+if (gettype($result) == "boolean" && $result)
+{
+	echo "Deleting file orphans succeeded!<br/>\n";
+}
+else
+{
+	echo "Deleting file orphans failed!<br/>\n".mysqli_error($link);
+}
+
 // Delete orphaned checksums
 $query = "DELETE FROM checksums
 			WHERE NOT EXISTS (
