@@ -386,9 +386,10 @@ function add_game ($sysid, $machinename, $sourceid)
 	$machinename = strtr($machinename, $normalize_chars);
 	$machinename = ru2lat($machinename);
 	$machinename = preg_replace($search_pattern["EXT"], $search_pattern["REP"], $machinename);
+	$machinename = trim($machinename);
 	
 	// This is an issue, apparently
-	if (trim($machinename) == "")
+	if ($machinename == "")
 	{
 		echo "</table><br/>\n";
 		die("Machinename is blank!");
