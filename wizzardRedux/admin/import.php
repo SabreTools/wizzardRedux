@@ -24,9 +24,12 @@ echo "<h2>Import From Datfile</h2>";
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
 
+// Verify GET variables
 $auto = isset($_GET["auto"]) && $_GET["auto"] == "1";
 $size = isset($_GET["size"]) && $_GET["size"] == "1";
 $type = isset($_GET["type"]) && in_array($_GET["type"], $type) ? $_GET["type"] : "";
+
+// Set import paths
 $importroot = "../temp/import/";
 $importdone = "../temp/imported/";
 
