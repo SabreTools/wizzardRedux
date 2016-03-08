@@ -74,9 +74,9 @@ elseif ($game != "")
 	{
 		echo "No game info could be retrieved! There might be an error.<br/>";
 		exit;
-	}
+	}	
 	$roms = mysqli_fetch_all($result);
-	$game_info = $roms[1];
+	$game_info = $roms[0];
 
 	echo "<h2>View the Game Information Below</h2>
 

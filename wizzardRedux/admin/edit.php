@@ -625,7 +625,7 @@ elseif ($game != "")
 		exit;
 	}
 	$roms = mysqli_fetch_all($result);
-	$game_info = $roms[1];
+	$game_info = $roms[0];
 	
 	echo "<form action='index.php?page=edit' method='post'>
 <input type='hidden' name='game' value='".$game."'/>
