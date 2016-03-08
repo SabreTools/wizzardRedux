@@ -69,6 +69,7 @@ if (!isset($_GET["filename"]))
 				if ($auto)
 				{
 					import_dat($file);
+					sleep(1);
 					echo "<script type='text/javascript'>window.location='?page=import&auto=1".
 						($size ? "&size=1" : "").
 						($type != "" ? "&type=".$type : "").
@@ -88,6 +89,7 @@ if (!isset($_GET["filename"]))
 else
 {
 	import_dat($_GET["filename"]);
+	sleep(1);
 	echo "<script type='text/javascript'>window.location='?page=import".($size ? "&size=1" : "")."'</script>";
 }
 
@@ -382,8 +384,6 @@ function add_game ($sysid, $machinename, $sourceid)
 	// WoD gets rid of anything past the first "(" or "[" as the name, we will do the same
 	preg_match("/(([[(].*[\)\]] )?([^([]+))/", $machinename, $machinename);
 	$machinename = $machinename[1];
-	var_dump($machinename);
-	die();
 	
 	// Run the name through the filters to make sure that it's correct
 	$machinename = strtr($machinename, $normalize_chars);
@@ -401,7 +401,7 @@ function add_game ($sysid, $machinename, $sourceid)
 	$query = "SELECT id
 			FROM games
 			WHERE system=".$sysid."
-			AND name='".$machinename."'
+			AND name='".htmlspecialchars($machinename)."'
 			AND source=".$sourceid;
 	
 	$result = mysqli_query($link, $query);
@@ -414,6 +414,7 @@ function add_game ($sysid, $machinename, $sourceid)
 	}
 	else
 	{
+		var_dump($result); die();
 		$gameid = mysqli_fetch_assoc($result);
 		$gameid = $gameid["id"];
 	}
