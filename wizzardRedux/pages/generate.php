@@ -51,7 +51,7 @@ if ($mega == "1")
 {
 	$system = "";
 	$source = "";
-	ini_set("memory_limit", "512M");
+	ini_set("memory_limit", "1024M");
 }
 
 // Use dropdown value to override others, if applicable
@@ -69,27 +69,6 @@ if ($dats != "" && $dats != "0")
 // If nothing is set, show the list of all available DATs (or generate all DATs)
 if ($system == "" && $source == "" && $mega != "1")
 {
-	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
-		FROM systems
-		JOIN games
-			ON systems.id=games.system
-		ORDER BY systems.manufacturer, systems.system";
-	$result = mysqli_query($link, $query);
-	
-	echo "<h3>Available Systems</h3>\n";
-	
-	$systems = array();
-	while($system = mysqli_fetch_assoc($result))
-	{
-		array_push($systems, $system);
-		
-		if ($auto == "1")
-		{
-			echo "Beginning generate ".$system["manufacturer"]." - ".$system["system"]." (merged)<br/>\n";
-			generate_dat($system["id"], "");
-		}
-	}
-	
 	// If we are creating all DATs, don't show the form
 	if ($auto != "1")
 	{
@@ -101,18 +80,34 @@ if ($system == "" && $source == "" && $mega != "1")
 	// Though we should create the MEGAMERGED DAT...
 	else
 	{
+		/*
 		echo "Beginning generate ALL (merged)<br/>\n";
 		generate_dat("", "");
+		*/
 	}
 	
+	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
+		FROM systems
+		JOIN games
+			ON systems.id=games.system
+		ORDER BY systems.manufacturer, systems.system";
+	$result = mysqli_query($link, $query);
+	
+	echo "<h3>Available Systems</h3>\n";
+	
 	// Note: Source-only DATs are not provided as an option yet
-	foreach ($systems as $system)
+	while($system = mysqli_fetch_assoc($result))
 	{
 		if ($auto != "1")
 		{
 			echo "<option value='".$system["id"]."-0'>".$system["manufacturer"]." - ".$system["system"]." (merged)</option>\n";
 		}
-	
+		else
+		{
+			echo "Beginning generate ".$system["manufacturer"]." - ".$system["system"]." (merged)<br/>\n";
+			generate_dat($system["id"], "");
+		}
+		
 		$query = "SELECT DISTINCT sources.id, sources.name
 			FROM systems
 			JOIN games
@@ -121,7 +116,7 @@ if ($system == "" && $source == "" && $mega != "1")
 				ON games.source=sources.id
 			WHERE systems.id=".$system["id"];
 		$result = mysqli_query($link, $query);
-	
+		
 		while($source = mysqli_fetch_assoc($result))
 		{
 			if ($auto != "1")
@@ -137,6 +132,7 @@ if ($system == "" && $source == "" && $mega != "1")
 			}
 		}
 	}
+	
 	echo "</select><br/>
 <input type='checkbox' name='old' value='1'>Use old DAT format<br/><br/>
 <input type='submit'>\n</form><br/>
