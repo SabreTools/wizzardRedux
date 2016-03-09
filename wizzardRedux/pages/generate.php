@@ -58,7 +58,7 @@ if ($mega == "1")
 if ($dats != "" && $dats != "0")
 {
 	$dats = explode("-", $_GET["dats"]);
-	$system = $dats[0];
+	$system = ($dats[0] == "0" ? "" : $dats[0]);
 	$source = ($dats[1] == "0" ? "" : $dats[1]);
 	$loc = "?page=generate&system=".$system."&source=".$source.(isset($_GET["old"]) && $_GET["old"] == 1 ? "&old=1" : "");
 	header("Location: ".$loc);
@@ -95,7 +95,7 @@ if ($system == "" && $source == "" && $mega != "1")
 	
 	echo "<h3>Available Systems</h3>\n";
 	
-	// Note: Source-only DATs are not provided as an option yet
+	// Either generate options for custom DATs OR generate them in auto mode
 	while($system = mysqli_fetch_assoc($result))
 	{
 		if ($auto != "1")
@@ -115,9 +115,9 @@ if ($system == "" && $source == "" && $mega != "1")
 			JOIN sources
 				ON games.source=sources.id
 			WHERE systems.id=".$system["id"];
-		$result = mysqli_query($link, $query);
+		$sresult = mysqli_query($link, $query);
 		
-		while($source = mysqli_fetch_assoc($result))
+		while($source = mysqli_fetch_assoc($sresult))
 		{
 			if ($auto != "1")
 			{
@@ -127,17 +127,38 @@ if ($system == "" && $source == "" && $mega != "1")
 			{
 				echo "Beginning generate ".$system["manufacturer"]." - ".$system["system"]." (".$source["name"].")<br/>\n";
 				generate_dat($system["id"], $source["id"]);
-				echo "Beginning generate ALL (".$source["name"].")<br/>\n";
-				generate_dat("", $source["id"]);
 			}
 		}
 	}
 	
+	// Generate links for all individual sources
+	$query = "SELECT DISTINCT sources.id, sources.name
+		FROM sources
+		JOIN games
+			ON sources.id=games.source";
+	$result = mysqli_query($link, $query);
+	
+	while($source = mysqli_fetch_assoc($result))
+	{
+		if ($auto != "1")
+		{
+			echo "<option value='0-".$source["id"]."'>ALL (".$source["name"].")</option>\n";
+		}
+		else
+		{
+			echo "Beginning generate ALL (".$source["name"].")<br/>\n";
+			generate_dat("", $source["id"]);
+		}
+	}
+	
+	if ($auto != "1")
+	{
 	echo "</select><br/>
 <input type='checkbox' name='old' value='1'>Use old DAT format<br/><br/>
 <input type='submit'>\n</form><br/>
 <a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>
-<a href='?page=generate&auto=1'>Createa all available DATs</a><br/><br/>";
+<a href='?page=generate&auto=1'>Create all available DATs</a><br/><br/>";
+	}
 }
 // If we have system, source, or mega set, generate the appropriate DAT
 else
