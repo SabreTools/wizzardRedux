@@ -108,7 +108,7 @@ if ($type == 'forum')
 	
 				$firstDateSet2 = true;
 	
-				$queryb = get_html2("/forum/index.php?board=".$board.".".($boardpage * 20), $cookie);
+				$queryb = get_html("/forum/index.php?board=".$board.".".($boardpage * 20), $cookie);
 				$queryb = explode('<td class="windowbg2" valign="middle" align="center" width="5%">', $queryb);
 				array_splice($queryb, 0, 1);
 				if (!$queryb)
@@ -159,7 +159,7 @@ if ($type == 'forum')
 				
 							print "load page: ".$topic.".".($page*15);
 				
-							$query = get_html2("/forum/index.php?topic=".$topic.".".($page * 15), $cookie);
+							$query = get_html("/forum/index.php?topic=".$topic.".".($page * 15), $cookie);
 							$query = explode('<tr><td style="padding: 1px 1px 0 1px;">', $query);
 							array_splice($query, 0, 1);
 					
