@@ -3,12 +3,15 @@
 /* ------------------------------------------------------------------------------------
 Create a DAT from the database
 	
-TODO: Create an "auto-generate all available"? Would it need to filter on things like
-	TOSEC or Redump? Harder than just clicking links?
+TODO: Create an "auto-generate all available". The following is required:
+	- Create method from "else" block, call it "generate_dat"
+	- Add new GET var called "auto"
+	- Add new link to the default page with auto=1
+	- Copy and retool the create list of options code to make a nested loop to generate the file
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
-TODO: Figure out why MEGA doesn't name games properly
+TODO: Substitute in the system id for the keys in $headers
  ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
@@ -27,15 +30,15 @@ $headers = array(
 		"a7800" => "a7800.xml",
 		"fds" => "fds.xml",
 		"lynx" => "lynx.xml",
-		"n64-BADC" => "n64-BADC.xml",
-		"n64-DCBA" => "n64-DCBA.xml",
-		"n64" => "n64.xml",
+		//"n64-BADC" => "n64-BADC.xml",				// Appears unused by No-Intro or NonGood
+		//"n64-DCBA" => "n64-DCBA.xml",				// Appears unused by No-Intro or NonGood
+		//"n64" => "n64.xml",							// Appears unused by No-Intro or NonGood
 		"nes" => "nes.xml",
-		"No-Intro_A7800" => "No-Intro_A7800.xml",
-		"No-Intro_FDS" => "No-Intro_FDS.xml",
-		"No-Intro_LNX" => "No-Intro_LNX.xml",
-		"no-intro_NES" => "No-Intro_NES.xml",
-		"nongoodnes" => "nongoodnes.xml",
+		//"No-Intro_A7800" => "No-Intro_A7800.xml",	// Functional subset of a7800.xml
+		//"No-Intro_FDS" => "No-Intro_FDS.xml",		// Functional subset of fds.xml
+		//"No-Intro_LNX" => "No-Intro_LNX.xml",		// Functional subset of lnx.xml
+		//"no-intro_NES" => "No-Intro_NES.xml",		// Functional subset of nes.xml
+		//"nongoodnes" => "nongoodnes.xml",			// Functional subset of nes.xml
 		"psid" => "psid.xml",
 		"spc" => "spc.xml",
 );
