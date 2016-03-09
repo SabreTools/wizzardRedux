@@ -11,7 +11,6 @@ TODO: Create an "auto-generate all available". The following is required:
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
-TODO: Substitute in the system id for the keys in $headers
  ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
@@ -27,18 +26,18 @@ $getvars = array(
 
 // Map systems to headers for datfile creation
 $headers = array(
-		"a7800" => "a7800.xml",
-		"fds" => "fds.xml",
-		"lynx" => "lynx.xml",
-		//"n64-BADC" => "n64-BADC.xml",				// Appears unused by No-Intro or NonGood
-		//"n64-DCBA" => "n64-DCBA.xml",				// Appears unused by No-Intro or NonGood
-		//"n64" => "n64.xml",							// Appears unused by No-Intro or NonGood
-		"nes" => "nes.xml",
-		//"No-Intro_A7800" => "No-Intro_A7800.xml",	// Functional subset of a7800.xml
-		//"No-Intro_FDS" => "No-Intro_FDS.xml",		// Functional subset of fds.xml
-		//"No-Intro_LNX" => "No-Intro_LNX.xml",		// Functional subset of lnx.xml
-		//"no-intro_NES" => "No-Intro_NES.xml",		// Functional subset of nes.xml
-		//"nongoodnes" => "nongoodnes.xml",			// Functional subset of nes.xml
+		"25" => "a7800.xml",
+		"228" => "fds.xml",
+		"31" => "lynx.xml",
+		//"234" => "n64-BADC.xml",				// Appears unused by No-Intro or NonGood
+		//"234" => "n64-DCBA.xml",				// Appears unused by No-Intro or NonGood
+		//"234" => "n64.xml",						// Appears unused by No-Intro or NonGood
+		"238" => "nes.xml",
+		//"25" => "No-Intro_A7800.xml",	// Functional subset of a7800.xml
+		//"228" => "No-Intro_FDS.xml",		// Functional subset of fds.xml
+		//"31" => "No-Intro_LNX.xml",		// Functional subset of lnx.xml
+		//"238" => "No-Intro_NES.xml",		// Functional subset of nes.xml
+		//"238" => "nongoodnes.xml",			// Functional subset of nes.xml
 		"psid" => "psid.xml",
 		"spc" => "spc.xml",
 );
