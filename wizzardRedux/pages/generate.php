@@ -72,7 +72,8 @@ if ($system == "" && $source == "" && $mega != "1")
 	// If we are creating all DATs, don't show the form
 	if ($auto != "1")
 	{
-		echo "<form action='?page=generate' method='get'>
+		echo "<h3>Available Systems</h3>
+<form action='?page=generate' method='get'>
 <input type='hidden' name='page' value='generate' />
 <select name='dats' id='dats'>
 <option value=' ' selected='selected'>Choose a DAT</option>\n";
@@ -92,8 +93,6 @@ if ($system == "" && $source == "" && $mega != "1")
 			ON systems.id=games.system
 		ORDER BY systems.manufacturer, systems.system";
 	$result = mysqli_query($link, $query);
-	
-	echo "<h3>Available Systems</h3>\n";
 	
 	// Either generate options for custom DATs OR generate them in auto mode
 	while($system = mysqli_fetch_assoc($result))
@@ -402,7 +401,7 @@ function process_roms ($roms, $system, $source)
 	}
 	
 	// If we're in a merged mode, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
-	if ($system == "" || $source != "")
+	if ($system == "" || $source == "")
 	{		
 		$roms = $newroms;
 		unset($newroms);
@@ -497,9 +496,8 @@ function process_roms ($roms, $system, $source)
 		foreach ($newroms as &$rom)
 		{			
 			$rom["game"] = $rom["game"].
-				($system != "" && $source == "" ? " [".$rom["source"]."]" : "").
-				($system == "" && $source != "" ? " [".$rom["manufacturer"]." - ".$rom["system"]."]" : "").
-				($system == "" && $source == "" ? " [".$rom["manufacturer"]." - ".$rom["system"]." (".$rom["source"].")]" : "");	
+				($system == "" ? " [".$rom["manufacturer"]." - ".$rom["system"]."]" : "").
+				($source == "" ? " [".$rom["source"]."]" : "");
 		}
 	}
 	
