@@ -4,7 +4,7 @@
 Import an existing DAT into the system
 
 Requires:
-	filename	File name in the format of "Manufacturer - SystemName (Source .*)\.dat"
+	filename	File name in one of a few formats, see $datpattern
 	size		Sort the list by size of the DAT file (handy for multiple imports)
 	type		If defined, sets the mapping to use on DAT import
 
