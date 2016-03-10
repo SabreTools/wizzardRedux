@@ -11,6 +11,7 @@ Requires:
 TODO: Auto-generate DATs affected by import (merged and custom)?
 TODO: Figure out if some systems need to have their data removed before importing again
 		e.g. TOSEC, Redump, TruRip
+TODO: RomCenter format? http://www.logiqx.com/DatFAQs/RomCenter.php
 ------------------------------------------------------------------------------------ */
 
 // Special import types
