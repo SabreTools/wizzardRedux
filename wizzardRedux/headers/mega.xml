@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+
+<detector>
+
+  <name>MEGAMERGED</name>
+  <author>Roman Scherzer, Yori Yoshizuki, darksabre76</author>
+  <version>1.0</version>
+
+  <!-- a7800.xml -->
+  
+  <rule start_offset="80" end_offset="EOF" operation="none">
+    <data offset="1" value="415441524937383030" result="true"/>
+  </rule>
+
+  <rule start_offset="80" end_offset="EOF" operation="none">
+    <data offset="64" value="41435455414C20434152542044415441205354415254532048455245" result="true"/>
+  </rule>
+  
+  <!-- fds.xml -->
+  
+  <rule start_offset="10">
+    <data offset="0" value="4644531A010000000000000000000000"/>
+  </rule>
+
+  <rule start_offset="10">
+    <data offset="0" value="4644531A020000000000000000000000"/>
+  </rule>
+
+  <rule start_offset="10">
+    <data offset="0" value="4644531A030000000000000000000000"/>
+  </rule>
+
+  <rule start_offset="10">
+    <data offset="0" value="4644531A040000000000000000000000"/>
+  </rule>
+  
+  <!-- lynx.xml -->
+  
+  <rule start_offset="40" end_offset="EOF" operation="none">
+    <data offset="0" value="4C594E58" result="true"/>
+  </rule>
+
+  <rule start_offset="40" end_offset="EOF" operation="none">
+    <data offset="6" value="425339" result="true"/>
+  </rule>
+  
+  <!-- nes.xml -->
+  
+  <rule start_offset="10" end_offset="EOF" operation="none">
+    <data offset="0" value="4E45531A" result="true"/>
+  </rule>
+  
+  <rule start_offset="10">
+    <data offset="0" value="4E4553"/>
+  </rule>
+  
+  <!-- snes.xml -->
+  
+   <!-- fig header -->
+  <rule start_offset="200">
+    <data offset="0" value="80000000008000000000000000000000"/>
+  </rule>
+  
+  <!-- smc header -->
+  <rule start_offset="200">
+    <data offset="0" value="6000020000000000000000000000000057696C64534D454721"/>
+  </rule>
+  
+  <!-- swc header -->
+  <rule start_offset="200">
+    <data offset="0" value="8000080000000000AABB040000000000"/>
+  </rule>
+  
+  <!-- ufo header -->
+  <rule start_offset="200">
+    <data offset="0" value="8000000000000000535550455255464F01080101020F0303"/>
+  </rule>
+
+</detector>

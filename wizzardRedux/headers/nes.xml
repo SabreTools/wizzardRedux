@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<detector>
+
+  <name>Nintendo Famicom/NES</name>
+  <author>Roman Scherzer</author>
+  <version>1.1</version>
+
+  <rule start_offset="10" end_offset="EOF" operation="none">
+    <data offset="0" value="4E45531A" result="true"/>
+  </rule>
+  
+  <rule start_offset="10">
+    <data offset="0" value="4E4553"/>
+  </rule>
+
+</detector>
