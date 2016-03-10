@@ -75,8 +75,12 @@ if ($system == "" && $source == "" && $mega != "1")
 	else
 	{
 		/*
+		ini_set("enable_gc", "1"); // Should be set by default...
+		
+		ini_set("memory_limit", "1024M");
 		echo "Beginning generate ALL (merged)<br/>\n";
 		generate_dat("", "");
+		sleep(5);
 		*/
 	}
 	
@@ -87,7 +91,7 @@ if ($system == "" && $source == "" && $mega != "1")
 		ORDER BY systems.manufacturer, systems.system";
 	$result = mysqli_query($link, $query);
 	
-	// Either generate options for custom DATs OR generate them in auto mode
+	// Either generate options for custom and system-merged DATs OR generate them in auto mode
 	while($system = mysqli_fetch_assoc($result))
 	{
 		if ($auto != "1")
@@ -98,6 +102,7 @@ if ($system == "" && $source == "" && $mega != "1")
 		{
 			echo "Beginning generate ".$system["manufacturer"]." - ".$system["system"]." (merged)<br/>\n";
 			generate_dat($system["id"], "");
+			sleep(2);
 		}
 		
 		$query = "SELECT DISTINCT sources.id, sources.name
@@ -121,9 +126,15 @@ if ($system == "" && $source == "" && $mega != "1")
 				generate_dat($system["id"], $source["id"]);
 			}
 		}
+		
+		// Free up the memory 
+		unset($sresult);
 	}
 	
-	// Generate links for all individual sources
+	// Free up the memory
+	unset($result);
+	
+	// Either generate options for source-merged DATs OR generate them in auto mode
 	$query = "SELECT DISTINCT sources.id, sources.name
 		FROM sources
 		JOIN games
@@ -142,6 +153,9 @@ if ($system == "" && $source == "" && $mega != "1")
 			generate_dat("", $source["id"]);
 		}
 	}
+	
+	// Free up the memory
+	unset($result);
 	
 	// If we're not in auto mode, then end the form and show the remaining links
 	if ($auto != "1")
@@ -171,8 +185,9 @@ if ($system == "" && $source == "" && $mega != "1")
 			{
 				//echo "Adding ".$item."<br/>\n";
 				$zip->addFile("temp/output/".$item,
+						(strpos($item, "ALL (merged") !== FALSE ? $item :
 						(strpos($item, "merged") !== FALSE ? "merged-system/".$item :
-								(strpos($item, "ALL") !== FALSE ? "merged-source/".$item : "custom/".$item)));
+						(strpos($item, "ALL") !== FALSE ? "merged-source/".$item : "custom/".$item))));
 			}
 		}
 		
@@ -210,6 +225,9 @@ function generate_dat ($system, $source)
 			echo "<a href='?page=generate'>Go Back</a>";
 			exit;
 		}
+		
+		// Free up the memory
+		unset($result);
 	}
 	
 	// Check the validity of the system id
@@ -225,6 +243,9 @@ function generate_dat ($system, $source)
 			echo "<a href='?page=generate'>Go Back</a>";
 			exit;
 		}
+		
+		// Free up the memory
+		unset($result);
 	}
 	
 	// Since the source and/or system are valid, retrive all files
@@ -243,7 +264,8 @@ function generate_dat ($system, $source)
 					($system != "" || $source != "" ? " WHERE" : "").
 					($source != "" ? " sources.id=".$source : "").
 					($source != "" && $system != "" ? " AND" : "").
-					($system != "" ? " systems.id=".$system : "");
+					($system != "" ? " systems.id=".$system : "")."
+			ORDER BY games.name ASC, files.name ASC";
 	$result = mysqli_query($link, $query);
 
 	// If there are no games for this set of parameters, tell the user
@@ -260,6 +282,9 @@ function generate_dat ($system, $source)
 	{
 		array_push($roms, $rom);
 	}
+	
+	// Free up the memory
+	unset($result);
 
 	// Process the roms
 	$roms = process_roms($roms, $system, $source);
@@ -344,6 +369,10 @@ function generate_dat ($system, $source)
 		fwrite($handle, $header);
 		foreach ($roms as $rom)
 		{
+			// Preprocess each game and rom name for safety
+			$rom["game"] = htmlspecialchars($rom["game"]);
+			$rom["name"] = htmlspecialchars($rom["name"]);
+			
 			$state = "";
 				
 			if ($lastgame != "" && $lastgame != $rom["game"])
@@ -370,6 +399,9 @@ function generate_dat ($system, $source)
 		fwrite($handle, $footer);
 	}
 	fclose($handle);
+	
+	// Free up the memory
+	unset($roms);
 
 	echo "File written!<br/>\n";
 }
@@ -377,22 +409,7 @@ function generate_dat ($system, $source)
 // Change duplicate names and remove duplicates (merged only)
 function process_roms ($roms, $system, $source)
 {
-	// First sort all roms by name and game
-	usort($roms, function ($a, $b)
-	{
-		$game_a = strtolower($a["game"]);
-		$name_a = strtolower($a["name"]);
-		$game_b = strtolower($b["game"]);
-		$name_b = strtolower($b["name"]);
-	
-		if (strcmp($game_a, $game_b) == 0)
-		{
-			return strcmp($name_a, $name_b);
-		}
-		return strcmp($name_a, $name_b);
-	});
-	
-	// Next, go through and rename any necessary
+	// First, go through and rename any necessary
 	$lastname = ""; $lastgame = "";
 	$newroms = array();
 	foreach ($roms as $rom)
