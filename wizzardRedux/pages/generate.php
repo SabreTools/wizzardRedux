@@ -143,13 +143,43 @@ if ($system == "" && $source == "" && $mega != "1")
 		}
 	}
 	
+	// If we're not in auto mode, then end the form and show the remaining links
 	if ($auto != "1")
 	{
-	echo "</select><br/>
+		echo "</select><br/>
 <input type='checkbox' name='old' value='1'>Use old DAT format<br/><br/>
 <input type='submit'>\n</form><br/>
 <a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>
 <a href='?page=generate&auto=1'>Create all available DATs</a><br/><br/>";
+	}
+	// If we're in auto mode, zip up the files and clean up
+	else
+	{
+		//echo "Creating new zipfile...<br/>\n";
+		$zip = new ZipArchive();
+		$zip->open("temp/dats-".date("Ymd").".zip", ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
+		
+		// Seems unnecessary, but helps make sure the zipfile is populated correctly
+		$zip->addEmptyDir("merged-system");
+		$zip->addEmptyDir("merged-source");
+		$zip->addEmptyDir("custom");
+		
+		//echo "Zipfile created successfully!<br/>\n";
+		foreach (scandir("temp/output") as $item)
+		{
+			if (strpos($item, ".xml") !== FALSE || strpos($item, ".dat") !== FALSE)
+			{
+				//echo "Adding ".$item."<br/>\n";
+				$zip->addFile("temp/output/".$item,
+						(strpos($item, "merged") !== FALSE ? "merged-system/".$item :
+								(strpos($item, "ALL") !== FALSE ? "merged-source/".$item : "custom/".$item)));
+			}
+		}
+		
+		$zip->close();
+		
+		// http://php.net/manual/en/function.unlink.php#109971
+		array_map("unlink", glob("temp/output/*.*"));
 	}
 }
 // If we have system, source, or mega set, generate the appropriate DAT
