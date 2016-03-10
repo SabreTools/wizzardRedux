@@ -9,6 +9,8 @@ Requires:
 	type		If defined, sets the mapping to use on DAT import
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
+TODO: Figure out if some systems need to have their data removed before importing again
+		e.g. TOSEC, Redump, TruRip
 ------------------------------------------------------------------------------------ */
 
 // Special import types

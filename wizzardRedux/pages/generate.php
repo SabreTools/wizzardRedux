@@ -6,6 +6,7 @@ Create a DAT from the database
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
+TODO: Limit DAT creation for some sources, e.g. No-Intro, Good, TOSEC, Redump, etc.
  ------------------------------------------------------------------------------------ */
 
 echo "<h2>Export to Datfile</h2>";
