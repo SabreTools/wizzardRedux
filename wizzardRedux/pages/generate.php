@@ -2,15 +2,13 @@
 
 /* ------------------------------------------------------------------------------------
 Create a DAT from the database
-Original code by Matt Nadareski (darksabre76)
+Original code by Matt Nadareski (darksabre76), emuLOAD
 
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
 TODO: Limit DAT creation for some sources, e.g. No-Intro, Good, TOSEC, Redump, etc.
  ------------------------------------------------------------------------------------ */
-
-echo "<h2>Export to Datfile</h2>";
 
 // All possible $_GET variables that we can use (propogate this to other files?)
 $getvars = array(
@@ -63,6 +61,8 @@ if ($dats != "" && $dats != "0")
 // If nothing is set, show the list of all available DATs (or generate all DATs)
 if ($system == "" && $source == "" && $mega != "1")
 {
+	echo "<h2>Export to Datfile</h2>";
+	
 	// If we are creating all DATs, don't show the form
 	if ($auto != "1")
 	{
@@ -199,7 +199,8 @@ if ($system == "" && $source == "" && $mega != "1")
 // If we have system, source, or mega set, generate the appropriate DAT
 else
 {
-	generate_dat($system, $source);
+	generate_dat($system, $source, true);
+	exit();
 }
 
 /*
@@ -207,7 +208,7 @@ else
  If just the system is set, create a DAT that has each game suffixed by source and merged (merged)
  If both system and source are set, create a DAT that has each rom unsuffixed and unmerged (custom)
  */
-function generate_dat ($system, $source)
+function generate_dat ($system, $source, $lone = false)
 {
 	global $link, $headers;
 	
@@ -293,8 +294,19 @@ function generate_dat ($system, $source)
 	" (".($source != "" ? $roms[0]["source"] : "merged")." ".$version.")";
 	
 	// Create and open an output file for writing (currently uses current time, change to "last updated time"
-	echo "Opening file for writing: temp/output/".$datname.($old == "1" ? ".dat" : ".xml")."<br/>\n";
-	$handle = fopen("temp/output/".$datname.($old == "1" ? ".dat" : ".xml"), "w");
+	if ($lone)
+	{
+		ob_end_clean();
+		
+		//First thing first, push the http headers
+		header('content-type: application/x-gzip');
+		header('Content-Disposition: attachment; filename="'.$datname.($old == "1" ? ".dat" : ".xml").'.gz"');
+	}
+	else
+	{
+		echo "Opening file for writing: temp/output/".$datname.($old == "1" ? ".dat" : ".xml")."<br/>\n";
+		$handle = fopen("temp/output/".$datname.($old == "1" ? ".dat" : ".xml"), "w");
+	}
 	
 	// Temporarilly set $system if we're in MEGAMERGED mode
 	if ($system == "" && $source == "")
@@ -333,11 +345,24 @@ function generate_dat ($system, $source)
 		$system = "";
 	}
 
-	echo "Writing data to file<br/>\n";
+	if (!$lone)
+	{
+		echo "Writing data to file<br/>\n";
+	}
 	$lastgame = "";
 	if ($old == "1")
 	{
-		fwrite($handle, $header_old);
+		// Write the header out
+		if ($lone)
+		{
+			echo gzencode($header_old, 9);
+		}
+		else
+		{
+			fwrite($handle, $header_old);
+		}
+		
+		// Write out each of the machines and roms
 		foreach ($roms as $rom)
 		{
 			$state = "";
@@ -357,15 +382,40 @@ function generate_dat ($system, $source)
 				($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
 				" )\n";
 	
-				$lastgame = $rom["game"];
-					
+			$lastgame = $rom["game"];
+			
+			if ($lone)
+			{
+				echo gzencode($state, 9);
+			}
+			else
+			{
 				fwrite($handle, $state);
+			}
 		}
-		fwrite($handle, ")");
+		
+		if ($lone)
+		{
+			echo gzencode(")", 9);
+		}
+		else
+		{
+			fwrite($handle, ")");
+		}
 	}
 	else
 	{
-		fwrite($handle, $header);
+		// Write the header out
+		if ($lone)
+		{
+			echo gzencode($header, 9);
+		}
+		else
+		{
+			fwrite($handle, $header);
+		}
+		
+		// Write out each of the machines and roms
 		foreach ($roms as $rom)
 		{
 			// Preprocess each game and rom name for safety
@@ -392,17 +442,36 @@ function generate_dat ($system, $source)
 
 			$lastgame = $rom["game"];
 				
-			fwrite($handle, $state);
+			if ($lone)
+			{
+				echo gzencode($state, 9);
+			}
+			else
+			{
+				fwrite($handle, $state);
+			}
 		}
-		fwrite($handle, "\t</machine>");
-		fwrite($handle, $footer);
+		
+		if ($lone)
+		{
+			echo gzencode("\t</machine>", 9);
+			echo gzencode($footer, 9);
+		}
+		else
+		{
+			fwrite($handle, "\t</machine>");
+			fwrite($handle, $footer);
+		}	
 	}
-	fclose($handle);
 	
 	// Free up the memory
 	unset($roms);
 
-	echo "File written!<br/>\n";
+	if (!$lone)
+	{
+		fclose($handle);
+		echo "File written!<br/>\n";
+	}
 }
 
 // Change duplicate names and remove duplicates (merged only)

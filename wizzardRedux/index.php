@@ -1,3 +1,8 @@
+<?php 
+// This is for a few special cases where we don't want the HTML header
+ob_start();
+?>
+
 <!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 
