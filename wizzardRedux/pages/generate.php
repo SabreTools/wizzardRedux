@@ -25,17 +25,9 @@ $headers = array(
 		"25" => "a7800.xml",
 		"228" => "fds.xml",
 		"31" => "lynx.xml",
-		//"234" => "n64-BADC.xml",				// Appears unused by No-Intro or NonGood
-		//"234" => "n64-DCBA.xml",				// Appears unused by No-Intro or NonGood
-		//"234" => "n64.xml",						// Appears unused by No-Intro or NonGood
+		"0" => "mega.xml",						// Merged version of all other headers
 		"238" => "nes.xml",
-		//"25" => "No-Intro_A7800.xml",	// Functional subset of a7800.xml
-		//"228" => "No-Intro_FDS.xml",		// Functional subset of fds.xml
-		//"31" => "No-Intro_LNX.xml",		// Functional subset of lnx.xml
-		//"238" => "No-Intro_NES.xml",		// Functional subset of nes.xml
-		//"238" => "nongoodnes.xml",			// Functional subset of nes.xml
-		"psid" => "psid.xml",
-		"spc" => "spc.xml",
+		"241" => "snes.xml",					// Self-created to deal with various headers
 );
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
