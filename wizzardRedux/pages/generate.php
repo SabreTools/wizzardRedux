@@ -162,8 +162,7 @@ if ($system == "" && $source == "" && $mega != "1")
 		echo "</select><br/>
 <input type='checkbox' name='old' value='1'>Use old DAT format<br/><br/>
 <input type='submit'>\n</form><br/>
-<a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>
-<a href='?page=generate&auto=1'>Create all available DATs</a><br/><br/>";
+<a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>";
 	}
 	// If we're in auto mode, zip up the files and clean up
 	else

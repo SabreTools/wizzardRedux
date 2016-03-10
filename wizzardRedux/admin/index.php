@@ -58,6 +58,7 @@ Administrative Functions Homepage
 	<li><a href='?page=edit'>Add/Edit/Remove a system/source/game/file</a></li>
 	<li><a href='parenting/index.php'>Add/Edit/Remove a parent</a></li>
 	<li><a href='?page=import'>Bulk add from DAT</a></li>
+	<li><a href='../?page=generate&auto=1'>Create all available DATs</a></li>
 	<li><a href='?page=onlinecheck'>Check for new files online</a></li>
 	<li><a href='?page=getmamenames'>Generate an array of names for all MAME softlists</a></li>
 	<li><a href='?page=parsenointro'>Generate an array of names for all No-Intro sources</a></li>
