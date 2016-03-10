@@ -240,6 +240,12 @@ function generate_dat ($system, $source)
 	// Create and open an output file for writing (currently uses current time, change to "last updated time"
 	echo "Opening file for writing: temp/output/".$datname.($old == "1" ? ".dat" : ".xml")."<br/>\n";
 	$handle = fopen("temp/output/".$datname.($old == "1" ? ".dat" : ".xml"), "w");
+	
+	// Temporarilly set $system if we're in MEGAMERGED mode
+	if ($system == "" && $source == "")
+	{
+		$system = "0";
+	}
 
 	$header_old = "clrmamepro (
 	name \"".$datname."\"
@@ -265,6 +271,12 @@ function generate_dat ($system, $source)
 		</header>\n";
 	
 	$footer = "\n</datafile>";
+	
+	// Unset $system again if we're in MEGAMERGED mode
+	if ($system == "0" && $source == "")
+	{
+		$system = "";
+	}
 
 	echo "Writing data to file<br/>\n";
 	$lastgame = "";
