@@ -1,6 +1,7 @@
 <?php
 /* ------------------------------------------------------------------------------------
 View systems, sources, games, and parents from one convenient location.
+Original code by Matt Nadareski (darksabre76)
 
 TODO: Add search functionality
 ------------------------------------------------------------------------------------ */

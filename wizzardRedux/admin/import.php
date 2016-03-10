@@ -2,6 +2,7 @@
 
 /* ------------------------------------------------------------------------------------
 Import an existing DAT into the system
+Original code by Matt Nadareski (darksabre76)
 
 Requires:
 	filename	File name in one of a few formats, see $datpattern

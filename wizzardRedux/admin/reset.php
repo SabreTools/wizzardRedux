@@ -2,6 +2,7 @@
 
 /* ------------------------------------------------------------------------------------
  Reset the database in case of data error
+ Original code by Matt Nadareski (darksabre76)
  ------------------------------------------------------------------------------------ */
 
 $query = "DELETE FROM checksums;

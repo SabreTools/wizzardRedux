@@ -1,13 +1,14 @@
 <?php
 
-/*
+/* ------------------------------------------------------------------------------------
 Internal test to see if the No-Intro pages can be traversed reasonably
+Original code by Matt Nadareski (darksabre76)
 
 Requires
 	auto		Set to 1 if a new no-intro mapping needs to be created
 	
 TODO: Better figure out how to differentiate between individual dumps on a page more effectively than duped filds
-*/
+------------------------------------------------------------------------------------ */
 
 // Create a name to field mapping for each of the findable fields
 $field_mapping = array (

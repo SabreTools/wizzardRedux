@@ -2,6 +2,7 @@
 
 /* ------------------------------------------------------------------------------------
 Add, edit, and remove data from the database manually.
+Original code by Matt Nadareski (darksabre76)
 
 TODO: Add search functionality
  ------------------------------------------------------------------------------------ */

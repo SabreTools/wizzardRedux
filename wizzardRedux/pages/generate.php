@@ -2,6 +2,7 @@
 
 /* ------------------------------------------------------------------------------------
 Create a DAT from the database
+Original code by Matt Nadareski (darksabre76)
 
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
@@ -75,8 +76,6 @@ if ($system == "" && $source == "" && $mega != "1")
 	else
 	{
 		/*
-		ini_set("enable_gc", "1"); // Should be set by default...
-		
 		ini_set("memory_limit", "1024M");
 		echo "Beginning generate ALL (merged)<br/>\n";
 		generate_dat("", "");

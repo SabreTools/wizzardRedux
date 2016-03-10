@@ -2,6 +2,7 @@
 
 /* ------------------------------------------------------------------------------------
 Check for new downloadable ROMs from all available sites
+Original code by Matt Nadareski (darksabre76), based on code written by The Wizard of DATz
 
 Requires:
 	source		The sourcename to check against (in sites/<source>.php)

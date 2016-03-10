@@ -1,8 +1,9 @@
 <?php
 
-/*
+/* ------------------------------------------------------------------------------------
  Clean duplicates and orphaned checksums from the database
- */
+ Original code by Matt Nadareski (darksabre76)
+ ------------------------------------------------------------------------------------ */
 
 //http://stackoverflow.com/questions/18932/how-can-i-remove-duplicate-rows
 

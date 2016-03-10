@@ -2,6 +2,7 @@
 
 /* ------------------------------------------------------------------------------------
  Wrap all administrative functions in a single password-locked page
+ Original code by Matt Nadareski (darksabre76)
 
  Requires:
  page		The page name minus the extension from the admin folder

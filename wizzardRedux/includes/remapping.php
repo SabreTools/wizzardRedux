@@ -2,6 +2,7 @@
 
 /*------------------------------------------------------------------------------------
  Map all known external sets to "Manufacturer - System" combos
+ Original code by Matt Nadareski (darksabre76)
  -----------------------------------------------------------------------------------*/
 
 // Ensure the temp folder exists with the right subfolders
