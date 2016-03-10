@@ -50,10 +50,6 @@
     <data offset="0" value="4E45531A" result="true"/>
   </rule>
   
-  <rule start_offset="10">
-    <data offset="0" value="4E4553"/>
-  </rule>
-  
   <!-- snes.xml -->
   
    <!-- fig header -->
