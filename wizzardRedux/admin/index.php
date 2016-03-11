@@ -36,16 +36,6 @@ if (!$link)
 
 //echo "Connection established!<br/>\n";
 
-// Ensure the temp folder exists with the right subfolders
-if (!file_exists("../temp/imported/"))
-{
-	mkdir("../temp/imported", "0777", true);
-}
-if (!file_exists("../temp/output/"))
-{
-	mkdir("../temp/output", "0777", true);
-}
-
 if ($_GET["page"] && file_exists(str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
 {
 	include_once $_GET["page"].".php";
