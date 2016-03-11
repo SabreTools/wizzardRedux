@@ -368,13 +368,15 @@ function import_dat ($filename)
 			}
 		}
 		echo "</table><br/>\n";
-		
 		fclose($handle);
 		
+		// Add the imported file to the zip and delete
+		$extfilename = $importroot.$filename;
 		$zip = new ZipArchive();
 		$zip->open("../temp/imported".($type != "" ? "-".$type : "").".zip", ZIPARCHIVE::CREATE);
-		$zip->addFile($importroot.$filename);
+		$zip->addFile($extfilename, $filename);
 		$zip->close();
+		unlink($extfilename);
 		
 		return;
 	}
