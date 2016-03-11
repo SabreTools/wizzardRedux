@@ -34,9 +34,8 @@ $auto = isset($_GET["auto"]) && $_GET["auto"] == "1";
 $size = isset($_GET["size"]) && $_GET["size"] == "1";
 $type = isset($_GET["type"]) && in_array($_GET["type"], $type) ? $_GET["type"] : "";
 
-// Set import paths
+// Set import path
 $importroot = "../temp/import/";
-$importdone = "../temp/imported/";
 
 // If there's a type defined, set the root accordingly
 if ($type != "")
@@ -100,7 +99,7 @@ else
 
 function import_dat ($filename)
 {
-	global $link, $normalize_chars, $search_pattern, $importroot, $importdone, $type;
+	global $link, $normalize_chars, $search_pattern, $importroot, $type;
 	
 	// First, get the pattern of the file name. This is required for organization.
 	switch ($type)
