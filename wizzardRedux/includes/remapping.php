@@ -5,24 +5,6 @@
  Original code by Matt Nadareski (darksabre76)
  -----------------------------------------------------------------------------------*/
 
-// Ensure the temp folder exists with the right subfolders
-$subfolders = array(
-		"import",
-		"import/mame",
-		"import/nointro",
-		"import/redump",
-		"import/tosec",
-		"import/trurip",
-		"output",
-);
-foreach ($subfolders as $folder)
-{
-	if (!file_exists("temp/".$folder."/"))
-	{
-		mkdir("temp/".$folder, "0777", true);
-	}
-}
-
 // MAME softlist mapping
 $mapping_mame = array (
 		"32x.xml" => "Sega - 32X",
