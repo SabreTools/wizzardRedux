@@ -371,7 +371,11 @@ function import_dat ($filename)
 		echo "</table><br/>\n";
 		
 		fclose($handle);
-		rename($importroot.$filename, $importdone.$filename);
+		
+		$zip = new ZipArchive();
+		$zip->open("../temp/imported".($type != "" ? "-".$type : "").".zip", ZIPARCHIVE::CREATE);
+		$zip->addFile($importroot.$filename);
+		$zip->close();
 		
 		return;
 	}
