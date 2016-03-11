@@ -72,16 +72,6 @@ if ($system == "" && $source == "" && $mega != "1")
 <select name='dats' id='dats'>
 <option value=' ' selected='selected'>Choose a DAT</option>\n";
 	}
-	// Though we should create the MEGAMERGED DAT...
-	else
-	{
-		/*
-		ini_set("memory_limit", "1024M");
-		echo "Beginning generate ALL (merged)<br/>\n";
-		generate_dat("", "");
-		sleep(5);
-		*/
-	}
 	
 	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
 		FROM systems
@@ -164,9 +154,13 @@ if ($system == "" && $source == "" && $mega != "1")
 <input type='submit'>\n</form><br/>
 <a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>";
 	}
-	// If we're in auto mode, zip up the files and clean up
+	// If we're in auto mode, create the MEGAMERGED, zip up the files and clean up
 	else
 	{
+		ini_set("memory_limit", "-1"); // Set the maximum memory to infinite. This is a bad idea in production.
+		echo "Beginning generate ALL (merged)<br/>\n";
+		generate_dat("", "");
+		
 		//echo "Creating new zipfile...<br/>\n";
 		$zip = new ZipArchive();
 		$zip->open("temp/dats-".date("Ymd").".zip", ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
@@ -418,8 +412,8 @@ function generate_dat ($system, $source, $lone = false)
 		foreach ($roms as $rom)
 		{
 			// Preprocess each game and rom name for safety
-			$rom["game"] = htmlspecialchars($rom["game"]);
-			$rom["name"] = htmlspecialchars($rom["name"]);
+			$rom["game"] = htmlspecialchars(utf8_encode($rom["game"]));
+			$rom["name"] = htmlspecialchars(utf8_encode($rom["name"]));
 			
 			$state = "";
 				
