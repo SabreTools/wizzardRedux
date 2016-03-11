@@ -13,7 +13,6 @@ $subfolders = array(
 		"import/redump",
 		"import/tosec",
 		"import/trurip",
-		"imported",
 		"output",
 );
 foreach ($subfolders as $folder)
