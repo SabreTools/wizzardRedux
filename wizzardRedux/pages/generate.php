@@ -306,7 +306,7 @@ function generate_dat ($system, $source, $lone = false)
 	{
 		$system = "0";
 	}
-
+	
 	$header_old = "clrmamepro (
 	name \"".htmlspecialchars($datname)."\"
 	description \"".htmlspecialchars($datname)."\"
@@ -321,8 +321,8 @@ function generate_dat ($system, $source, $lone = false)
 	
 	<datafile>
 		<header>
-			<name>".$datname."</name>
-			<description>".$datname."</description>
+			<name>".htmlspecialchars($datname)."</name>
+			<description>".htmlspecialchars($datname)."</description>
 			<category>The Wizard of DATz</category>
 			<version>".$version."</version>
 			<date>".$version."</date>
