@@ -308,8 +308,8 @@ function generate_dat ($system, $source, $lone = false)
 	}
 
 	$header_old = "clrmamepro (
-	name \"".$datname."\"
-	description \"".$datname."\"
+	name \"".htmlspecialchars($datname)."\"
+	description \"".htmlspecialchars($datname)."\"
 	version \"".$version."\"
 	".($system != "" && array_key_exists($system, $headers) ? " header \"".$headers[$system]."\"" : "")."
 	comment \"\"
