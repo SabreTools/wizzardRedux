@@ -11,6 +11,7 @@ Notes:
 	Below are a list of sites with things of note about them:
 	- AtariOnline				No idea what "compare" block does
 	- c64gamescom				Empty checker page
+	- C64Heaven					No idea how to get to the archive, only few files on home page
 	- CPC-Power					"full" is no longer active
 	- Import64					Empty checker page
 	- NES-CartDatabase			Needs more testing
