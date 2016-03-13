@@ -3,37 +3,45 @@
 // Original code: The Wizard of DATz
 
 $dir = "http://apple2online.com/";
-print "load: ".$dir."\n";
 $query = get_data($dir);
-$query = explode("index.php?p=", $query);
-array_splice($query, 0, 1);
 
+preg_match_all("/index\.php\?p=(.*?)\"/", $query, $query);
+$query = $query[1];
+
+echo "<table>\n";
 foreach ($query as $row)
 {
-	$row = explode('"', $row);
 	$new = 0;
 	$old = 0;
 
-	$dir = "http://apple2online.com/index.php?p=".$row[0];
-	print "load: ".$dir."\n";
+	$dir = "http://apple2online.com/index.php?p=".$row;
+	echo "<tr><td>".$dir."</td>";
 	$queryb = get_data($dir);
-	$queryb = explode('ddlevelsmenu', str_replace('&amp;', '&', $queryb));
-	$queryb = explode('web_documents/', $queryb[1]);
-	array_splice($queryb, 0, 1);
-
-	foreach ($queryb as $row)
+	
+	preg_match_all("/title=\"(.*?)\" href=\"web_documents\/(.*?)\"/", $queryb, $queryb);
+	
+	$newrows = array();
+	for ($index = 1; $index < sizeof($queryb[0]); $index++)
 	{
-		$DL = explode('"', $row);
-		$DL = $DL[0];
+		$newrows[] = array($queryb[1][$index], $queryb[2][$index]);
+	}
 
-		$ext = explode('.', $DL);
+	foreach ($newrows as $row)
+	{
+		$ext = explode('.', $row[1]);
 		$ext = $ext[count($ext) - 1];
 
-		$alt = explode('/', $DL);
+		$alt = explode('/', $row[1]);
 		$alt = $alt[count($alt) - 1];
 
-		$title = explode('</a>', $row);
-		$title = trim(strip_tags('<a href="'.$title[0]));
+		$title = $row[0];
+		
+		// In the conditions where the page doesn't have a download
+		if ($ext == "" && $alt == "" && $title == NULL)
+		{
+			continue;
+		}
+		
 		if (!$title)
 		{
 			$title = $alt;
@@ -45,7 +53,7 @@ foreach ($query as $row)
 
 		if (!$r_query[$DL])
 		{
-			$found[] = array($title, $DL);
+			$found[] = array($title, "http://apple2online.com/web_documents/".$DL);
 			$new++;
 			$r_query[$DL] = true;
 		}
@@ -55,25 +63,20 @@ foreach ($query as $row)
 		}
     }
 
-	print "new: ".$new.", old: ".$old."\n";
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
+echo "</table>\n";
 
-
-print "\nnew urls:\n\n";
-print "<table><tr><td><pre>";
-
-foreach ($found as $url)
+if (sizeof($found) > 0)
 {
-	print $url[1]."\n";
+	echo "<h2>New files:</h2>";
 }
 
-print "</td><td><pre>";
-
-foreach ($found as $url)
+foreach ($found as $row)
 {
-	print "<a href=\"http://apple2online.com/web_documents/".$url[1]."\">".$url[0]."</a>\n";
+	echo "<a href='http://www.apple-iigs.info/".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
-print "</td></tr></table>";
+echo "<br/>\n";
 
 ?>
