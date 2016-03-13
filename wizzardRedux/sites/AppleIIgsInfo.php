@@ -58,7 +58,6 @@ for ($page = 0; $page < $max; $page++)
 	}
 
 	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
-	die();
 }
 
 $dirs = array(
