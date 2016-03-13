@@ -47,10 +47,7 @@ $dirs4 = array(
       '_parties/',
 );
 
-$found = array();
-
-print "<pre>check folders:\n\n";
-
+echo "<table>\n";
 foreach ($dirs1 as $dir)
 {
 	if ($dir)
@@ -82,104 +79,96 @@ foreach ($dirs4 as $dir)
 		listDir($dir, 4);
 	}
 }
+echo "</table>\n";
 
-print "\nnew urls:\n\n";
-
-print "<table><tr><td><pre>";
+if (sizeof($found) > 0)
+{
+	echo "<h2>New files:</h2>";
+}
 
 foreach ($found as $row)
 {
-	print "<a href=\"".$base_dl_url.$row[0]."\" target=_blank>".$row[1]."</a>\n";
+	echo "<a href='".$base_dl_url.$row[0]."'>".$row[1]."</a><br/>\n";
 }
 
-print "</td><td><pre>";
+echo "<br/>\n";
 
-foreach ($found as $row)
-{
-	print $row[0]."\n";
-}
-
-print "</td></tr></table>";
-
-function listDir($dir, $mode)
+function listDir ($dir, $mode)
 {
 	GLOBAL $found, $r_query, $base_dl_url;
 
-	print "load: ".$dir."\n";
 	$query = get_data($base_dl_url.$dir);
-	$query = explode('Parent Directory</a>', $query);
-	$query = explode('<a href="', $query[1]);
-	$query[0] = null;
+	
+	preg_match_all("/<a href=\"(.+?)\">(.+?)<\/a>/", $query, $query);
+	$newrows = array();
+	for ($index = 5; $index < sizeof($query[0]); $index++)
+	{
+		$newrows[] = array($query[1][$index], $query[2][$index]);
+	}
 
 	$new = 0;
 	$old = 0;
 	$folder = 0;
 
-	foreach ($query as $row)
+	foreach ($newrows as $row)
 	{
-		if ($row)
-		{
-			$url = explode('"', $row);
-			$url = $url[0];
+		$url = $row[0];
 
-			if (substr($url, -1) == '/')
+		if (substr($url, -1) == '/')
+		{
+			listDir(str_replace('&amp;', '&', $dir.$url), $mode);
+			$folder++;
+		}
+		else
+		{
+			if (!$r_query[str_replace('&amp;', '&', $dir.$url)])
 			{
-				listDir(str_replace('&amp;', '&', $dir.$url), $mode);
-				$folder++;
+				if ($mode == 1)
+				{
+					$author = explode('/', $dir);
+					$author = $author[count($author) - 2];
+					$text = $author." (".substr($url, 7, -4).") (".substr($url, 0, 4).")".substr($url, -4);
+				}
+
+				if ($mode == 2)
+				{
+					$author = explode('/', $dir);
+					$language = $author[1];
+					$author = $author[count($author) - 2];
+					$infos = explode('%20'.$author.'%20', $url);
+					$text = $author." (".substr($infos[1], 0, -4).") (".$infos[0].") (".$language.")".substr($url, -4);
+				}
+
+				if ($mode == 3)
+				{
+					$text = "Unknown (".substr($url, 7, -4).") (".substr($url, 0, 4).")".substr($url, -4);
+				}
+
+				if ($mode == 4)
+				{
+					$infos = explode('%20by%20', $url);
+					$text = substr($infos[1], 0, -4)." (".substr($infos[0], 7).")";
+
+					$info = explode('/', $dir);
+
+					for ($x = 1; $x < count($info) - 1; $x++)
+					{
+						$text = $text." (".str_replace('%20-%20', ') (', $info[$x]).")";
+					}
+
+					$text = $text.substr($url, -4);
+				}
+
+				$found[] = array($dir.$url, urldecode($text));
+				$new++;
 			}
 			else
 			{
-				if (!$r_query[str_replace('&amp;', '&', $dir.$url)])
-				{
-					if ($mode == 1)
-					{
-						$author = explode('/', $dir);
-						$author = $author[count($author) - 2];
-						$text = $author." (".substr($url, 7, -4).") (".substr($url, 0, 4).")".substr($url, -4);
-					}
-
-					if ($mode == 2)
-					{
-						$author = explode('/', $dir);
-						$language = $author[1];
-						$author = $author[count($author) - 2];
-						$infos = explode('%20'.$author.'%20', $url);
-						$text = $author." (".substr($infos[1], 0, -4).") (".$infos[0].") (".$language.")".substr($url, -4);
-					}
-
-					if ($mode == 3)
-					{
-						$text = "Unknown (".substr($url, 7, -4).") (".substr($url, 0, 4).")".substr($url, -4);
-					}
-
-					if ($mode == 4)
-					{
-						$infos = explode('%20by%20', $url);
-						$text = substr($infos[1], 0, -4)." (".substr($infos[0], 7).")";
-
-						$info = explode('/', $dir);
-
-						for ($x = 1; $x < count($info) - 1; $x++)
-						{
-							$text = $text." (".str_replace('%20-%20', ') (', $info[$x]).")";
-						}
-
-						$text = $text.substr($url, -4);
-					}
-
-					$found[] = array($dir.$url, urldecode($text));
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
+				$old++;
 			}
 		}
 	}
-
-	print "close: ".$dir."\n";
-	print "new: ".$new.", old: ".$old.", folder:".$folder."\n";
+	echo "<tr><td>".$dir."</td><td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
 ?>
