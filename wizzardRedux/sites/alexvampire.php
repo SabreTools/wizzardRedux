@@ -11,28 +11,23 @@ foreach ($newfiles as $newfile)
 {
 	echo "<tr><td>".$newfile."</td>";
 	$query = get_data($newfile);
- 	$query = explode('<link>', $query);
-	$query[0] = null;
+	
+	preg_match_all("/<link>(.*?)<\/link>/", $query, $query);
+	$query = $query[1];
 
 	$old = 0;
 	$new = 0;
 
 	foreach ($query as $row)
 	{
-		if ($row)
+    	if ($r_query[$row] !== NULL)
 		{
-			$dl = explode('</link>', $row);
-			$dl = $dl[0];
-
-	    	if ($r_query[$dl])
-			{
-				$old++;
-			}
-			else
-			{
-				$found[] = $dl;
-				$new++;
-			}
+			$old++;
+		}
+		else
+		{
+			$found[] = array($row, $row);
+			$new++;
 		}
 	}
 	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
@@ -47,7 +42,7 @@ if (sizeof($found) > 0)
 
 foreach ($found as $row)
 {
-	echo "<a href='".$row."'>".$row."</a><br/>\n";
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
 echo "<br/>\n";
