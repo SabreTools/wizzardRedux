@@ -6,13 +6,15 @@ print "<pre>";
 
 $max = 100000;
 
+echo "<table>\n";
 for ($page = 0; $page < $max; $page++)
 {
 	$dir = "http://www.apple-iigs.info/logiciels.php?arechercher=&begin=".(($page * 10) + 1);
-	print "load: ".$dir."\n";
+	echo "<tr><td>".$dir."</td><td></td></tr>";
 	$query = get_data($dir);
-	$query = explode('detlogiciels.php?nom=', $query);
-	array_splice($query, 0, 1);
+	
+	preg_match_all("/detlogiciels\.php\?nom=(.+?)&origine/", $query, $query);
+	$query = $query[1];
 
 	$new = 0;
 	$old = 0;
@@ -21,25 +23,20 @@ for ($page = 0; $page < $max; $page++)
 	
 	foreach ($query as $row)
 	{
-		$row = explode('&origine', $row);
-		$row = $row[0];
 		$dir = "http://www.apple-iigs.info/detlogiciels.php?nom=".urlencode($row);
 
-		print "load: ".$dir."\n";
+		echo "<tr><td>".$dir."</td>";
 
 		$queryb = get_data($dir);
-		$queryb = explode("<a href='../", str_replace("\r", "", $queryb));
-		array_splice($queryb, 0, 1);
+		preg_match_all("/<a href='\.\.\/(.+?)'/", str_replace("\r", "", $queryb), $queryb);
+		$queryb = $queryb[1];
 
 		foreach ($queryb as $DL)
 		{
-			$DL = explode("'", $DL);
-			$DL = $DL[0];
-
 			$ext = explode('.', $DL);
 			$ext = $ext[count($ext) - 1];
-
-			if (!$r_query[$DL])
+			
+			if ($r_query[$DL] != "")
 			{
 				$found[] = array($row.".".$ext, $DL);
 				$new++;
@@ -49,9 +46,7 @@ for ($page = 0; $page < $max; $page++)
 			{
 				$old++;
 			}
-
 		}
-
 		$notFound = false;
 	}
 
@@ -60,7 +55,7 @@ for ($page = 0; $page < $max; $page++)
 		$page = $max;
 	}
 
-	print "new: ".$new.", old: ".$old."\n";
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
 $dirs = array(
@@ -70,27 +65,29 @@ $dirs = array(
 
 foreach ($dirs as $dir)
 {
-	print "load: ".$dir."\n";
+	echo "<tr><td>".$dir."</td>";
 	
 	$new = 0;
 	$old = 0;
 	
 	$queryb = get_data($dir);
-	$queryb = explode('<tr class', $queryb);
-	array_splice($queryb, 0, 1);
 	
-	foreach ($queryb as $row)
+	preg_match_all("/<td align=left>(.+?)<\/td>\r?\n?\s*<td><a href=\"\.\.\/(.*)\">/", str_replace("\r", "", $queryb), $queryb);
+	
+	$newrows = array();
+	for ($index = 0; $index < sizeof($queryb[0]); $index++)
 	{
-		$DL = explode('<a href="../', $row);
-		$DL = explode('"', $DL[1]);
-		$DL = $DL[0];
+		$newrows[] = array($queryb[1][$index], $queryb[2][$index]);
+	}
 	
-		$title = explode('</tr>', $row);
-		$title = trim(strip_tags('<tr class'.$title[0]));
+	foreach ($newrows as $row)
+	{
+		$title = $row[0];
+		$DL = $row[1];
 	
 		$ext = explode('.', $DL);
 		$ext = $ext[count($ext) - 1];
-	
+
 		if (!$r_query[$DL])
 		{
 			$found[] = array($title.".".$ext, $DL);
@@ -103,84 +100,77 @@ foreach ($dirs as $dir)
 		}
 	
 	}
-	print "new: ".$new.", old: ".$old."\n";
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
-
 $dir = "http://www.apple-iigs.info/revueinderauge.php";
-print "load: ".$dir."\n";
-$query = implode ('', file($dir));
-$query = explode('Retour menu principal</a></li>', $query);
-$query = explode('</ul>', $query[1]);
-$query = explode("<li><a href='", $query[0]);
-array_splice($query, 0, 1);
+echo "<tr><td>".$dir."</td><td></td></tr>";
+$query = get_data($dir);
 
-foreach ($query as $row)
+preg_match_all("/<li><a href='(.+?)'>(.+?)<\/li>/", $query, $query);
+
+$newrows = array();
+for ($index = 1; $index < sizeof($query[0]); $index++)
 {
-	$page = explode("'", $row);
-	$page = $page[0];
+	$newrows[] = array($query[1][$index], $query[2][$index]);
+}
 
-	$title = explode("<", $row);
-	$title = explode(">", $title[0]);
-	$title = $title[1];
+foreach ($newrows as $row)
+{
+	$page = $row[0];
+	$title = $row[1];
 
 	$dir = "http://www.apple-iigs.info/".$page;
-	print "load: ".$dir."\n";
+	echo "<tr><td>".$dir."</td>";
 
 	$new = 0;
 	$old = 0;
 	
 	$queryb = get_data($dir);
-	$queryb = explode('<tr class', str_replace("\r", "", $queryb));
-	array_splice($queryb, 0, 1);
 	
-	foreach ($queryb as $row)
+	preg_match_all("/<tr class=.+?><td align=.*?>(.+?)<\/td><td><img src='.+?'><\/td><td align=.+?>.+?<\/td><td><a class=nolink href='\.\.\/(.+?)'>/", str_replace("\r", "", $queryb), $queryb);
+	
+	$newrowsb = array();
+	for ($index = 0; $index < sizeof($queryb[0]); $index++)
 	{
-		$title2 = explode('</tr>', $row);
-		$title2 = trim(strip_tags('<tr class'.$title2[0]));
+		$newrowsb[] = array($queryb[1][$index], $queryb[2][$index]);
+	}
 	
-		$DLs = explode(" href='../", $row);
-		array_splice($DLs, 0, 1);
+	foreach ($newrowsb as $row)
+	{
+		var_dump($row);
+		
+		$title2 = $row[0];
+		$DL = $row[1];
+		
+		$ext = explode('.', $DL);
+		$ext = $ext[count($ext) - 1];
 	
-		foreach ($DLs as $DL)
+		if (!$r_query[$DL])
 		{
-			$DL = explode("'", $DL);
-			$DL = $DL[0];
-		
-			$ext = explode('.', $DL);
-			$ext = $ext[count($ext) - 1];
-		
-			if (!$r_query[$DL])
-			{
-				$found[] = array($title." (".$title2.").".$ext, $DL);
-				$new++;
-				$r_query[$DL] = true;
-			}
-			else
-			{
-				$old++;
-			}
+			$found[] = array($title." (".$title2.").".$ext, $DL);
+			$new++;
+			$r_query[$DL] = true;
+		}
+		else
+		{
+			$old++;
 		}
 	}
-	print "new: ".$new.", old: ".$old."\n";
-
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
+echo "</table>\n";
 
-print "\nnew urls:\n\n";
-print "<table><tr><td><pre>";
-
-foreach($found as $url)
+if (sizeof($found) > 0)
 {
-	print $url[1]."\n";
+	echo "<h2>New files:</h2>";
 }
 
-print "</td><td><pre>";
-
-foreach($found as $url)
+foreach ($found as $row)
 {
-	print "<a href=\"http://www.apple-iigs.info/".$url[1]."\">".$url[0]."</a>\n";
+	echo "<a href='http://www.apple-iigs.info/".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
-print "</td></tr></table>";
+echo "<br/>\n";
 
 ?>
