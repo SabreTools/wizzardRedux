@@ -50,6 +50,7 @@ $dead = array(
 		"AcornPreservation",
 		"Atarimania",
 		"Cas2Rom",
+		"c64gamescom",
 		"Import64",
 		"Konamito",
 		"m3Zz",
