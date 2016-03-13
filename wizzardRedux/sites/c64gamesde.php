@@ -2,16 +2,16 @@
 
 // Original code: The Wizard of DATz
 
-print "<pre>";
+$ids = array();
 
-$files = array();
-
+/*
 $translator = array(
 	1 => 'c',
 	2 => 't',
 	3 => 'd',
 	4 => 'o',
 );
+*/
 
 $translator2 = array(
 	'c' => 'Cartridge',
@@ -20,100 +20,73 @@ $translator2 = array(
 	'o' => 'Original',
 );
 
+echo "<table>\n";
 for ($x = 1; $x <= 4; $x++)
 {
 	$dir = "http://c64games.de/phpseiten/spiele.php?aufruf=true&medium=".$x;
-
-	$old = 0;
-	$new = 0;
-
+	
 	$query = get_data($dir);
-	$query = explode('spieledetail.php?filnummer=', $query);
-	$query[0] = null;
-
-	foreach ($query as $row)
-	{
-		if ($row)
-		{
-			$row = explode('"', $row);
-			$row = $row[0];
-
-			$found[$row] = $row;
-			$new++;
-		}
-	}
-
-	print "load: ".$dir."\t";
-	print "found: ".$new."\n";
+	
+	preg_match_all("/spieledetail\.php\?filnummer=(.*?)\"/", $query, $ids);
+	$ids = $ids[1];
+	echo "<tr><td>".$dir."</td><td>Found new: ".count($ids).", old: ???</tr>\n";
 }
 
-foreach($found as $id)
+foreach($ids as $id)
 {
 	$dir = "http://c64games.de/phpseiten/spieledetail.php?filnummer=".$id;
 
 	$old = 0;
 	$new = 0;
 
-	$query = implode('', file($dir));
-	$query = explode('../hugo.php?art=', $query);
-
-	$titel = explode('<span style="color:red;font:Bold 14px Arial, Helvetica;"><i> ', $query[0]);
-	$titel = explode(' </i></span>', $titel[1]);
-	$titel = $titel[0];
-
-	$year = explode('Jahr:</td><td><span style="color:white;font:Bold 12px Arial, Helvetica;">', $query[0]);
-	$year = explode('<', $year[1]);
-	$year = $year[0];
-
-	$Eingespielt = explode('Eingespielt am:</td><td><span style="color:white;font:Bold 12px Arial, Helvetica;"> ', $query[0]);
-	$Eingespielt = explode('<', $Eingespielt[1]);
-	$Eingespielt = date('Ymd', strtotime($Eingespielt[0]));
-
-	$manufactor = explode('Hersteller:</td><td><span style="color:white;font:Bold 12px Arial, Helvetica;">', $query[0]);
-	$manufactor = explode('<', $manufactor[1]);
-	$manufactor = $manufactor[0];
-
-	$query[0] = null;
-
-	foreach ($query as $row)
+	$query = get_data($dir);
+	
+	preg_match("/<span style=\"color:red;font:Bold 14px Arial, Helvetica;\"><i>(.*?)<\/i><\/span>/", $query, $title);
+	$title = trim($title[1]);
+	
+	preg_match("/Jahr:<\/td><td><span style=\"color:white;font:Bold 12px Arial, Helvetica;\">(.*?)<br><\/td>/", $query, $year);
+	$year = trim($year[1]);
+	
+	preg_match("/Eingespielt am:<\/td><td><span style=\"color:white;font:Bold 12px Arial, Helvetica;\">(.*?)<\/td>/", $query, $uploaded);
+	$uploaded = date('Ymd', strtotime(trim($uploaded[1])));
+	
+	preg_match("/Hersteller:<\/td><td><span style=\"color:white;font:Bold 12px Arial, Helvetica;\">(.*?)<\/td>/", $query, $manufacturer);
+	$manufacturer = $manufacturer[1];
+	
+	preg_match_all("/\.\.\/hugo\.php\?art=(.*?)\.(.*?)\"/", $query, $query);
+	$newrows = array();
+	for ($index = 1; $index < sizeof($query[0]); $index++)
 	{
-		if ($row)
+		$newrows[] = array($query[1][$index], $query[2][$index]);
+	}
+
+	foreach ($newrows as $row)
+	{
+    	if ($r_query[$uploaded.'#'.$id])
+    	{
+			$old++;
+		}
+		else
 		{
-			$row = explode('"', $row);
-			$row = $row[0];
-
-			$ext = explode('.', $row);
-			$ext = $ext[count($ext) - 1];
-
-	    	if ($r_query[$Eingespielt.'#'.$id])
-	    	{
-				$old++;
-			}
-			else
-			{
-				$files[] = array($Eingespielt.'#'.$id, $row, $titel." (".$manufactor.") (".$year.") (".$translator2[$row[0]].").".$ext);
-				$new++;
-			}
+			$found[] = array("{".$uploaded.'#'.$id."}".$title." (".$manufacturer.") (".$year.") (".$translator2[$row[0][0]].").".$row[1], $row[0].".".$row[1]);
+			$new++;
 		}
 	}
 
-	print "load ".$dir."\t";
-	print "found new:".$new.", old:".$old."\n";
+	echo "<tr><td>".$dir."</td><td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
-	
-print "<table><tr><td><pre>";
+echo "</table>\n";
 
-foreach ($files as $row)
+if (sizeof($found) > 0)
 {
-	print $row[0]."\n";
+	echo "<h2>New files:</h2>";
 }
-print "</td><td><pre>";
 
-foreach ($files as $row)
+foreach ($found as $row)
 {
-	print "<a href=\"http://c64games.de/hugo.php?art=".$row[1]."\">".$row[2]."</a>\n";
+	echo "<a href='http://c64games.de/hugo.php?art=".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
-print "</td></tr></table>";
+echo "<br/>\n";
 
 ?>
