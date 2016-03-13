@@ -2,33 +2,41 @@
 
 // Original code: The Wizard of DATz
 
-print "<pre>";
-
-print "Last fixes\n\n";
+echo "<table>\n";
+echo "<tr><td>http://intros.c64.org/frame.php - FIXED</td>";
 
 $query = get_data("http://intros.c64.org/frame.php");
 $query = explode('<div class="menu_header">FIXED</div>', $query);
-$query = explode('<a href="main.php?module=showintro&iid=', $query[1]);
 
-$query[0] = null;
-
-foreach ($query as $row)
+preg_match_all("/<a href=\"main\.php\?module=showintro&iid=(.*?)\".*?>(.*?)<\/a>/s", $query[1], $query);
+$newrows = array();
+for ($index = 0; $index < sizeof($query[0]); $index++)
 {
-	if ($row)
-	{
-		$id = explode('"', $row);
-		$gametitle = explode('>', $row);
-		$gametitle = explode('<', $gametitle[1]);
-		$gametitle = explode(' ', $gametitle[0]);
-		$gametitle[count($gametitle) - 1] = "(".$gametitle[count($gametitle) - 1].")";
-		$gametitle = implode(' ', $gametitle);
+	$newrows[] = array($query[1][$index], $query[2][$index]);
+}
 
-		if (!$r_query[$id[0]])
-		{
-			print $id[0]."\t<a href=http://intros.c64.org/inc_download.php?iid=".$id[0].">".$gametitle.".prg</a>\n";
-		}
+$old = 0;
+$new = 0;
+
+foreach ($newrows as $row)
+{
+	$id = $row[0];
+	$gametitle = $row[1];
+	$gametitle = explode(' ', $gametitle);
+	$gametitle[count($gametitle) - 1] = "(".$gametitle[count($gametitle) - 1].")";
+	$gametitle = implode(' ', $gametitle);
+
+	if (!$r_query[$id])
+	{
+		$new++;
+		$found[] = array("{FIX-".$id."}".$gametitle.".prg", "http://intros.c64.org/inc_download.php?iid=".$id);
+	}
+	else
+	{
+		$old++;
 	}
 }
+echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 
 $r_query = array_flip($r_query);
 $start = explode("=", $r_query[0]);
@@ -40,37 +48,37 @@ $error = false;
 $x = $start;
 while(!$error)
 {
+	echo "<tr><td>http://intros.c64.org/main.php?module=showintro&iid=".$x."</td>";
 	$query = get_data("http://intros.c64.org/main.php?module=showintro&iid=".$x);
-
-	if ($query != "Database error. Please contact us if this problem persists." || strpos($query, "<a href=\"inc_download.php?iid=\"")) 
+	
+	if ($query != "Database error. Please contact us if this problem persists." && strpos($query, "<a href=\"inc_download.php?iid=\"") === FALSE) 
 	{
-		$gametitle = explode('<span class="introname">', $query);
-		$gametitle = explode('</span>', $gametitle[1]);
-		$gametitle = explode(' ', $gametitle[0]);
+		preg_match("/<span class=\"introname\">(.*?)<\/span>/", $query, $gametitle);
+		$gametitle = explode(' ', $gametitle[1]);
 		$gametitle[count($gametitle) - 1] = "(".$gametitle[count($gametitle) - 1].")";
 		$gametitle = implode(' ', $gametitle);
-
-		print $x."\t<a href=http://intros.c64.org/inc_download.php?iid=".$x.">".$gametitle.".prg</a>\n";
-
-		$last = $x;
-	}
-	elseif ($x == 9744)
-	{
-		$error = true;
+		
+		$found[] = array("{".$x."}".$gametitle.".prg", "http://intros.c64.org/inc_download.php?iid=".$x);
+		echo "<td>Found new: 1, old: 0</tr>\n";
 	}
 	else
 	{
-		print $x."\t".$query."\n";
 		$error = true;
 	}
 	$x++;
 }
+echo "</table>\n";
 
-if ($last)
+if (sizeof($found) > 0)
 {
-	$start = $last + 1;
+	echo "<h2>New files:</h2>";
 }
 
-print "\nnext startnr\t".$start."<br/>\n";
+foreach ($found as $row)
+{
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
+}
+
+echo "<br/>\n";
 
 ?>
