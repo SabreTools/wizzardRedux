@@ -77,7 +77,6 @@ foreach ($pages as $newfile)
 	}
 	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
-
 echo "</table>\n";
 
 if (sizeof($found) > 0)
