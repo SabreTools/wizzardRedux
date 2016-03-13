@@ -29,30 +29,29 @@ $bad_ext = Array(
 	'com',
 );
 
-print "<pre>check folders:\n\n";
-
+echo "<table>\n";
 foreach ($dirs as $dir)
 {
-	print "load: ".$dir."\n";
+	echo "<tr><td>".$dir."</td>";
 
 	$query = get_data($dir);
-	$query = str_replace(' HREF="', ' href="', $query);
-	$query = str_replace("\r", "", $query);
-	$query = str_replace("\n", "", $query);
-	$query = str_replace("\t", " ", $query);
-	$query = explode(' href="http://www.bjars.com/', $query);
-	array_splice($query, 0, 1);
-
+	
+	preg_match_all("/<a href=\"http:\/\/www\.bjars\.com\/(.*?)\".*?>(.*?)<\/a>/is", $query, $links);
+	
+	$newrows = array();
+	for ($index = 1; $index < sizeof($links[0]); $index++)
+	{
+		$newrows[] = array($links[1][$index], preg_replace("/\s+/", " ", trim(strip_tags($links[2][$index]))));
+	}
+	
 	$new = 0;
 	$old = 0;
 
-	foreach ($query as $row)
+	foreach ($newrows as $row)
 	{
-		$url = explode('"', $row);
-		$url = $url[0];
-		$title = explode('</a>',$row);
-		$title = trim(strip_tags('<a "'.$title[0]));
-
+		$url = $row[0];
+		$title = $row[1];
+		
 		$ext = explode('.', $url);
 		$ext = $ext[count($ext) - 1];
 
@@ -70,27 +69,20 @@ foreach ($dirs as $dir)
 		}
 	}
 
-	print "close: ".$dir."\n";
-	print "new: ".$new.", old: ".$old."\n";
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
+echo "</table>\n";
 
-print "\nnew urls:\n\n";
-
-print "<table><tr><td><pre>";
-
-foreach ($found as $url)
+if (sizeof($found) > 0)
 {
-	print "<a href=\"http://www.bjars.com/".$url[1]."\">".$url[0]."</a>\n";
+	echo "<h2>New files:</h2>";
 }
 
-
-print "</td><td><pre>";
-
-foreach ($found as $url)
+foreach ($found as $row)
 {
-	print $url[1]."\n";
+	echo "<a href='http://www.bjars.com/".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
-print "</td></tr></table>";
+echo "<br/>\n";
 
 ?>

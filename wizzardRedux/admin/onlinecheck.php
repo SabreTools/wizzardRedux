@@ -27,7 +27,7 @@ TODO: Retool existing onlinecheck.php files to follow the new format. 3) check c
 TODO: Document all required GET and POST vars for each page
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
 TODO: Can we run all online checks in a coherent way (in series, that is)?
-TODO: Last updated - BananaRepublic
+TODO: Last updated - bjars
 ------------------------------------------------------------------------------------ */
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
