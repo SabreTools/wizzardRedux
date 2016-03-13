@@ -10,7 +10,7 @@ echo "<table>\n";
 for ($page = 0; $page < $max; $page++)
 {
 	$dir = "http://www.apple-iigs.info/logiciels.php?arechercher=&begin=".(($page * 10) + 1);
-	echo "<tr><td>".$dir."</td><td></td></tr>";
+	echo "<tr><td colspan=2>".$dir."</td></tr>";
 	$query = get_data($dir);
 	
 	preg_match_all("/detlogiciels\.php\?nom=(.+?)&origine/", $query, $query);
@@ -104,7 +104,7 @@ foreach ($dirs as $dir)
 }
 
 $dir = "http://www.apple-iigs.info/revueinderauge.php";
-echo "<tr><td>".$dir."</td><td></td></tr>";
+echo "<tr><td colspan=2>".$dir."</td></tr>";
 $query = get_data($dir);
 
 preg_match_all("/<li><a href='(.+?)'>(.+?)<\/li>/", $query, $query);
