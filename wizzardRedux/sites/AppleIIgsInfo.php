@@ -33,7 +33,6 @@ for ($page = 0; $page < $max; $page++)
 
 		foreach ($queryb as $DL)
 		{
-			var_dump($DL);
 			$ext = explode('.', $DL);
 			$ext = $ext[count($ext) - 1];
 			
@@ -144,8 +143,6 @@ foreach ($newrows as $row)
 	
 	foreach ($newrowsb as $row)
 	{
-		var_dump($row);
-		
 		$title2 = $row[0];
 		$DL = $row[1];
 		
