@@ -12,6 +12,7 @@ foreach ($dirs as $dir)
 	echo "<tr><td>".$dir."</td>";
 	$query = get_data($dir);
 	preg_match_all("/ href=\"(.*?)\"/", $query, $query);
+	$query = $query[1];
 
 	$new = 0;
 	$old = 0;
