@@ -10,71 +10,64 @@ $dirs = array(
 	'http://c16.c64games.de/c16/basic/',
 );
 
-print "<pre>check folders:\n\n";
-
+echo "<table>\n";
 foreach ($dirs as $dir)
 {
 	listDir($dir);
 }
+echo "</table>\n";
 
-print "\nnew urls:\n\n";
-
-foreach ($found as $url)
+if (sizeof($found) > 0)
 {
-	print "<a href=\"".$url."\">".$url."</a>\n";
+	echo "<h2>New files:</h2>";
 }
 
-function listDir($dir)
+foreach ($found as $row)
+{
+	echo "<a href='".$row."'>".$row."</a><br/>\n";
+}
+
+echo "<br/>\n";
+
+function listDir ($dir)
 {
 	GLOBAL $found, $r_query;
-
-	print "load: ".$dir."\n";
-
+	
 	$query = get_data($dir);
-	$query = explode('>Parent Directory<', $query);
-	if ($query[1])
+	
+	preg_match_all("/<a href=\"(.*?)\">/i", $query, $query);
+	$query = $query[1];
+	for ($index = 0; $index < 5; $index++)
 	{
-		$query = $query[1];
+		unset($query[$index]);
 	}
-	else
-	{
-		$query = $query[0];
-	}
-	$query = str_replace(' HREF="', ' href="', $query);
-	$query = explode(' href="', $query);
-	$query[0] = null;
 
 	$new = 0;
 	$old = 0;
 
 	foreach ($query as $row)
 	{
-		if ($row)
-		{
-			$url = explode('"', $row);
-			$url = $dir.$url[0];
+		$url = $dir.$row;
 
-			if (substr($url, -1) == '/')
+		if (substr($url, -1) == '/')
+		{
+			listDir($url);
+		}
+		else
+		{
+			if(!$r_query[$url])
 			{
-				listDir($url);
+				$found[] = $url;
+				$new++;
 			}
 			else
 			{
-				if(!$r_query[$url])
-				{
-					$found[] = $url;
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
+				$old++;
 			}
 		}
 	}
 
-	print "close: ".$dir."\n";
-	print "new: ".$new.", old: ".$old."\n";
+	echo "<tr><td>".$dir."</td><td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
 ?>
