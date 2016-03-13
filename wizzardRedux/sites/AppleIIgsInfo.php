@@ -2,8 +2,6 @@
 
 // Original code: The Wizard of DATz
 
-print "<pre>";
-
 $max = 100000;
 
 echo "<table>\n";

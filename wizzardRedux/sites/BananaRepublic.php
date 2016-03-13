@@ -2,19 +2,18 @@
 
 // Original code: The Wizard of DATz
 
-print "<pre>";
-
 $newfiles = array(
 	'http://www.elysium.filety.pl/All_files.txt',
 	'http://www.elysium.filety.pl/GamesArchive.txt',
 );
 
+echo "<table>\n";
 foreach ($newfiles as $newfile)
 {
 	$new = 0;
 	$old = 0;	
 
-	print "load ".$newfile."\n";
+	echo "<tr><td>".$newfile."</td>";
 	$query = get_data($newfile);
  	$query = explode("\r\n", str_replace('-->', '   ', $query));
 
@@ -35,40 +34,21 @@ foreach ($newfiles as $newfile)
 			}
 		}
 	}
-	print "found new:".$new.", old:".$old."\n";
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
-print "<table><tr><td><pre>";
+echo "</table>\n";
+
+if (sizeof($found) > 0)
+{
+	echo "<h2>New files:</h2>\n";
+}
 
 foreach ($found as $row)
 {
-	print $row."\n";
+	preg_match("/\.\/(.*\/(.*?)\/(.*?)\.(.*))/", $row, $name);
+	print "<a href=\"http://www.elysium.filety.pl/".$name[1]."\">".$name[2]." (".$name[3].").".$name[4]."</a><br/>\n";
 }
 
-print "</td><td><pre>";
-
-foreach ($found as $row)
-{
-	$row = explode("] ./", $row);
-	$row = $row[1];
-	$row2 = explode("/", $row);
-	print "<a href=\"http://www.elysium.filety.pl/".$row."\">".$row2[count($row2) - 1]."</a>\n";
-}
-
-print "</td><td><pre>";
-
-foreach ($found as $row)
-{
-	$row = explode("] ./", $row);
-	$row = $row[1];
-	$row2 = explode("/", $row);
-	$title = explode(".", $row2[count($row2) - 1]);
-	$ext = $title[count($title) - 1];
-	$title[count($title) - 1] = null;
-	$title = implode(".", $title);
-
-	print "<a href=\"http://www.elysium.filety.pl/".$row."\">".$row2[count($row2)-2]." (".substr($title,0,-1).").".$ext."</a>\n";
-}
-
-print "</td></tr></table>";
+echo "<br/>\n";
 
 ?>
