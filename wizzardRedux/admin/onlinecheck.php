@@ -29,7 +29,7 @@ TODO: Document all required GET and POST vars for each page
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
 TODO: Can we run all online checks in a coherent way (in series, that is)?
 TODO: Once all checkers are certainly using the new table and found format, standardize $found and move to this file
-TODO: Last updated - C64intros
+TODO: Last updated - c64rulez
 ------------------------------------------------------------------------------------ */
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
@@ -50,8 +50,8 @@ $dead = array(
 		"8BitCommodoreItalia",
 		"AcornPreservation",
 		"Atarimania",
-		"Cas2Rom",
 		"c64gamescom",
+		"Cas2Rom",
 		"Import64",
 		"Konamito",
 		"m3Zz",

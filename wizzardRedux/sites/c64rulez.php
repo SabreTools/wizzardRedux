@@ -2,8 +2,6 @@
 
 // Original code: The Wizard of DATz
 
-print "<pre>";
-
 $newfiles = array (
 	'http://c64.rulez.org/pub/c64.hu/NEWFILES.txt',
 	'http://c64.rulez.org/pub/c64/NEWFILES.txt',
@@ -12,14 +10,14 @@ $newfiles = array (
 	'http://c64.rulez.org/pub/c128/NEWFILES.txt',
 );
 
+echo "<table>\n";
 foreach ($newfiles as $newfile)
 {
-	print "load ".$newfile."\n";
+	echo "<tr><td>".$newfile."</td>";
 	$query = get_data($newfile);
- 	$query = explode("\n", $query);
- 	$dir = explode("/", $newfile);
-	$dir[count($dir) - 1] = null;
- 	$dir = implode("/", $dir);
+	
+	preg_match_all("/^(\S.*\/.*\.\S+)$/m", $query, $query);
+	$query = $query[1];
 
 	$old = 0;
 	$new = 0;
@@ -32,12 +30,25 @@ foreach ($newfiles as $newfile)
 		}
 		else
 		{
-			print "<a href=\"".$dir.$row."\">".$row."</a>\n";
+			$found[] = array($row, $dir.$row);
 			$new++;
 		}
 	}
 
-	print "found new:".$new.", old:".$old."\n\n";
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
+echo "</table>\n";
+
+if (sizeof($found) > 0)
+{
+	echo "<h2>New files:</h2>";
+}
+
+foreach ($found as $row)
+{
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
+}
+
+echo "<br/>\n";
 
 ?>
