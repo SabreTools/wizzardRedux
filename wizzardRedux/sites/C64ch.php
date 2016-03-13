@@ -2,9 +2,6 @@
 
 // Original code: The Wizard of DATz
 
-// TODO: Fix naming issue (comes up with "Array" for one part)
-// TODO: Find end of list without having to add start
-
 $x = implode('', array_flip($r_query));
 
 echo "<table>\n";

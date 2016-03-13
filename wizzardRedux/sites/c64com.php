@@ -2,10 +2,6 @@
 
 // Original code: The Wizard of DATz
 	
-print "<pre>";
-print "load <a href=?action=onlinecheck&source=".$source."&type=demos>demos</a>\n";
-print "load <a href=?action=onlinecheck&source=".$source."&type=games>games</a>\n";
-	
 $url = array(
 	'demos' => 'http://www.c64.com/demos/demos_show.php?showid=',
 	'games' => 'http://www.c64.com/games/no-frame.php?showid=',
@@ -17,80 +13,76 @@ $demos_start = $demos_start[1];
 $games_start = explode("=", $r_query[1]);
 $games_start = $games_start[1];
 
+echo "<table>\n";
 $demos_end = parse_games("demos", $demos_start);
 $games_end = parse_games("games", $games_start);
+echo "</table>\n";
 
-/*
-// Handy AFTER we automatically download
-$handle = fopen("../sites/".$source.".txt", "w");
-fwrite($handle, "demos=".$demos_end);
-fwrite($handle, "games=".$games_end);
-fclose($handle);
-*/
-	
-function parse_games($type, $start)
+if (sizeof($found) > 0)
 {
-	print "loading ".$type."\n";
+	echo "<h2>New files:</h2>";
+}
+
+foreach ($found as $row)
+{
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
+}
+
+echo "<br/>\n";
 	
-	for ($x = $start; $x < $start + 50; $x++)
+function parse_games($type, $x)
+{
+	GLOBAL $found, $url;
+	
+	echo "<tr><td colspan=2>".$type."</td></tr>";
+	
+	while (true)
 	{
+		echo "<tr><td>".$url[$type].$x."</td>";
+		
 		$query = get_data($url[$type].$x);
+		
+		if (preg_match("/Download\s+now/s", $query) !== 1)
+		{
+			break;
+		}
+		
 		if ($type == 'demos')
 		{
-			$query = explode('<td height="41" align="center" valign="middle" bgcolor="#535353">', $query);
-			$query = explode('</td>', $query[1]);
-			$query = $query[0];
+			preg_match("/<td height=\"41\" align=\"center\" valign=\"middle\" bgcolor=\"#535353\">(.*?)<\/td>/s", $query, $query);
+			$query = $query[1];
 		}
 		else
 		{
-			$query = explode('<td height="41" colspan="2">', $query);
-			$query = explode('</td>', $query[1]);
-			$query = $query[0];
+			preg_match("/<td height=\"41\" colspan=\"2\">(.*?)<\/td>/s", $query, $query);
+			$query = $query[1];
 		}
 	
-		$gametitle = explode('<span class="headline_1">', $query);
-		$gametitle = explode('</span>', $gametitle[1]);
-		$gametitle = trim($gametitle[0]);
+		preg_match("/<span class=\"headline_1\">(.*?)<\/span>/s", $query, $gametitle);
+		$gametitle = trim($gametitle[1]);
 	
-		$addinfo = explode('<a ', $query);
-		$addinfo[0] = null;
-			
+		preg_match_all("/<a.*?>(.*?)<\/a>/s", $query, $addinfo);
 		$infos = array();
-			
-		foreach ($addinfo as $info)
+		foreach ($addinfo[1] as $info)
 		{
-			if ($info)
+			$info = str_replace(array('(', ')', '?'), array('', '', 'x'), trim(strip_tags($info)));
+			if ($info !== "")
 			{
-				$info = explode('</a>', $info);
-				$info = str_replace(array('(', ')', '?'), array('', '', 'x'), trim(strip_tags('<a '.$info[0])));
-				if ($info)
-				{
-					$infos[] = $info;
-				}
+				$infos[] = $info;
 			}
 		}
-	
-		if ($infos)
+		
+		if (sizeof($infos) > 0)
 		{
 			$gametitle = $gametitle." (".implode(") (", $infos).")";
 		}
 	
-		if ($gametitle)
-		{
-			print $x."\t<a href=http://www.c64.com/".$type."/download.php?id=".$x.">".$gametitle.".zip</a>\n";
-			$last = $x;
-		}
-		else
-		{
-			print $x."\tnot found\n";
-		}
-	}
-	
-	if ($last)
-	{
-		$start = $last + 1;
-	
-		print "\nnext startnr\t<a href=?action=onlinecheck&source=".$source."&type=".$type."&start=".($start).">".$start."</a>";
+		$found[] = array("{".$type."-".$x."}".$gametitle.".zip", "http://www.c64.com/".$type."/download.php?id=".$x);
+		$last = $x;
+		
+		echo "<td>Found new: 1, old: 0</tr>\n";
+		
+		$x++;
 	}
 	
 	return $start;
