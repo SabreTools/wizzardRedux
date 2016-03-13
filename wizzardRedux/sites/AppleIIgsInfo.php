@@ -6,11 +6,11 @@ print "<pre>";
 
 $max = 100000;
 
-echo "<table>\n";
+//echo "<table>\n";
 for ($page = 0; $page < $max; $page++)
 {
 	$dir = "http://www.apple-iigs.info/logiciels.php?arechercher=&begin=".(($page * 10) + 1);
-	echo "<tr><td>".$dir."</td><td></td></tr>";
+	//echo "<tr><td>".$dir."</td><td></td></tr>";
 	$query = get_data($dir);
 	
 	preg_match_all("/detlogiciels\.php\?nom=(.+?)&origine/", $query, $query);
@@ -25,25 +25,30 @@ for ($page = 0; $page < $max; $page++)
 	{
 		$dir = "http://www.apple-iigs.info/detlogiciels.php?nom=".urlencode($row);
 
-		echo "<tr><td>".$dir."</td>";
+		//echo "<tr><td>".$dir."</td>";
 
 		$queryb = get_data($dir);
 		preg_match_all("/<a href='\.\.\/(.+?)'/", str_replace("\r", "", $queryb), $queryb);
 		$queryb = $queryb[1];
+		
+		//var_dump($r_query);
 
 		foreach ($queryb as $DL)
 		{
+			var_dump($DL);
 			$ext = explode('.', $DL);
 			$ext = $ext[count($ext) - 1];
 			
-			if ($r_query[$DL] != "")
+			if ($r_query[$DL] === NULL)
 			{
+				echo "new: ".$DL."<br/>\n";
 				$found[] = array($row.".".$ext, $DL);
 				$new++;
 				$r_query[$DL] = true;
 			}
 			else
 			{
+				echo "old: ".$DL."<br/>\n";
 				$old++;
 			}
 		}
@@ -55,7 +60,8 @@ for ($page = 0; $page < $max; $page++)
 		$page = $max;
 	}
 
-	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
+	//echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
+	die();
 }
 
 $dirs = array(
@@ -65,7 +71,7 @@ $dirs = array(
 
 foreach ($dirs as $dir)
 {
-	echo "<tr><td>".$dir."</td>";
+	//echo "<tr><td>".$dir."</td>";
 	
 	$new = 0;
 	$old = 0;
@@ -90,17 +96,19 @@ foreach ($dirs as $dir)
 
 		if (!$r_query[$DL])
 		{
+			echo "new: ".$DL."<br/>\n";
 			$found[] = array($title.".".$ext, $DL);
 			$new++;
 			$r_query[$DL] = true;
 		}
 		else
 		{
+			echo "old: ".$DL."<br/>\n";
 			$old++;
 		}
 	
 	}
-	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
+	//echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
 $dir = "http://www.apple-iigs.info/revueinderauge.php";
@@ -121,7 +129,7 @@ foreach ($newrows as $row)
 	$title = $row[1];
 
 	$dir = "http://www.apple-iigs.info/".$page;
-	echo "<tr><td>".$dir."</td>";
+	//echo "<tr><td>".$dir."</td>";
 
 	$new = 0;
 	$old = 0;
@@ -148,18 +156,20 @@ foreach ($newrows as $row)
 	
 		if (!$r_query[$DL])
 		{
+			echo "new: ".$DL."<br/>\n";
 			$found[] = array($title." (".$title2.").".$ext, $DL);
 			$new++;
 			$r_query[$DL] = true;
 		}
 		else
 		{
+			echo "old: ".$DL."<br/>\n";
 			$old++;
 		}
 	}
-	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
+	//echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
-echo "</table>\n";
+//echo "</table>\n";
 
 if (sizeof($found) > 0)
 {
