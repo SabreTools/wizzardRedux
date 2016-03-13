@@ -2,58 +2,63 @@
 
 // Original code: The Wizard of DATz
 
-if (isset($_GET["type"]) && $_GET["type"] == 'search')
-{
-	print "<pre>";
-	
+// TODO: Figure out what the 'compare' block actually does
+
+$type = (isset($_GET["type"]) ? $_GET["type"] : "");
+
+if ($type == 'search')
+{	
 	$newfiles = array(
 		'http://atarionline.pl/',
 	);
 	
+	echo "<table>\n";
 	foreach ($newfiles as $newfile)
 	{
-		print "load ".$newfile."\n";
+		echo "<tr><td>".$newfile."</td>";
 		$query = get_data($newfile);
-	 	$query = explode('href = "/archiwa/', $query);
-		$query[0] = null;
+		
+		preg_match_all("/<a href=\"\/archiwa\/(.*?)\?.*?\"/", $query, $query);
 	
 		$old = 0;
 		$new = 0;
 	
-		foreach ($query as $row)
+		foreach ($query[1] as $row)
 		{
-			if ($row)
+			$row = trim($row);
+
+		  	if ($r_query[$row] !== "")
 			{
-				$row = explode('"', $row);
-				$row = explode('?', $row[0]);
-				$row = trim($row[0]);
-	
-			  	if ($r_query[$row])
-				{
-					$old++;
-				}
-				else
-				{
-					$found[] = $row;
-					$new++;
-				}
+				$old++;
+			}
+			else
+			{
+				$found[] = $row;
+				$new++;
 			}
 		}
 
-		print "found new:".$new.", old:".$old."\n\n";
+		echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 	}
-
-	foreach ($found as $row)
+	echo "</table>\n";
+	
+	if (sizeof($found) > 0)
 	{
-		print "<a href = \"http://atarionline.pl/archiwa/".$row."\">".$row."</a>\n";
+		echo "<h2>New files:</h2>";
 	}
 	
-}
-elseif (isset($_GET["type"]) && $_GET["type"] == 'compare')
-{
-	if ($GLOBALS[_FILES])
+	foreach ($found as $row)
 	{
-		$file_old = implode('', file($GLOBALS[_FILES][file_old][tmp_name]));
+		echo "<a href='http://atarionline.pl/archiwa/".$row."'>".$row."</a><br/>\n";
+	}
+	
+	echo "<br/>\n";	
+}
+elseif ($type == 'compare')
+{
+	if (sizeof($_FILES) > 0)
+	{
+		$file_old = implode('', file($_FILES["file_old"]["tmp_name"]));
 		$file_old = explode("\r\n", str_replace('\\', '+', str_replace('|', ' ', $file_old)));
 		array_splice($file_old, 0, 3);
 		$patharray = array();
@@ -66,7 +71,7 @@ elseif (isset($_GET["type"]) && $_GET["type"] == 'compare')
 				$pathLevel = strlen($split[0]) / 4;
 				$patharray[$pathLevel] = $split[1];
 				$path = "";
-				for ($y = 0;$y<= $pathLevel;$y++)
+				for ($y = 0; $y <= $pathLevel; $y++)
 				{
 					$path = $path.$patharray[$y]."\\";
 				}
@@ -81,10 +86,10 @@ elseif (isset($_GET["type"]) && $_GET["type"] == 'compare')
 			}
 		}
 
-		$file_new = implode('', file ($GLOBALS[_FILES][file_new][tmp_name]));
-		$file_new = explode("\r\n", str_replace('\\','+',str_replace('|',' ',$file_new)));
-		$dir = str_replace('+','\\',$file_new[2]);
-		array_splice($file_new,0,3);
+		$file_new = implode('', file($_FILES["file_new"]["tmp_name"]));
+		$file_new = explode("\r\n", str_replace('\\', '+', str_replace('|', ' ', $file_new)));
+		$dir = str_replace('+', '\\', $file_new[2]);
+		array_splice($file_new, 0, 3);
 		$patharray = array();
 
 		foreach ($file_new as $file)
@@ -125,8 +130,8 @@ elseif (isset($_GET["type"]) && $_GET["type"] == 'compare')
 else
 {
 	print "<pre>";
-	print "load <a href='?page=onlinecheck&source=".$_GET["source"]."&type=search'>search</a>\n";
-	print "load <a href='?page=onlinecheck&source=".$_GET["source"]."&type=compare'>compare</a>\n";
+	print "load <a href='?page=onlinecheck&source=AtariOnline&type=search'>search</a>\n";
+	print "load <a href='?page=onlinecheck&source=AtariOnline&type=compare'>compare</a>\n";
 }
 
 ?>
