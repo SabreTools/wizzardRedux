@@ -35,13 +35,12 @@ $pages = array(
 echo "<table>\n";
 foreach ($pages as $newfile)
 {
-	echo "<tr><td>".$newfile."</td>";
-	$query = get_data($newfile); // Read the whole page into one string
-	$query = preg_replace('/(\s+)/',' ', $query); // Replace all whitespace with a single space
-	$query = preg_replace('/(href=)("?)(\S+?)("?)(>)/','\1"\3"\5', $query); // Make sure all hrefs are quoted properly
+	echo "<tr><td>".$newfile."</td>\n";
+	$query = get_data($newfile);
 	
-	$query = explode ('<tr ',$query); // Separate lines based on table rows
-	unset($query[0]); // The first item is never a match so unset it
+	preg_match_all("/<tr.*?>(.*?)<\/tr>/s", $query, $query);
+	$query = $query[1];
+	unset($query[0]);
 
 	$old = 0;
 	$new = 0;
@@ -49,17 +48,16 @@ foreach ($pages as $newfile)
 	// For each table row, process and get links
 	foreach ($query as $row)
 	{
-		$row = explode('<td', $row); // Separate lines based on table cells
-		$title = trim(str_replace(" ( NO SCAN YET )", "", strip_tags('<td'.$row[1]))); // Extract the title from the row
-		$info = trim(strip_tags('<td'.$row[2])); // Extract the information from the row
-		$dls = explode('tapescans/victaps/', $row[3]); // Get any downloads that can be found in the row
-		unset($dls[0]); // The first item is never a match so unset it
+		preg_match("/<td.*?>(.+?)<\/td>.*?<td.*?<div.*?>(.*?)<\/div>.*?(<td.*?<\/td>)/s", $row, $rowinfo);
+		$title = strip_tags($rowinfo[1]);
+		$info = $rowinfo[2];
+		preg_match_all("/<a href=.*tapescans\/victaps\/(.*?)>/", $rowinfo[3], $dls);
+		$dls = $dls[1];
 
 		// For each download found, see if we've included it already
 		foreach ($dls as $dl)
 		{
-			$dl = explode('"', $dl);
-			$dl = $dl[0];
+			$dl = str_replace("\"", "", $dl);
 				
 			$ext = explode('.', $dl);
 			$ext = $ext[count($ext)-1];
@@ -70,7 +68,7 @@ foreach ($pages as $newfile)
 			}
 			else
 			{
-				$found[] = array($dl, $title." (".$info.").".$ext);
+				$found[] = array($title." (".$info.").".$ext, "http://armas.cbm8bit.com/tapescans/victaps/".$dl);
 				$new++;
 			}
 		}
@@ -86,7 +84,7 @@ if (sizeof($found) > 0)
 
 foreach ($found as $row)
 {
-	echo "<a href='http://armas.cbm8bit.com/tapescans/victaps/".$row[0]."'>".$row[1]."</a><br/>\n";
+	echo "<a href='".$row[1]."'>".$row[1]."</a><br/>\n";
 }
 
 echo "<br/>\n";
