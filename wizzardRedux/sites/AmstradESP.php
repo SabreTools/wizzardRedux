@@ -32,71 +32,76 @@ echo "<table>\n";
 foreach ($dirs as $dir)
 {
 	echo "<tr><td>".$dir."</td>";
-	$query = str_replace("\r\n", '', get_data($dir));
-	$query = explode('<p>  <a href="', $query);
-
-	if (!$query[1])
+	
+	$query = get_data($dir);
+	
+	preg_match_all("/<p>\s*<a href=\"(.*?)\">(.*?)<\/a>(.*?)<br>/s", $query, $links_a);
+	preg_match_all("/<a class=\"teaserlink\" href=\"(.*?)\">(.*?)<\/a>(.*?)<br>/s", $query, $links_b);
+	
+	$links1 = array_merge($links_a[1], $links_b[1]);
+	$links2 = array_merge($links_a[2], $links_b[2]);
+	$links3 = array_merge($links_a[3], $links_b[3]);
+	
+	$links = array();
+	for ($index = 0; $index < sizeof($links1); $index++)
 	{
-		$query = explode('<a class="teaserlink" href="', $query[0]);
+		$links[] = array(trim($links1[$index]), trim($links2[$index]), trim($links3[$index]));
 	}
-
-	$query[0] = null;
 
 	$t_dir = explode("/", $dir);
 	$t_dir[count($t_dir) - 1] = null;
 	$t_dir = implode("/", $t_dir);
 
-	foreach ($query as $row)
+	foreach ($links as $row)
 	{
 		$new = 0;
 		$old = 0;
-
-		$url = explode('"', $row);
-		$url = $t_dir.$url[0];
-
-		//print "found: ".$url."\n";
-
-		$text = explode('</a>', $row);
-		$ext = explode('<', $text[1]);
-		$text = explode('>', $text[0]);
-		$text = trim($text[1]);
-		$ext = trim($ext[0]);
-		$text = strtr($text.' ('.str_replace(', ',') (',$ext).')', $normalize_chars);
+		
+		$url = $t_dir.$row[0];
+		$text = strtr($row[1].' ('.str_replace(', ',') (',$row[2]).')', $normalize_chars);
+		
 		$query2 = get_data($url);
-		$query2 = explode('<a href="', $query2);
-		$query2[0] = null;
+		
+		preg_match_all("/<a href=\"(.*?)\">(.*?)<\/a>/", $query2, $links);
+		$newlinks = array();
+		for ($index = 0; $index < sizeof($links[0]); $index++)
+		{
+			$newlinks[] = array($links[1][$index], strip_tags($links[2][$index]));
+		}
 
 		$dl_dir = explode("/", $url);
 		$dl_dir[count($dl_dir) - 1] = null;
 		$dl_dir = implode("/", $dl_dir);
 
-		foreach ($query2 as $dl)
+		foreach ($newlinks as $dl)
 		{
-				$url2 = explode('"', $dl);
-				$url2 = $dl_dir.$url2[0];
-					
-				$ext = explode(".", $url2);
-				$ext = $ext[count($ext) - 1];
-
-				$dltext = explode('</a>', $dl);
-				$dltext = trim(strip_tags('<a href="'.$dltext[0]));
-
-				if ($dltext && $dltext != 'Share')
+			// If the link is a JS call, ignore it
+			if (preg_match("/onclick=\"javascript/", $dl[0]) == 1)
+			{
+				continue;
+			}
+			
+			$url2 = str_replace("\" target=\"_blank", "", $dl_dir.$dl[0]);
+			$ext = explode(".", $url2);
+			$ext = $ext[count($ext) - 1];
+			$dltext = trim(strip_tags($dl[1]));
+			
+			if ($dltext !== "" && $dltext != 'Share')
+			{
+				if (!$r_query[$url2])
 				{
-					if (!$r_query[$url2])
-					{
-						$found[] = array($url2,$text.' {'.$dltext.'}.'.$ext);
-						$new++;
-					}
-					else
-					{
-						$old++;
-					}
+					$found[] = array($text.' {'.$dltext.'}.'.$ext, $url2);
+					$new++;
 				}
+				else
+				{
+					$old++;
+				}
+			}
 		}
-
-		echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 	}
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
+	break;
 }
 
 echo "</table>\n";
@@ -108,7 +113,7 @@ if (sizeof($found) > 0)
 
 foreach ($found as $row)
 {
-	echo "<a href='".$row[0]."'>".$row[1]."</a><br/>\n";
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
 echo "<br/>\n";
