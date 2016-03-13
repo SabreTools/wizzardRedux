@@ -5,66 +5,63 @@
 // TODO: Fix naming issue (comes up with "Array" for one part)
 // TODO: Find end of list without having to add start
 
-$start = implode('', $r_query);
+$x = implode('', array_flip($r_query));
 
-print "<pre>Search for new uploads\n\n";
-
-for ($x = $start; $x < $start + 100; $x++)
+echo "<table>\n";
+while (true)
 {
+	echo "<tr><td>http://c64.ch/demos/realdetail.php?id=".$x."</td>";
+	
 	$query = trim(get_data("http://c64.ch/demos/realdetail.php?id=".$x));
+	
+	// If the page redirects to the main page, the game with that ID doesn't exist
+	if (strpos($query, "C64.CH - The C64 Demo Portal - News") !== FALSE)
+	{
+		break;
+	}
 
-	$OK = explode('C64.CH - The C64 Demo Portal - News', $query);
+	preg_match("/<td style=\"background:url\(\/img\/m\/t2b\.gif\);\" colspan=\"3\" width=\"432\"><span class=\"mt\">(.*?) by <a.*?>(.*?)<\/a>/", $query, $gametitle);
+	$gameauthor = trim($gametitle[2]);
+	$gametitle = trim(str_replace(array(' (', ')'), array(', ', ''), $gametitle[1]));
 
 	$info = array();
-
-	$gametitle = explode('<td style="background:url(/img/m/t2b.gif);" colspan="3" width="432"><span class="mt">', $query);
-	$gameauthor = explode('</span>', $gametitle[1]);
-	$gametitle = explode(' by <a', $gametitle[1]);
-	$gametitle = trim(str_replace(array(' (', ')'), array(', ', ''), $gametitle[0]));
-
 	$info[] = $gametitle;
-
-	$gameauthor = explode('group">', $gameauthor[0]);
-	$gameauthor = explode('</a>', $gameauthor[1]);
-	$gameauthor = trim($gameauthor[0]);
-
-	$year = explode('/demos/list.php?year=', $query);
-	$year = explode('</a>', $year[1]);
-	$year = explode('>', $year[0]);
 	
-	if ($year)
+	preg_match("/\/demos\/list\.php\?year=(.*?)&amp;source=year/", $query, $year);
+	$year = $year[1];
+	
+	if ($year !== NULL)
 	{
 		$info[] = $year;
 	}
 
-	$party = explode('/demos/list.php?source=party&partyid=', $query);
-	$party = explode('</a>', $party[1]);
-	$party = explode('>', $party[0]);
+	preg_match("/\/demos\/list\.php\?source=party&partyid=.*?\">(.*?)<\/a>/", $query, $party);
 	$party = trim(str_replace(array(' (', ')'), array(', ', ''), $party[1]));
 
-	if ($party)
+	if ($party !== NULL)
 	{
 		$info[] = $party;
 	}
 
 	$gametitle = $gameauthor." (".implode(") (", $info).").zip";
-
-	if ($OK[1])
-	{
-		print $x."\tnot found\n";
-	}
-	else
-	{
-		print $x."\t<a href=http://c64.ch/demos/download.php?id=".$x.">".$gametitle."</a>\n";
-		$last = $x;
-	}
+	
+	$found[] = array($gametitle, "http://c64.ch/demos/download.php?id=".$x);
+	echo "<td>Found new: 1, old: 0</tr>\n";
+	
+	$x++;
 }
+echo "</table>\n";
 
-if ($last)
+if (sizeof($found) > 0)
 {
-	$start = $last + 1;
+	echo "<h2>New files:</h2>";
 }
 
-print "\nnext startnr\t".($start)."<br/>\n";
+foreach ($found as $row)
+{
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
+}
+
+echo "<br/>\n";
 
 ?>
