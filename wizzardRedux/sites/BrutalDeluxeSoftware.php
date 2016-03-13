@@ -2,57 +2,57 @@
 
 // Original code: The Wizard of DATz
 
-print "<pre>";
+echo "<table>\n";
 
 $dir = "http://brutaldeluxe.fr/projects/cassettes/index.html";
-print "load: ".$dir."\n";
+echo "<tr><td colspan=2>".$dir."</td></tr>";
 $query = get_data($dir);
-$query = preg_replace('/\s+/', " ", $query);
-$query = explode('name="current">Apple Cassettes Tapes</a>', $query);
-$query = explode('</ul>', $query[1]);
-$query = explode('<li><a href= "../../', $query[0]);
-array_splice($query, 0, 1);
 
-foreach ($query as $row)
+preg_match_all("/<a href=\s*\"\.\.\/\.\.\/(projects\/.*?)\".*?>(.*?)<\/a><\/li>/s", $query, $query);
+
+$newrows = array();
+for ($index = 1; $index < sizeof($query[0]); $index++)
 {
-	$url = explode('"', $row);
-	$url = $url[0];
-	$title = explode('<', $row);
-	$title = explode('>', $title[0]);
-	$title = $title[1];
+	$newrows[] = array($query[1][$index], $query[2][$index]);
+}
+
+foreach ($newrows as $row)
+{
+	$url = $row[0];
+	$title = $row[1];
 
 	$new = 0;
 	$old = 0;
 
 	$dir = "http://brutaldeluxe.fr/".$url;
-	print "load: ".$dir."\n";
+	echo "<tr><td>".$dir."</td>";
 	$queryb = get_data($dir);
-	$queryb = preg_replace('/\s+/', " ", $queryb);
-	$queryb = explode('<tr>', $queryb);
-	array_splice($queryb, 0, 1);
-
-	$dir = explode('/', $dir);
-	$dir[count($dir) - 1] = null;
-	$dir = implode('/', $dir);
-
-	foreach ($queryb as $row)
+	
+	preg_match_all("/<tr>(.*?)<\/tr>/s", $queryb, $queryb);
+	unset($queryb[1][0]);
+	$dir = dirname($dir)."/";
+	
+	foreach ($queryb[1] as $row)
 	{
-		$row = explode('<td>', $row);
-		$titleb = explode("<", $row[2]);
-		$titlec = explode("<", $row[1]);
-		$titleb = trim($titleb[0])." (".$title.") (".trim($titlec[0]).")";;
-
-		$DLs = explode('<a href=', $row[4]);
-		array_splice($DLs, 0, 1);
-
+		preg_match_all("/<td>(.*?)<\/td>/s", $row, $items);
+		$items = $items[1];
+		
+		preg_match("/(.*?)<br \/>/s", $items[1], $titleb);
+		
+		$titleb = trim($titleb[1]);
+		$titlec = trim($items[0]);
+		
+		$titleb = $titleb." (".$title.") (".$titlec.")";
+		
+		preg_match_all("/<a href=\"(.*?)\">/", $items[3], $DLs);
+		$DLs = $DLs[1];
+		
 		foreach ($DLs as $DL)
 		{
-			$DL = explode('"', $DL);
-			$DL = $dir.$DL[1];
-
+			$DL = $dir.$DL;
 			$ext = explode('.', $DL);
 			$ext = $ext[count($ext) - 1];
-
+			
 			if (!$r_query[$DL])
 			{
 				$found[] = array($titleb.".".$ext, $DL);
@@ -66,10 +66,8 @@ foreach ($query as $row)
 
 			$notFound = false;
         }
-
     }
-
-	print "new: ".$new.", old: ".$old."\n";
+    echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
 $dirs = array(
@@ -81,91 +79,70 @@ foreach ($dirs as $dir)
 {
 	listDir($dir);
 }
+echo "</table>\n";
 
-print "\nnew urls:\n\n";
-print "<table><tr><td><pre>";
-
-foreach ($found as $url)
+if (sizeof($found) > 0)
 {
-	print $url[1]."\n";
+	echo "<h2>New files:</h2>";
 }
 
-print "</td><td><pre>";
-
-foreach ($found as $url)
+foreach ($found as $row)
 {
-	print "<a href=\"".$url[1]."\">".$url[0]."</a>\n";
+	echo "<a href='http://www.apple-iigs.info/".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
-print "</td></tr></table>";
+echo "<br/>\n";
 
 function listDir($dir)
 {
 	GLOBAL $found, $r_query;
-
-	print "load: ".$dir."\n";
-
+	
 	$query = get_data($dir);
-	$query = explode('>Parent Directory<', $query);
-	if ($query[1])
+	
+	preg_match_all("/<a href=\"(.*?)\">(.*?)<\/a>/is", $query, $query);
+	$newrows = array();
+	for ($index = 5; $index < sizeof($query[0]); $index++)
 	{
-		$query = $query[1];
+		$newrows[] = array($query[1][$index], $query[2][$index]);
 	}
-	else
-	{
-		$query=$query[0];
-	}
-	$query = str_replace(' HREF="', ' href="', $query);
-	$query = explode(' href="', $query);
-	$query[0] = null;
 
 	$new = 0;
 	$old = 0;
 
-	foreach ($query as $row)
+	foreach ($newrows as $row)
 	{
-		if ($row)
+		$url = $dir.$row[0];
+		
+		if (substr($url, -1) == '/')
 		{
-			$url = explode('"', $row);
-			$url = $dir.$url[0];
+			listDir($url);
+			continue;
+		}
+		
+		preg_match("/^.*\/(.*?)\/(.*?)\.(.*?)$/", $url, $title);
+		
+		$subdir = $title[1];
+		$ext = $title[3];
+		$title = $title[2];
+		$cutleng = strlen($subdir."_");
 
-			$title = explode('/', $url);
-			$subdir = $title[count($title) - 2];
-			$title = $title[count($title) - 1];
+		if (substr($title, 0, $cutleng) == $subdir."_")
+		{
+			$title = substr($title, $cutleng);
+		}
 
-			$ext = explode('.', $title);
-			$ext = $ext[count($ext) - 1];
-
-			$title = substr($title, 0, -(strlen($ext) + 1));
-
-			$cutleng = strlen($subdir."_");
-
-			if (substr($title, 0, $cutleng) == $subdir."_")
-			{
-				$title = substr($title, $cutleng);
-			}
-
-			if (substr($url, -1) == '/')
-			{
-				listDir($url);
-			}
-			else
-			{
-				if (!$r_query[$url])
-				{
-					$found[] = array($title." (".$subdir.").".$ext, $url);
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
-			}
+		if (!$r_query[$url])
+		{
+			$found[] = array($title." (".$subdir.").".$ext, $url);
+			$new++;
+		}
+		else
+		{
+			$old++;
 		}
 	}
 
-	print "close: ".$dir."\n";
-	print "new: ".$new.", old: ".$old."\n";
+	echo "<tr><td>".$dir."</td><td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
 ?>
