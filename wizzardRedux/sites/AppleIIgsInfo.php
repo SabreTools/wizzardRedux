@@ -38,14 +38,12 @@ for ($page = 0; $page < $max; $page++)
 			
 			if ($r_query[$DL] === NULL)
 			{
-				echo "new: ".$DL."<br/>\n";
 				$found[] = array($row.".".$ext, $DL);
 				$new++;
 				$r_query[$DL] = true;
 			}
 			else
 			{
-				echo "old: ".$DL."<br/>\n";
 				$old++;
 			}
 		}
@@ -92,14 +90,12 @@ foreach ($dirs as $dir)
 
 		if (!$r_query[$DL])
 		{
-			echo "new: ".$DL."<br/>\n";
 			$found[] = array($title.".".$ext, $DL);
 			$new++;
 			$r_query[$DL] = true;
 		}
 		else
 		{
-			echo "old: ".$DL."<br/>\n";
 			$old++;
 		}
 	
@@ -150,14 +146,12 @@ foreach ($newrows as $row)
 	
 		if (!$r_query[$DL])
 		{
-			echo "new: ".$DL."<br/>\n";
 			$found[] = array($title." (".$title2.").".$ext, $DL);
 			$new++;
 			$r_query[$DL] = true;
 		}
 		else
 		{
-			echo "old: ".$DL."<br/>\n";
 			$old++;
 		}
 	}
