@@ -25,6 +25,7 @@ $headers = array(
 		"228" => "fds.xml",
 		"31" => "lynx.xml",
 		"0" => "mega.xml",						// Merged version of all other headers
+		"234" => "n64.xml",
 		"238" => "nes.xml",
 		"241" => "snes.xml",					// Self-created to deal with various headers
 );
