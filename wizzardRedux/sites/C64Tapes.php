@@ -1,99 +1,83 @@
 <?php
 
 // Original code: The Wizard of DATz
-
-print "<pre>";
-
 $page = "http://c64tapes.org/games_list.php?title=^.&sort=title";
 
-print "load ".$page."\n";
+echo "<table>\n";
 
 $content = get_data($page);
-$content = utf8_decode($content);
-$content = explode('<tr>', $content);
-$content[0] = null;
-$content[1] = null;
+
+preg_match_all("/<tr>(.*?TAP icon.*?)<\/tr>/", utf8_decode($content), $query);
+$query = $query[1];
+unset($query[0]);
 
 $new = 0;
 $old = 0;
 
-foreach ($content as $row)
+foreach ($query as $row)
 {
-	if ($row)
+	preg_match_all("/<td.*?>(.*?)<\/td>/", $row, $row);
+	$row = $row[1];
+	
+	$id = $row[0];
+	$name = str_replace(array('[', ']'), array('(', ')'), $row[1]);
+	$name = trim(strip_tags($name));
+	$add = str_replace(array('<a class="year" href="year.php?id=1">[unkn]</a>',
+									   ' (', ')', '</a>', '<a', '[', ']'),
+						array(null, ', ', null, ')</a>', '(<a', null, null), $row[3]);
+	$add = trim(strip_tags($add));
+
+	$dl_page = get_data("http://c64tapes.org/title.php?id=".$id);
+	
+	preg_match("/<td>Filename \(TAP\): <\/td>(.*?)<\/td>/", utf8_decode($dl_page), $url1);
+	$url1 = strip_tags($url1[1]);
+	
+	preg_match("/<td>Filename \(RAW\): <\/td>(.*?)<\/td>/", utf8_decode($dl_page), $url2);
+	$url2 = strip_tags($url2[1]);
+
+	if ($url1 != "")
 	{
-		if (substr_count($row, 'TAP icon"'))
+		$id = 'taps/'.$url1;
+		if (!$r_query[$id])
 		{
-			$row = explode('<td', $row);
-			$id = strip_tags('<td'.$row[1]);
+			echo "<tr><td colspan=2>".$name.' '.$add."</td></tr>";
+			$found[] = array($name.' '.$add.".zip", "http://c64tapes.org/".$id);
+			$new++;
+		}
+		else
+		{
+			$old++;
+		}
+	}
 
-			$row[2] = str_replace(array('[', ']'), array('(', ')'), $row[2]);
-			$name = trim(strip_tags('<td'.$row[2]));
-			$row[4] = str_replace(array('<a class="year" href="year.php?id=1">[unkn]</a>',
-											   ' (', ')', '</a>', '<a', '[', ']'),
-								array(null, ', ', null, ')</a>', '(<a', null, null), $row[4]);
-			$add = trim(strip_tags('<td'.$row[4]));
-
-			$dl_page = get_data("http://c64tapes.org/title.php?id=".$id);
-			$dl_page = utf8_decode($dl_page);
-
-			$url1 = explode('<td>Filename (TAP): </td>', $dl_page);
-			$url1 = explode('</td>', $url1[1]);
-			$url1 = trim(strip_tags($url1[0]));
-
-			$url2 = explode('<td>Filename (RAW): </td>', $dl_page);
-			$url2 = explode('</td>', $url2[1]);
-			$url2 = trim(strip_tags($url2[0]));
-
-			print $id."\t".$name.' '.$add."\n";
-
-			if ($url1)
-			{
-				$id = 'taps/'.$url1;
-				if (!$r_query[$id])
-				{
-					$found[] = array($id, $name.' '.$add.".zip");
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
-			}
-
-			if ($url2)
-			{
-				$id = 'raw/'.$url2;
-				if (!$r_query[$id])
-				{
-					$found[] = array($id, $name.' '.$add.".zip");
-					$new++;
-				}
-				else
-				{
-					$old++;
-				}
-			}
+	if ($url2 != "")
+	{
+		$id = 'raw/'.$url2;
+		if (!$r_query[$id])
+		{
+			echo "<tr><td colspan=2>".$name.' '.$add."</td></tr>";
+			$found[] = array($name.' '.$add.".zip", "http://c64tapes.org/".$id);
+			$new++;
+		}
+		else
+		{
+			$old++;
 		}
 	}
 }
 
-print "found new ".$new.", old ".$old."\n";
+echo "<tr><td>".$page."</td><td>Found new: ".$new.", old: ".$old."</tr>\n</table>\n";
 
-print "<table><tr><td><pre>";
+if (sizeof($found) > 0)
+{
+	echo "<h2>New files:</h2>";
+}
 
 foreach ($found as $row)
 {
-	print $row[0]."\n";
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
-print "</td><td><pre>";
-
-foreach ($found as $row)
-{
-	print "<a href=\"http://c64tapes.org/".$row[0]."\" target=_blank>".$row[1]."</a>\n";
-}
-
-print "</td></tr></table>";
-
+echo "<br/>\n";
 
 ?>
