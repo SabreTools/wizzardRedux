@@ -71,17 +71,17 @@
   
   <!-- fig header -->
   <rule start_offset="200">
-    <data offset="16" value="000000000000000000000000000000000000000000000000"/>
+    <data offset="16" value="0000000000000000"/>
   </rule>
   
   <!-- smc header -->
   <rule start_offset="200">
-    <data offset="16" value="AABB04000000000000000000000000000000000000000000"/>
+    <data offset="16" value="AABB040000000000"/>
   </rule>
   
   <!-- ufo header -->
   <rule start_offset="200">
-    <data offset="16" value="535550455255464F01040101020F03030000000000000000"/>
+    <data offset="16" value="535550455255464F"/>
   </rule>
 
 </detector>
