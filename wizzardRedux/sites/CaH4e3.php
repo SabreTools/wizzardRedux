@@ -22,59 +22,61 @@ $dirs = array(
 	'http://cah4e3.shedevr.org.ru/decr.php',
 );
 
-print "<pre>check folders:\n\n";
-
+echo "<table>\n";
 foreach ($dirs as $dir)
 {
-	if ($dir)
+	echo "<tr><td>".$dir."</td>";
+	$query = get_data($dir);
+	
+	preg_match_all("/<a.*?href=\"(.*?)\">(.*?)<\/a>/", $query, $query);
+	
+	$newrows = array();
+	for ($index = 0; $index < sizeof($query[0]); $index++)
 	{
-		print "load: ".$dir."\n";
-		$query = get_data($dir);
-		$query = explode(' href="', $query);
-		$query[0] = null;
-	
-		$new = 0;
-		$old = 0;
-		$other = 0;
-	
-		foreach ($query as $row)
+		$newrows[] = array($query[1][$index], $query[2][$index]);
+	}
+
+	$new = 0;
+	$old = 0;
+	$other = 0;
+
+	foreach ($newrows as $row)
+	{
+		$url = $row[0];
+		$ext = explode('.', $url);
+		$title = $row[1];
+		
+		if ($ext[count($ext) - 1] == 'rar')
 		{
-			if ($row)
+			if (!$r_query[$url])
 			{
-				$url = explode('"', $row);
-				$url = $url[0];
-	
-				$ext = explode('.', $url);
-	
-				if ($ext[count($ext) - 1] == 'rar')
-				{
-					if (!$r_query[$url])
-					{
-						$found[] = $url;
-						$new++;
-					}
-					else
-					{
-						$old++;
-					}
-				}
-				else
-				{
-					$other++;
-				}
+				$found[] = array($title, "http://cah4e3.shedevr.org.ru/".$url);
+				$new++;
+			}
+			else
+			{
+				$old++;
 			}
 		}
-	
-		print "close: ".$dir."\n";
-		print "new: ".$new.", old: ".$old.", other:".$other."\n";
+		else
+		{
+			$other++;
+		}
 	}
+	echo "<td>Found new: ".$new.", old: ".$old.", other: ".$other."</tr>\n";
 }
+echo "</table>\n";
 
-print "\nnew urls:\n\n";
-
-foreach ($found as $url)
+if (sizeof($found) > 0)
 {
-	print "<a href=\"http://cah4e3.shedevr.org.ru/".$url."\">".$url."</a>\n";
+	echo "<h2>New files:</h2>";
 }
+
+foreach ($found as $row)
+{
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
+}
+
+echo "<br/>\n";
 
 ?>
