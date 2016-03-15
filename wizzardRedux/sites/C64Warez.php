@@ -11,10 +11,8 @@ $pages = $pages[1];
 echo "<table>\n";
 foreach ($pages as $page)
 {
-	echo "<tr><td>".$dir."</td>";
-	
-	$query = get_data("http://remotecpu.com/downloads".$page);
-	//$query = get_data("http://remotecpu.com/downloads/category/236-strategy-games.html");
+	echo "<tr><td>".$page."</td>";	
+	$query = get_data("http://remotecpu.com/".$page);
 	
 	preg_match("/<b>Category: (.*?)<\/b>/", $query, $category);
 	$category = $category[1];
@@ -24,6 +22,7 @@ foreach ($pages as $page)
 	
 	if (sizeof($links) == 0)
 	{
+		echo "<td>Found new: 0, old: 0</td></tr>\n";
 		continue;
 	}
 
