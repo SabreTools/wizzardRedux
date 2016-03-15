@@ -12,6 +12,7 @@ Notes:
 	- AtariOnline				No idea what "compare" block does
 	- c64gamescom				Empty checker page
 	- C64Heaven					No idea how to get to the archive, only few files on home page
+	- C64Warez					Needs registration; possible cookie usage
 	- CPC-Power					"full" is no longer active
 	- Import64					Empty checker page
 	- NES-CartDatabase			Needs more testing
@@ -25,11 +26,10 @@ Notes:
 	- Vizzed					Possible cookie usage
 
 TODO: Retool existing onlinecheck.php files to follow the new format. 3) check code flow to try to optimize
-TODO: Document all required GET and POST vars for each page
 TODO: VideopacNL uses a cookie to be able to access the board. This means you need to log in to the site and then copy the cookie as a param
 TODO: Can we run all online checks in a coherent way (in series, that is)?
 TODO: Once all checkers are certainly using the new table and found format, standardize $found and move to this file
-TODO: Last updated - C64Tapes
+TODO: Last updated - C64Warez
 ------------------------------------------------------------------------------------ */
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.

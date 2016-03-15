@@ -2,75 +2,78 @@
 
 // Original code: The Wizard of DATz
 
-// TODO: This site needs an overhaul. The URL and page structure changed and now requires a login to download the files.
+// TODO: Find what the download URL is (currently old one being used)
 
-print "<pre>";
+$pages = get_data("http://remotecpu.com/downloads.html");
+preg_match_all("/'?(\/downloads\/category\/.*?)'?,/", $pages, $pages);
+$pages = $pages[1];
 
-//$query = get_data('http://c64warez.com/');
-$query = get_data('http://remotecpu.com/downloads.html');
-preg_match_all('/<a href="(\/downloads\/category\/.*)/">', $query, $categories);
-var_dump($categories);
-$query = explode('<a href="/downloads/category/', $query);
-array_splice($query, 0, 1);
-
-foreach ($query as $row)
+echo "<table>\n";
+foreach ($pages as $page)
 {
-	$row = explode('"', $row);
-	$row = $row[0];
-
-	$parts = explode('/', $row);
-
-	if ($parts[0] != 'get_file')
+	echo "<tr><td>".$dir."</td>";
+	
+	$query = get_data("http://remotecpu.com/downloads".$page);
+	//$query = get_data("http://remotecpu.com/downloads/category/236-strategy-games.html");
+	
+	preg_match("/<b>Category: (.*?)<\/b>/", $query, $category);
+	$category = $category[1];
+	
+	preg_match_all("/<td.*?><a href=\"(\/downloads\/download\/.*?)\">/", $query, $links);
+	$links = $links[1];
+	
+	if (sizeof($links) == 0)
 	{
-		print "load ".$row."\n";
-
-		$queryb = get_data('http://c64warez.com/files/'.str_replace(' ', '%20', $row));
-		$queryb = explode('<a href="http://c64warez.com/files/get_file/', $queryb);
-		array_splice($queryb, 0, 1);
-
-		$new = 0;
-		$old = 0;
-
-		foreach ($queryb as $rowb)
-		{
-			$type = explode('<', $rowb);
-			$type = explode('>', $type[2]);
-			$type = $type[1];
-			$rowb = explode('"', $rowb);
-			$id = $rowb[0];
-			$titel = "{".$type."}".$rowb[2]." (".$parts[1].")";
-
-			if (!$r_query[$id])
-			{
-				$found[] = array($titel, $id);
-				$new++;
-				$r_query[$id] = true;
-			}
-			else
-			{
-				$old++;
-			}
-		}
-
-		print "new: ".$new.", old: ".$old."\n";
+		continue;
 	}
+
+	$new = 0;
+	$old = 0;
+
+	foreach ($links as $link)
+	{
+		$gamepage = get_data("http://remotecpu.com/".$link);
+		
+		preg_match("/<tr><td.*?>System<\/td><td.*?><strong>(.*?)<\/strong><\/tr>/", $gamepage, $system);
+		$system = trim($system[1]);
+		
+		preg_match("/<tbody>.*?<tr>.*?<td.*?><span.*?><img.*?>(.*?)<\/span><\/td>/s", $gamepage, $name);
+		$name = trim($name[1]);
+		
+		$title = "{".$system."}".$name." (".$category.")";
+		
+		$id = explode("/", $link);
+		$id = $id[sizeof($id) - 1];
+		$id = explode("-", $id);
+		$id = $id[0];
+		
+		if (!$r_query[$id])
+		{
+			// This link is outdated, but without registration it's impossible to get the updated link
+			$found[] = array($title, "http://c64warez.com/files/get_file/".$id);
+			$new++;
+			$r_query[$id] = true;
+		}
+		else
+		{
+			$old++;
+		}
+	}
+
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
+echo "</table>\n";
 
-print "\nnew urls:\n\n";
-print "<table><tr><td><pre>";
-
-foreach ($found as $url)
+if (sizeof($found) > 0)
 {
-	print $url[1]."\n";
+	echo "<h2>New files:</h2>";
 }
 
-print "</td><td><pre>";
-
-foreach ($found as $url)
+foreach ($found as $row)
 {
-	print "<a href=\"http://c64warez.com/files/get_file/".$url[1]."\">".$url[0]."</a>\n";
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
-print "</td></tr></table>";
+echo "<br/>\n";
 
 ?>
