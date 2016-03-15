@@ -36,7 +36,7 @@ for ($page = 0; $page < $max; $page++)
 			
 			if ($r_query[$DL] === NULL)
 			{
-				$found[] = array($row.".".$ext, $DL);
+				$found[] = array($row.".".$ext, "http://www.apple-iigs.info/".$DL);
 				$new++;
 				$r_query[$DL] = true;
 			}
@@ -88,7 +88,7 @@ foreach ($dirs as $dir)
 
 		if (!$r_query[$DL])
 		{
-			$found[] = array($title.".".$ext, $DL);
+			$found[] = array($title.".".$ext, "http://www.apple-iigs.info/".$DL);
 			$new++;
 			$r_query[$DL] = true;
 		}
@@ -144,7 +144,7 @@ foreach ($newrows as $row)
 	
 		if (!$r_query[$DL])
 		{
-			$found[] = array($title." (".$title2.").".$ext, $DL);
+			$found[] = array($title." (".$title2.").".$ext, "http://www.apple-iigs.info/".$DL);
 			$new++;
 			$r_query[$DL] = true;
 		}
@@ -164,7 +164,7 @@ if (sizeof($found) > 0)
 
 foreach ($found as $row)
 {
-	echo "<a href='http://www.apple-iigs.info/".$row[1]."'>".$row[0]."</a><br/>\n";
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
 }
 
 echo "<br/>\n";
