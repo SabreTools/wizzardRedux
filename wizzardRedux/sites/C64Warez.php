@@ -17,10 +17,10 @@ foreach ($pages as $page)
 	preg_match("/<b>Category: (.*?)<\/b>/", $query, $category);
 	$category = $category[1];
 	
-	preg_match_all("/<td.*?><a href=\"(\/downloads\/download\/.*?)\">/", $query, $links);
-	$links = $links[1];
+	preg_match_all("/<td.*?><a href=\"(\/downloads\/download\/.*?)\">/", $query, $urls);
+	$urls = $urls[1];
 	
-	if (sizeof($links) == 0)
+	if (sizeof($urls) == 0)
 	{
 		echo "<td>Found new: 0, old: 0</td></tr>\n";
 		continue;
@@ -29,9 +29,9 @@ foreach ($pages as $page)
 	$new = 0;
 	$old = 0;
 
-	foreach ($links as $link)
+	foreach ($urls as $url)
 	{
-		$gamepage = get_data("http://remotecpu.com/".$link);
+		$gamepage = get_data("http://remotecpu.com/".$url);
 		
 		preg_match("/<tr><td.*?>System<\/td><td.*?><strong>(.*?)<\/strong><\/tr>/", $gamepage, $system);
 		$system = trim($system[1]);
@@ -41,7 +41,7 @@ foreach ($pages as $page)
 		
 		$title = "{".$system."}".$name." (".$category.")";
 		
-		$id = explode("/", $link);
+		$id = explode("/", $url);
 		$id = $id[sizeof($id) - 1];
 		$id = explode("-", $id);
 		$id = $id[0];
