@@ -82,8 +82,7 @@ foreach ($dirs as $dir)
 			}
 			
 			$url2 = str_replace("\" target=\"_blank", "", $dl_dir.$dl[0]);
-			$ext = explode(".", $url2);
-			$ext = $ext[count($ext) - 1];
+			$ext = pathinfo($url2, PATHINFO_EXTENSION);
 			$dltext = trim(strip_tags($dl[1]));
 			
 			if ($dltext !== "" && $dltext != 'Share')

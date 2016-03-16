@@ -5,7 +5,7 @@ AG	f_ad=CoronaMagica_ag.zip&n_ar=Corona%20M%E1gica,%20La%20(amiga)&dd=amiga/jueg
 AG	f_ad=DinamicPack92_ag.zip&n_ar=Dinamic%20Pack%2092,%20The%20(amiga)&dd=amiga/juegos&f=79&sis=amiga	Dinamic Pack '92, The (Dinamic 1991).zip
 AG	f_ad=GuardianAngel_ag.zip&n_ar=Guardian%20Angel%20(amiga)&dd=amiga/juegos&f=73&sis=amiga&ex=1	Freddy Hardest en Manhattan Sur (Dinamic 1989).zip
 AG	f_ad=HFlota_ag.zip&n_ar=Hundir%20la%20Flota%20(amiga)&dd=amiga/juegos&f=119&sis=amiga	Hundir la Flota (M.A. Soft 1991).zip
-AG	f_ad=IanBothamsCricket_ag.zip&dd=amiga/juegos&f=996&sis=amiga	Ian Botham's Cricket (Celebrity So 1991).zip&dd=amiga/juegos&f=996&sis=amiga
+AG	f_ad=IanBothamsCricket_ag.zip&dd=amiga/juegos&f=996&sis=amiga	Ian Botham's Cricket (Celebrity So 1991).zip
 AG	f_ad=KValley_ag.zip&n_ar=King's Valley%20(amiga)&dd=amiga/juegos&f=837&sis=amiga	King's Valley (M.A. Soft 1998).zip
 AG	f_ad=Lingo_ag.zip&n_ar=Lingo%20(amiga)&dd=amiga/juegos&f=122&sis=amiga	Lingo (Copysoft 1994).zip
 AG	f_ad=MAGames_ag.zip&n_ar=M.A.%20Games%20(amiga)&dd=amiga/juegos&f=26&sis=amiga	M.A. Games (M.A. Soft 1998).zip
@@ -18,7 +18,7 @@ AG	f_ad=StripFighter.zip&n_ar=Strip%20Fighter%20(amiga)&dd=amiga/juegos&f=779&si
 AG	f_ad=TWarrior_ag.zip&n_ar=Telemark%20Warrior%20(amiga)&dd=amiga/juegos&f=49&sis=amiga	Telemark Warrior (Dro Soft 1989).zip
 AG	f_ad=after_ag.zip&n_ar=After%20the%20War%20(amiga)&dd=amiga/juegos&f=21&sis=amiga&ex=1	After the War (Dinamic 1989).zip
 AG	f_ad=amc_ag.zip&n_ar=Astro%20Marine%20Corps%20(amiga)&dd=amiga/juegos&f=29&sis=amiga&ex=1	Astro Marine Corps (Dinamic 1989).zip
-AG	f_ad=anieto_ag.zip&dd=amiga/juegos&f=23&sis=amiga	Ángel Nieto Pole 500 (Opera Sport 1990).zip&dd=amiga/juegos&f=23&sis=amiga
+AG	f_ad=anieto_ag.zip&dd=amiga/juegos&f=23&sis=amiga	Ángel Nieto Pole 500 (Opera Sport 1990).zip
 AG	f_ad=armymov_ag.zip&n_ar=Army%20Moves%20(amiga)&dd=amiga/juegos&f=24&sis=amiga&ex=1	Army Moves (Dinamic 1986).zip
 AG	f_ad=aspargp_ag.zip&n_ar=Grand%20Prix%20Master%20(amiga)&dd=amiga/juegos&f=27&sis=amiga&ex=1	Aspar G.P. Master (Dinamic 1988).zip
 AG	f_ad=chichen_ag.zip&n_ar=Chich%E9n%20Itz%E1%20(amiga)&dd=amiga/juegos&f=52&sis=amiga	Chichén Itzá (Aventuras AD 1992).zip
@@ -42,10 +42,10 @@ AG	f_ad=navym_ag.zip&n_ar=Navy%20Moves%20(amiga)&dd=amiga/juegos&f=34&sis=amiga&
 AG	f_ad=oberon69_ag.zip&n_ar=Oberon%2069%20(amiga)&dd=amiga/juegos&f=37&sis=amiga	Oberon 69 (G.LL. 1990).zip
 AG	f_ad=original_ag.zip&n_ar=Aventura%20Original,%20La%20(amiga)&dd=amiga/juegos&f=39&sis=amiga	Aventura Original, La (Aventuras AD 1989).zip
 AG	f_ad=paris-dakar_ag.zip&n_ar=Paris-Dakar%20(amiga)&dd=amiga/juegos&f=42&sis=amiga	París-Dakar (Zigurat 1988).zip
-AG	f_ad=riskyw_ag.zip&dd=amiga/juegos&f=43&sis=amiga	Risky Woods (Dinamic 1992).zip&dd=amiga/juegos&f=43&sis=amiga
+AG	f_ad=riskyw_ag.zip&dd=amiga/juegos&f=43&sis=amiga	Risky Woods (Dinamic 1992).zip
 AG	f_ad=satan_ag.zip&n_ar=Satan%20(amiga)&dd=amiga/juegos&f=45&sis=amiga&ex=1	Satan (Dinamic 1989).zip
 AG	f_ad=senor_ag.zip&n_ar=Se%F1or%20de%20los%20Anillos,%20El%20(amiga)&dd=amiga/juegos&f=38&sis=amiga	Señor de los Anillos, El (Dimassoft 1991).zip
-AG	f_ad=solnegro_ag.zip&dd=amiga/juegos&f=47&sis=amiga	Sol Negro (Opera Soft 1988).zip&dd=amiga/juegos&f=47&sis=amiga
+AG	f_ad=solnegro_ag.zip&dd=amiga/juegos&f=47&sis=amiga	Sol Negro (Opera Soft 1988).zip
 AG	f_ad=spacepower_ag.zip&n_ar=Space%20Power%20(amiga)&dd=amiga/juegos&f=53&sis=amiga	Space Power (Pyramid 1993).zip
 AG	f_ad=stellar_ag.zip&n_ar=Stellar%20(amiga)&dd=amiga/juegos&f=54&sis=amiga	Stellar Escape (Pyramid 1991).zip
 AG	f_ad=templos_ag.zip&n_ar=Templos%20Sagrados,%20Los%20(amiga)&dd=amiga/juegos&f=50&sis=amiga	Templos Sagrados, Los (Aventuras AD 1991).zip
@@ -123,8 +123,8 @@ AMS	f_ad=JacksonCity_ams.zip&n_ar=Jackson%20City%20(amstrad)&dd=amstrad/juegos&f
 AMS	f_ad=Jump_ams.zip&n_ar=Jump%20(amstrad)&dd=amstrad/juegos&f=546&sis=amstrad	Jump (Zigurat 1992).zip
 AMS	f_ad=Knight_Ghosts_ams.zip&n_ar=Knight%20Ghosts%20(amstrad)&dd=amstrad/juegos&f=554&sis=amstrad	Knight Ghost (Juliet Soft 1986).zip
 AMS	f_ad=LastMission(Fr)_ams.zip&n_ar=Last%20Mission,%20The%20[français]%20(amstrad)&dd=amstrad/juegos&f=561&sis=amstrad&ex=1	Last Mission, The (Opera Soft 1987).zip
-AMS	f_ad=LightCorridor_ams.zip&dd=amstrad/juegos&f=1000&sis=amstrad	Light Corridor, The (Infogrames 1990).zip&dd=amstrad/juegos&f=1000&sis=amstrad
-AMS	f_ad=LivingstoneIPresume_ams.zip&dd=amstrad/juegos&f=141&sis=amstrad&ex=1	Livingstone Supongo (Opera Soft 1986).zip&dd=amstrad/juegos&f=141&sis=amstrad&ex=1
+AMS	f_ad=LightCorridor_ams.zip&dd=amstrad/juegos&f=1000&sis=amstrad	Light Corridor, The (Infogrames 1990).zip
+AMS	f_ad=LivingstoneIPresume_ams.zip&dd=amstrad/juegos&f=141&sis=amstrad&ex=1	Livingstone Supongo (Opera Soft 1986).zip
 AMS	f_ad=MadMix(eng)_ams.zip&n_ar=Mad%20Mix%20Game%20(Pepsi%20Challenge)%20(amstrad)&dd=amstrad/juegos&f=61&sis=amstrad&ex=1	Mad Mix Game (Topo Soft 1988).zip
 AMS	f_ad=MadeInSpain5Estrellas_ams.zip&n_ar=Made%20in%20Spain%205%20Estrellas%20(amstrad)&dd=amstrad/juegos&f=814&sis=amstrad	Made in Spain 5 Estrellas (Zigurat 1989).zip
 AMS	f_ad=MagicJohnson_ams.zip&n_ar=Magic%20Johnson's%20Basketball%20(amstrad)&dd=amstrad/juegos&f=815&sis=amstrad	Magic Johnson's Basketball (Melbourne Ho 1990).zip
@@ -167,7 +167,7 @@ AMS	f_ad=Stardust(eng)_ams.zip&n_ar=Stardust%20[english]%20(amstrad)&dd=amstrad/
 AMS	f_ad=Stripjak_ams.zip&n_ar=Strip-Jak%20(amstrad)&dd=amstrad/juegos&f=349&sis=amstrad	Strip-Jak (R.B Software 1986).zip
 AMS	f_ad=Submarino_Neptuno_ams.zip&n_ar=Submarino%20Experimental%20Neptuno%20(amstrad)&dd=amstrad/juegos&f=347&sis=amstrad	Submarino Experimental Neptuno (Ediciones Ma 198?).zip
 AMS	f_ad=SuperPackGunstick.zip&n_ar=Super Pack Gunstick (amstrad)&dd=amstrad/juegos&f=910&sis=amstrad	Super Pack Gunstick (Ubi Soft 1989).zip
-AMS	f_ad=Supertripper_ams.zip&dd=amstrad/juegos&f=1&sis=amstrad	Supertripper (Indescomp 1985).zip&dd=amstrad/juegos&f=1&sis=amstrad
+AMS	f_ad=Supertripper_ams.zip&dd=amstrad/juegos&f=1&sis=amstrad	Supertripper (Indescomp 1985).zip
 AMS	f_ad=Titanic(Kixx)_ams.zip&n_ar=Titanic%20[english]%20(amstrad)&dd=amstrad/juegos&f=282&sis=amstrad&ex=1	Titanic (Topo Soft 1988).zip
 AMS	f_ad=TopByTopo2_ams.zip&n_ar=Top%20by%20Topo%202%20(amstrad)&dd=amstrad/juegos&f=818&sis=amstrad	Top by Topo 2 (Topo Soft 1991).zip
 AMS	f_ad=TopbyTopo_ams.zip&n_ar=Top%20by%20Topo%20(amstrad)&dd=amstrad/juegos&f=74&sis=amstrad	Top by Topo (Topo Soft 1989).zip
@@ -179,7 +179,7 @@ AMS	f_ad=WestBank(eng)_ams.zip&n_ar=West%20Bank%20[english]%20(amstrad)&dd=amstr
 AMS	f_ad=Xenon(eng)_ams.zip&n_ar=Xenon [english] (amstrad)&dd=amstrad/juegos&f=869&sis=amstrad&ex=1	Xenon (Melbourne Ho 1988).zip
 AMS	f_ad=Xenon_ams.zip&n_ar=Xenon (amstrad)&dd=amstrad/juegos&f=869&sis=amstrad	Xenon (Melbourne Ho 1988).zip
 AMS	f_ad=Yahtzee_ams.zip&n_ar=Yahtzee%20(amstrad)&dd=amstrad/juegos&f=789&sis=amstrad	Y'ahtzee (Dimension Ne 1985).zip
-AMS	f_ad=abadia_ams.zip&dd=amstrad/juegos&f=166&sis=amstrad	Abadía del Crimen, La (Opera Soft 1987).zip&dd=amstrad/juegos&f=166&sis=amstrad
+AMS	f_ad=abadia_ams.zip&dd=amstrad/juegos&f=166&sis=amstrad	Abadía del Crimen, La (Opera Soft 1987).zip
 AMS	f_ad=abracad_ams.zip&n_ar=Abracadabra%20(amstrad)&dd=amstrad/juegos&f=173&sis=amstrad	Abracadabra (Proein 1988).zip
 AMS	f_ad=africans(fr_it)_ams.zip&n_ar=African%20Trail%20Simulator%20[français|italiano]%20(amstrad)&dd=amstrad/juegos&f=176&sis=amstrad&ex=1	African Trail Simulator (Positive 1990).zip
 AMS	f_ad=africans_ams.zip&n_ar=African%20Trail%20Simulator%20(amstrad)&dd=amstrad/juegos&f=176&sis=amstrad	African Trail Simulator (Positive 1990).zip
@@ -203,7 +203,7 @@ AMS	f_ad=atrog_ams.zip&n_ar=Atrog%20(amstrad)&dd=amstrad/juegos&f=222&sis=amstra
 AMS	f_ad=autocras_ams.zip&n_ar=Autocrash%20(amstrad)&dd=amstrad/juegos&f=223&sis=amstrad	Autocrash (Zigurat 1991).zip
 AMS	f_ad=averno_ams.zip&n_ar=Averno%20(amstrad)&dd=amstrad/juegos&f=227&sis=amstrad	Averno (Proein 1989).zip
 AMS	f_ad=bandasal_ams.zip&n_ar=Banda%20Salvaje%20(amstrad)&dd=amstrad/juegos&f=230&sis=amstrad	Banda Salvaje, La (Piratassoft 1984).zip
-AMS	f_ad=basketmaster_ams.zip&dd=amstrad/juegos&f=143&sis=amstrad&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip&dd=amstrad/juegos&f=143&sis=amstrad&ex=1
+AMS	f_ad=basketmaster_ams.zip&dd=amstrad/juegos&f=143&sis=amstrad&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip
 AMS	f_ad=basun_ams.zip&n_ar=Basun%20(amstrad)&dd=amstrad/juegos&f=234&sis=amstrad	Basun (Multicrom 1988).zip
 AMS	f_ad=bestialw-gs_ams.zip&n_ar=Bestial%20Warrior%20-Gunstick-%20(amstrad)&dd=amstrad/juegos&f=238&sis=amstrad&ex=1	Bestial Warrior (Dinamic 1989).zip
 AMS	f_ad=bestialw_ams.zip&n_ar=Bestial%20Warrior%20(amstrad)&dd=amstrad/juegos&f=238&sis=amstrad	Bestial Warrior (Dinamic 1989).zip
@@ -247,7 +247,7 @@ AMS	f_ad=defcom1_ams.zip&n_ar=Defcom%201%20(amstrad)&dd=amstrad/juegos&f=150&sis
 AMS	f_ad=despera2_ams.zip&n_ar=Desperado%202%20(amstrad)&dd=amstrad/juegos&f=396&sis=amstrad	Desperado 2 (Topo Soft 1991).zip
 AMS	f_ad=desperad_ams.zip&n_ar=Desperado%20(amstrad)&dd=amstrad/juegos&f=394&sis=amstrad	Desperado (Topo Soft 1987).zip
 AMS	f_ad=dirk.zip&n_ar=Dirk%20(amstrad)&dd=amstrad/juegos&f=857&sis=amstrad	Dirk (P.P.P. Edici 1987).zip
-AMS	f_ad=drakkar_ams.zip&dd=amstrad/juegos&f=408&sis=amstrad	Drakkar (Delta 1990).zip&dd=amstrad/juegos&f=408&sis=amstrad
+AMS	f_ad=drakkar_ams.zip&dd=amstrad/juegos&f=408&sis=amstrad	Drakkar (Delta 1990).zip
 AMS	f_ad=dustin_ams.zip&n_ar=Dustin%20(amstrad)&dd=amstrad/juegos&f=411&sis=amstrad	Dustin (Dinamic 1986).zip
 AMS	f_ad=eagle_ams.zip&n_ar=Eagle%20(amstrad)&dd=amstrad/juegos&f=413&sis=amstrad	Eagle (Juliet Soft 1987).zip
 AMS	f_ad=elcid_ams.zip&n_ar=Cid,%20El%20(amstrad)&dd=amstrad/juegos&f=317&sis=amstrad	Cid, El (Dro Soft 1987).zip
@@ -257,7 +257,7 @@ AMS	f_ad=enigma_ams.zip&n_ar=Enigma%20de%20Aceps,%20El%20(amstrad)&dd=amstrad/ju
 AMS	f_ad=escoba_ams.zip&n_ar=Escoba%20(amstrad)&dd=amstrad/juegos&f=439&sis=amstrad	Escoba (Microhobby 1985).zip
 AMS	f_ad=espacial_ams.zip&n_ar=Aventura%20Espacial,%20La%20(amstrad)&dd=amstrad/juegos&f=36&sis=amstrad	Aventura Espacial, La (Aventuras AD 1990).zip
 AMS	f_ad=espada_ams.zip&n_ar=Espada%20Sagrada,%20La%20(amstrad)&dd=amstrad/juegos&f=447&sis=amstrad	Espada Sagrada, La (Topo Soft 1990).zip
-AMS	f_ad=fmartin_ams.zip&dd=amstrad/juegos&f=143&sis=amstrad	Fernando Martín Basket Master (Dinamic 1987).zip&dd=amstrad/juegos&f=143&sis=amstrad
+AMS	f_ad=fmartin_ams.zip&dd=amstrad/juegos&f=143&sis=amstrad	Fernando Martín Basket Master (Dinamic 1987).zip
 AMS	f_ad=fred_ams.zip&n_ar=Fred%20(amstrad)&dd=amstrad/juegos&f=96&sis=amstrad	Fred (Indescomp 1983).zip
 AMS	f_ad=freddy2_ams.zip&n_ar=Freddy%20Hardest%20in%20South%20Manhattan%20(amstrad)&dd=amstrad/juegos&f=73&sis=amstrad	Freddy Hardest en Manhattan Sur (Dinamic 1989).zip
 AMS	f_ad=frontier_ams.zip&n_ar=Frontiers%20(amstrad)&dd=amstrad/juegos&f=465&sis=amstrad	Frontiers (Zafiro 1988).zip
@@ -302,7 +302,7 @@ AMS	f_ad=lastmiss_ams.zip&n_ar=Last%20Mission,%20The%20(amstrad)&dd=amstrad/jueg
 AMS	f_ad=legend_ams.zip&n_ar=Legend%20(amstrad)&dd=amstrad/juegos&f=563&sis=amstrad	Legend (Delta 1990).zip
 AMS	f_ad=leonard_ams.zip&n_ar=King%20Leonard%20(amstrad)&dd=amstrad/juegos&f=553&sis=amstrad	King Leonard (Mind Games 1986).zip
 AMS	f_ad=liberator_ams.zip&n_ar=Liberator%20(amstrad)&dd=amstrad/juegos&f=566&sis=amstrad	Liberator (Proein 1989).zip
-AMS	f_ad=livings1_ams.zip&dd=amstrad/juegos&f=141&sis=amstrad	Livingstone Supongo (Opera Soft 1986).zip&dd=amstrad/juegos&f=141&sis=amstrad
+AMS	f_ad=livings1_ams.zip&dd=amstrad/juegos&f=141&sis=amstrad	Livingstone Supongo (Opera Soft 1986).zip
 AMS	f_ad=livings2_ams.zip&n_ar=Livingstone%20Supongo%20II%20(amstrad)&dd=amstrad/juegos&f=121&sis=amstrad	Livingstone Supongo II (Opera Soft 1989).zip
 AMS	f_ad=lorna_ams.zip&n_ar=Lorna%20(amstrad)&dd=amstrad/juegos&f=125&sis=amstrad	Lorna (Topo Soft 1990).zip
 AMS	f_ad=mad-mix_ams.zip&n_ar=Mad%20Mix%20Game%20(amstrad)&dd=amstrad/juegos&f=61&sis=amstrad	Mad Mix Game (Topo Soft 1988).zip
@@ -324,15 +324,15 @@ AMS	f_ad=mortadel2_ams.zip&n_ar=Mortadelo%20y%20Filem%F3n%20II%20(amstrad)&dd=am
 AMS	f_ad=mot_ams.zip&n_ar=Mot%20(amstrad)&dd=amstrad/juegos&f=32&sis=amstrad	Mot (Opera Soft 1989).zip
 AMS	f_ad=mountain_ams.zip&n_ar=Mountain%20Bike%20Racer%20(amstrad)&dd=amstrad/juegos&f=672&sis=amstrad	Mountain Bike Racer (Positive 1990).zip
 AMS	f_ad=mr_gaz_ams.zip&n_ar=Mr.%20Gas%20(amstrad)&dd=amstrad/juegos&f=671&sis=amstrad	Mister Gas (Proein 1989).zip
-AMS	f_ad=mundialf_ams.zip&dd=amstrad/juegos&f=670&sis=amstrad	Mundial de Fútbol (Opera Sport 1990).zip&dd=amstrad/juegos&f=670&sis=amstrad
+AMS	f_ad=mundialf_ams.zip&dd=amstrad/juegos&f=670&sis=amstrad	Mundial de Fútbol (Opera Sport 1990).zip
 AMS	f_ad=mutantzn_ams.zip&n_ar=Mutan%20Zone%20(amstrad)&dd=amstrad/juegos&f=666&sis=amstrad	Mutan Zone (Opera Soft 1988).zip
 AMS	f_ad=mystnile_ams.zip&n_ar=Mystery%20of%20the%20Nile%20(amstrad)&dd=amstrad/juegos&f=129&sis=amstrad&ex=1	Misterio del Nilo, El (Zigurat 1987).zip
 AMS	f_ad=mythos_ams.zip&n_ar=Mythos%20(amstrad)&dd=amstrad/juegos&f=664&sis=amstrad	Mithos (Opera Soft 1990).zip
 AMS	f_ad=nanako_ams.zip&n_ar=Nanako%20in%20Classic%20Japanese%20Monster%20Castle%20(amstrad)&dd=amstrad/juegos&f=13&sis=amstrad	Nanako (CEZ Silver 2007).zip
-AMS	f_ad=narcopol.zip&dd=spectrum/juegos/n&n_ar=Narco%20Police%20(spectrum)&dd=amstrad/juegos&f=33&sis=amstrad	Narco Police (Dinamic 1990).zip&dd=spectrum/juegos/n
+AMS	f_ad=narcopol.zip&dd=spectrum/juegos/n&n_ar=Narco%20Police%20(spectrum)&dd=amstrad/juegos&f=33&sis=amstrad	Narco Police (Dinamic 1990).zip
 AMS	f_ad=naufragi_ams.zip&n_ar=Naufragio%20(amstrad)&dd=amstrad/juegos&f=662&sis=amstrad	Naufragio (Rymsoft 1987).zip
 AMS	f_ad=navymov_ams.zip&n_ar=Navy%20Moves%20(amstrad)&dd=amstrad/juegos&f=34&sis=amstrad	Navy Moves (Dinamic 1988).zip
-AMS	f_ad=nieto_ams.zip&dd=amstrad/juegos&f=23&sis=amstrad	Ángel Nieto Pole 500 (Opera Sport 1990).zip&dd=amstrad/juegos&f=23&sis=amstrad
+AMS	f_ad=nieto_ams.zip&dd=amstrad/juegos&f=23&sis=amstrad	Ángel Nieto Pole 500 (Opera Sport 1990).zip
 AMS	f_ad=nonamed_ams.zip&n_ar=Nonamed%20(amstrad)&dd=amstrad/juegos&f=659&sis=amstrad	Nonamed (Dinamic 1986).zip
 AMS	f_ad=oasis_ams.zip&n_ar=Oasis%20%28amstrad%29&dd=amstrad/juegos&f=657&sis=amstrad	Oasis, El (Alea 1986).zip
 AMS	f_ad=oberon69_ams.zip&n_ar=Oberon%2069%20(amstrad)&dd=amstrad/juegos&f=37&sis=amstrad	Oberon 69 (G.LL. 1990).zip
@@ -384,7 +384,7 @@ AMS	f_ad=sirwood_ams.zip&n_ar=Sirwood%20(amstrad)&dd=amstrad/juegos&f=386&sis=am
 AMS	f_ad=sitopons_ams.zip&n_ar=Sito%20Pons%20500cc.%20GP%20(amstrad)&dd=amstrad/juegos&f=385&sis=amstrad	Sito Pons 500 c.c. Grand Prix (Zigurat 1991).zip
 AMS	f_ad=slapshot_ams.zip&n_ar=Slapshot%20(amstrad)&dd=amstrad/juegos&f=382&sis=amstrad&ex=1	Hockey (Indescomp 1986).zip
 AMS	f_ad=smaily_ams.zip&n_ar=Smaily%20(amstrad)&dd=amstrad/juegos&f=381&sis=amstrad	Smaily (Zigurat 1990).zip
-AMS	f_ad=solnegro_ams.zip&dd=amstrad/juegos&f=47&sis=amstrad	Sol Negro (Opera Soft 1988).zip&dd=amstrad/juegos&f=47&sis=amstrad
+AMS	f_ad=solnegro_ams.zip&dd=amstrad/juegos&f=47&sis=amstrad	Sol Negro (Opera Soft 1988).zip
 AMS	f_ad=solo_ams.zip&n_ar=Solo%20(amstrad)&dd=amstrad/juegos&f=378&sis=amstrad	Solo (Opera Soft 1989).zip
 AMS	f_ad=sootland_ams.zip&n_ar=Sootland%20(amstrad)&dd=amstrad/juegos&f=418&sis=amstrad	Sootland (Zafiro 1988).zip
 AMS	f_ad=soviet_ams.zip&n_ar=Soviet%20(amstrad)&dd=amstrad/juegos&f=375&sis=amstrad	Soviet (Opera Soft 1990).zip
@@ -459,7 +459,7 @@ ARCADE	f_ad=radikalb.php&n_ar=Radikal%20Bikers%20(arcade)&dd=arcade&f=982&sis=ar
 ARCADE	f_ad=sauro.php&n_ar=Sauro (arcade)&dd=arcade&f=865&sis=arcade	Sauro (Tecfri 1987).php
 ARCADE	f_ad=speedbal.php&n_ar=Speed Ball (arcade)&dd=arcade&f=871&sis=arcade	Speed Ball (Tecfri 1987).php
 ARCADE	f_ad=speedspn.php&n_ar=Speed Spin (arcade)&dd=arcade&f=932&sis=arcade	Speed Spin (TCH 1994).php
-ARCADE	f_ad=splash.php&dd=arcade&f=993&sis=arcade	Splash! (Gaelco 1992).php&dd=arcade&f=993&sis=arcade
+ARCADE	f_ad=splash.php&dd=arcade&f=993&sis=arcade	Splash! (Gaelco 1992).php
 ARCADE	f_ad=squaitsa.php&n_ar=Squash%20(arcade)&dd=arcade&f=834&sis=arcade	Squash (ITISA 1984).php
 ARCADE	f_ad=stlforce.php&n_ar=Steel Force (arcade)&dd=arcade&f=900&sis=arcade	Steel Force (Ecogames 1994).php
 ARCADE	f_ad=trickydoc.php&n_ar=Tricky Doc (arcade)&dd=arcade&f=884&sis=arcade	Tricky Doc (Tecfri 1987).php
@@ -478,7 +478,7 @@ C64	f_ad=GameOver(eng)_c64.zip&n_ar=Game%20Over%20[english]%20(c64)&dd=c64/juego
 C64	f_ad=Gameover_c64.zip&n_ar=Game%20Over%20(c64)&dd=c64/juegos&f=582&sis=c64	Game Over (Dinamic 1987).zip
 C64	f_ad=GuillemBergueda_c64.zip&n_ar=Guillem%20de%20Bergueda%20(c64)&dd=c64/juegos&f=494&sis=c64	Guillem de Berguedà (Centre Divul 1985).zip
 C64	f_ad=Jabato_c64.zip&n_ar=Jabato%20(c64)&dd=c64/juegos&f=120&sis=c64	Jabato (Aventuras AD 1989).zip
-C64	f_ad=LivingstoneSupongo_c64.zip&dd=c64/juegos&f=141&sis=c64	Livingstone Supongo (Opera Soft 1986).zip&dd=c64/juegos&f=141&sis=c64
+C64	f_ad=LivingstoneSupongo_c64.zip&dd=c64/juegos&f=141&sis=c64	Livingstone Supongo (Opera Soft 1986).zip
 C64	f_ad=MegaBox_c64.zip&n_ar=Mega%20Box%20(c64)&dd=c64/juegos&f=30&sis=c64	Mega Box (Dinamic 1991).zip
 C64	f_ad=Narco_police_c64.zip&n_ar=Narco%20Police%20(c64)&dd=c64/juegos&f=33&sis=c64	Narco Police (Dinamic 1990).zip
 C64	f_ad=Profesion_Detective_c64.zip&n_ar=Profesi%F3n%20Detective%20(c64)&dd=c64/juegos&f=118&sis=c64	Profesión detective (Idealogic 1983).zip
@@ -495,7 +495,7 @@ C64	f_ad=amc_c64.zip&n_ar=Astro%20Marine%20Corps%20(c64)&dd=c64/juegos&f=29&sis=
 C64	f_ad=armymove_c64.zip&n_ar=Army%20Moves%20(c64)&dd=c64/juegos&f=24&sis=c64	Army Moves (Dinamic 1986).zip
 C64	f_ad=aspar_gp_c64.zip&n_ar=Aspar%20GP%20Master%20(c64)&dd=c64/juegos&f=27&sis=c64	Aspar G.P. Master (Dinamic 1988).zip
 C64	f_ad=aventura_espacial_c64.zip&n_ar=Aventura%20Espacial,%20La%20(c64)&dd=c64/juegos&f=36&sis=c64	Aventura Espacial, La (Aventuras AD 1990).zip
-C64	f_ad=basket_master_c64.zip&dd=c64/juegos&f=143&sis=c64&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip&dd=c64/juegos&f=143&sis=c64&ex=1
+C64	f_ad=basket_master_c64.zip&dd=c64/juegos&f=143&sis=c64&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip
 C64	f_ad=boogaboo-esp_c64.zip&n_ar=Booga-Boo%20(The%20Flea)%20(c64)&dd=c64/juegos&f=75&sis=c64	Pulga, La (Indescomp 1983).zip
 C64	f_ad=boogaboo_c64.zip&n_ar=Booga-Boo%20(The%20Flea)%20[english]%20(c64)&dd=c64/juegos&f=75&sis=c64&ex=1	Pulga, La (Indescomp 1983).zip
 C64	f_ad=buitre_c64.zip&n_ar=Emilio%20Butrague%F1o%20F%FAtbol%20(c64)&dd=c64/juegos&f=153&sis=c64	Emilio Butragueño ¡Fútbol! (Topo Soft 1988).zip
@@ -503,7 +503,7 @@ C64	f_ad=camelot_c64.zip&n_ar=Camelot%20Warriors%20(c64)&dd=c64/juegos&f=147&sis
 C64	f_ad=chicago_c64.zip&n_ar=Chicago's%2030%20(c64)&dd=c64/juegos&f=133&sis=c64	Chicago's 30 (Topo Soft 1988).zip
 C64	f_ad=cozumel_c64.zip&n_ar=Cozumel%20(c64)&dd=c64/juegos&f=65&sis=c64	Cozumel (Aventuras AD 1990).zip
 C64	f_ad=defcom1_c64.zip&n_ar=Defcom%201%20(c64)&dd=c64/juegos&f=150&sis=c64	Defcom 1 (Iber 1989).zip
-C64	f_ad=fmartin_c64.zip&dd=c64/juegos&f=143&sis=c64	Fernando Martín Basket Master (Dinamic 1987).zip&dd=c64/juegos&f=143&sis=c64
+C64	f_ad=fmartin_c64.zip&dd=c64/juegos&f=143&sis=c64	Fernando Martín Basket Master (Dinamic 1987).zip
 C64	f_ad=fred_c64.zip&n_ar=Fred%20(c64)&dd=c64/juegos&f=96&sis=c64&ex=1	Fred (Indescomp 1983).zip
 C64	f_ad=freddyh_c64.zip&n_ar=Freddy%20Hardest%20(c64)&dd=c64/juegos&f=154&sis=c64&ex=1	Freddy Hardest (Dinamic 1987).zip
 C64	f_ad=game_over_2_c64.zip&n_ar=Game%20Over%20II%20(c64)&dd=c64/juegos&f=123&sis=c64&ex=1	Phantis (Dinamic 1987).zip
@@ -515,7 +515,7 @@ C64	f_ad=hammer_boy_c64.zip&n_ar=Hammer%20Boy%20(c64)&dd=c64/juegos&f=82&sis=c64
 C64	f_ad=jaialai_c64.zip&n_ar=Jai-Alai%20(c64)&dd=c64/juegos&f=157&sis=c64	Jai Alai (Opera Sport 1991).zip
 C64	f_ad=keops_c64.zip&n_ar=Keops%20(c64)&dd=c64/juegos&f=160&sis=c64	Keops (Sakati Soft 1984).zip
 C64	f_ad=kerulen_c64.zip&n_ar=Ke%20Rulen%20los%20Petas%20(c64)&dd=c64/juegos&f=159&sis=c64	Ke Rulen los Petas (Iber 1989).zip
-C64	f_ad=livingst_c64.zip&dd=c64/juegos&f=141&sis=c64&ex=1	Livingstone Supongo (Opera Soft 1986).zip&dd=c64/juegos&f=141&sis=c64&ex=1
+C64	f_ad=livingst_c64.zip&dd=c64/juegos&f=141&sis=c64&ex=1	Livingstone Supongo (Opera Soft 1986).zip
 C64	f_ad=mad_mix_c64.zip&n_ar=Mad%20Mix%20Game%20(Pepsi%20Challenge)%20(c64)&dd=c64/juegos&f=61&sis=c64&ex=1	Mad Mix Game (Topo Soft 1988).zip
 C64	f_ad=madmix_c64.zip&n_ar=Mad%20Mix%20Game%20(c64)&dd=c64/juegos&f=61&sis=c64	Mad Mix Game (Topo Soft 1988).zip
 C64	f_ad=megacorp_c64.zip&n_ar=Megacorp%20(c64)&dd=c64/juegos&f=136&sis=c64	Megacorp (AD 1987).zip
@@ -594,7 +594,7 @@ MAC	f_ad=mog.dmg&n_ar=Maze%20of%20Galious%20Remake%20(mac)&dd=mac&f=89&sis=mac	M
 MAC	f_ad=netherearth.sit&n_ar=Nether%20Earth%20(mac)&dd=mac&f=87&sis=mac	Nether Earth Remake (Brain games 2002).sit
 MAC	f_ad=stransball2-mac.php&n_ar=Super%20Transball%202%20(mac)&dd=mac&f=71&sis=mac	Super Transball 2 (Brain games 2002).php
 MD	f_ad=UWOL_md.zip&n_ar=UWOL - Quest For Money (megadrive)&dd=consolas&f=927&sis=megadrive	UWOL (Mojon Twins 2009).zip
-MD	f_ad=riskywoods_md.zip&dd=consolas&f=43&sis=megadrive	Risky Woods (Dinamic 1992).zip&dd=consolas&f=43&sis=megadrive
+MD	f_ad=riskywoods_md.zip&dd=consolas&f=43&sis=megadrive	Risky Woods (Dinamic 1992).zip
 MSX	f_ad=5ExitosOpera_msx.zip&n_ar=5 Éxitos de Opera Soft (msx)&dd=msx/juegos&f=832&sis=msx	5 Éxitos de Opera Soft (Opera Soft 1990).zip
 MSX	f_ad=ATrail(itfr)_msx.zip&n_ar=African%20Trail%20Simulator%20[français|italiano]%20(msx)&dd=msx/juegos&f=176&sis=msx&ex=1	African Trail Simulator (Positive 1990).zip
 MSX	f_ad=Aaargh!_msx.zip&n_ar=Aaargh! (msx)&dd=msx/juegos&f=882&sis=msx	Aaargh! (Melbourne Ho 1987).zip
@@ -603,9 +603,9 @@ MSX	f_ad=AguasBravas_msx.zip&n_ar=Aguas%20Bravas%20(msx)&dd=msx/juegos&f=179&sis
 MSX	f_ad=AlienSyndrome_msx.zip&n_ar=Alien Syndrome (msx)&dd=msx/juegos&f=879&sis=msx	Alien Syndrome (ACE 1988).zip
 MSX	f_ad=AlteredBeast_msx.zip&n_ar=Altered Beast (msx)&dd=msx/juegos&f=947&sis=msx	Altered Beast (Activision 1989).zip
 MSX	f_ad=Ananas.zip&n_ar=Ananas%20(msx)&dd=msx/juegos&f=805&sis=msx	Ananas (SPE 1988).zip
-MSX	f_ad=ArcticFox.zip&dd=msx/juegos&f=998&sis=msx	Arcticfox (Electronic A 1986).zip&dd=msx/juegos&f=998&sis=msx
+MSX	f_ad=ArcticFox.zip&dd=msx/juegos&f=998&sis=msx	Arcticfox (Electronic A 1986).zip
 MSX	f_ad=Autocrash_msx.zip&n_ar=Autocrash%20(msx)&dd=msx/juegos&f=223&sis=msx	Autocrash (Zigurat 1991).zip
-MSX	f_ad=Basketmaster_msx.zip&dd=msx/juegos&f=143&sis=msx&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip&dd=msx/juegos&f=143&sis=msx&ex=1
+MSX	f_ad=Basketmaster_msx.zip&dd=msx/juegos&f=143&sis=msx&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip
 MSX	f_ad=BeTiled!_msx.zip&n_ar=BeTiled!%20(msx)&dd=msx/juegos&f=19&sis=msx	BeTiled! (CEZ Silver 2007).zip
 MSX	f_ad=Bestialw_gstick_msx.zip&n_ar=Bestial%20Warrior%20-Gunstick-%20(msx)&dd=msx/juegos&f=238&sis=msx&ex=1	Bestial Warrior (Dinamic 1989).zip
 MSX	f_ad=Bingo_msx.zip&n_ar=Bingo,%20El%20(msx)&dd=msx/juegos&f=241&sis=msx	Bingo, El (Indescomp 1985).zip
@@ -677,7 +677,7 @@ MSX	f_ad=Krom_msx.zip&n_ar=Krom%20(msx)&dd=msx/juegos&f=748&sis=msx	Krom (OMK 19
 MSX	f_ad=Krypton.zip&n_ar=Krypton%20(msx)&dd=msx/juegos&f=324&sis=msx	Krypton (Manhattan Tr 1985).zip
 MSX	f_ad=LadySafari_msx.zip&n_ar=Lady%20Safari%20(msx)&dd=msx/juegos&f=559&sis=msx	Lady Safari (OMK 1988).zip
 MSX	f_ad=LastCommando_msx.zip&n_ar=Last%20Commando,%20The%20(msx)&dd=msx/juegos&f=327&sis=msx&ex=1	Comando Tracer (Dinamic 1988).zip
-MSX	f_ad=LightCorridor_msx.zip&dd=msx/juegos&f=1000&sis=msx	Light Corridor, The (Infogrames 1990).zip&dd=msx/juegos&f=1000&sis=msx
+MSX	f_ad=LightCorridor_msx.zip&dd=msx/juegos&f=1000&sis=msx	Light Corridor, The (Infogrames 1990).zip
 MSX	f_ad=M-47.zip&n_ar=M-47 Combate de Blindados (msx)&dd=msx/juegos&f=918&sis=msx	M-47 (Edisoft 1986).zip
 MSX	f_ad=Mach3_msx.zip&n_ar=Mach 3 (msx)&dd=msx/juegos&f=944&sis=msx	Mach 3 (Loriciels 1987).zip
 MSX	f_ad=MadeInSpain5Estrellas_msx.zip&n_ar=Made%20in%20Spain%205%20Estrellas%20(msx)&dd=msx/juegos&f=814&sis=msx	Made in Spain 5 Estrellas (Zigurat 1989).zip
@@ -695,7 +695,7 @@ MSX	f_ad=MrChefSausages.zip&n_ar=Mr Chef and the Sausages (msx)&dd=msx/juegos&f=
 MSX	f_ad=MultiSportsII_msx.zip&n_ar=Multi%20Sports%20II%20(msx)&dd=msx/juegos&f=829&sis=msx	Multi Sports II (Dinamic 1992).zip
 MSX	f_ad=MultiSports_msx.zip&n_ar=Multi Sports (msx)&dd=msx/juegos&f=35&sis=msx	Multi Sports (Dinamic 1991).zip
 MSX	f_ad=MundialItalia90.zip&n_ar=Mundial de Fútbol - Italia '90 (msx)&dd=msx/juegos&f=877&sis=msx	Mundial de Fútbol - Italia '90 (Virgin Games 1989).zip
-MSX	f_ad=Mundial_Futbol_msx.zip&dd=msx/juegos&f=670&sis=msx	Mundial de Fútbol (Opera Sport 1990).zip&dd=msx/juegos&f=670&sis=msx
+MSX	f_ad=Mundial_Futbol_msx.zip&dd=msx/juegos&f=670&sis=msx	Mundial de Fútbol (Opera Sport 1990).zip
 MSX	f_ad=Mystical_msx.zip&n_ar=Mystical (msx)&dd=msx/juegos&f=971&sis=msx	Mystical (Infogrames 1991).zip
 MSX	f_ad=NavyMoves(eng)_msx.zip&n_ar=Navy%20Moves%20[english]%20(msx)&dd=msx/juegos&f=34&sis=msx&ex=1	Navy Moves (Dinamic 1988).zip
 MSX	f_ad=NebulaWars.zip&n_ar=Nebula%20Wars%20(msx)&dd=msx/juegos&f=155&sis=msx	Nebula Wars (J.C. Enrique 1989).zip
@@ -720,14 +720,14 @@ MSX	f_ad=SoldierOfLight_msx.zip&n_ar=Soldier of Light (msx)&dd=msx/juegos&f=852&
 MSX	f_ad=StarBowls_msx.zip&n_ar=Star%20Bowls%20(msx)&dd=msx/juegos&f=370&sis=msx	Star Bowls (Zigurat 1991).zip
 MSX	f_ad=SummerPack_msx.zip&n_ar=Summer Pack (msx)&dd=msx/juegos&f=870&sis=msx	Summer Pack (Opera Soft 1990).zip
 MSX	f_ad=SuperSapiens_msx.zip&n_ar=Super%20Sapiens%20(msx)&dd=msx/juegos&f=345&sis=msx	Super Sapiens (Proein 1989).zip
-MSX	f_ad=SuperTripper_msx.zip&dd=msx/juegos&f=1&sis=msx	Supertripper (Indescomp 1985).zip&dd=msx/juegos&f=1&sis=msx
+MSX	f_ad=SuperTripper_msx.zip&dd=msx/juegos&f=1&sis=msx	Supertripper (Indescomp 1985).zip
 MSX	f_ad=Tension_msx.zip&n_ar=Tension%20(msx)&dd=msx/juegos&f=299&sis=msx	Tensión (SPE 1988).zip
 MSX	f_ad=TestDriveII.zip&n_ar=Test Drive II (msx)&dd=msx/juegos&f=912&sis=msx	Test Drive II (Accolade 1989).zip
 MSX	f_ad=TokyoGang_msx.zip&n_ar=Tokyo%20Gang%20(msx)&dd=msx/juegos&f=278&sis=msx	Tokyo Gang (G.LL. 1990).zip
 MSX	f_ad=Trans-EuropeRallye_msx.zip&n_ar=Trans-Europe%20Rally%20(msx)&dd=msx/juegos&f=735&sis=msx	Trans-Europe Rally (ABC Soft 1984).zip
 MSX	f_ad=TrasUnicornio.zip&n_ar=Tras el Unicornio (msx)&dd=msx/juegos&f=885&sis=msx	Tras el Unicornio (Azimut Soft 1987).zip
 MSX	f_ad=Underground_msx.zip&n_ar=Underground%20(msx)&dd=msx/juegos&f=261&sis=msx	Underground (System 4 1988).zip
-MSX	f_ad=WIME.zip&dd=msx/juegos&f=994&sis=msx	War in Middle Earth (Melbourne Ho 1988).zip&dd=msx/juegos&f=994&sis=msx
+MSX	f_ad=WIME.zip&dd=msx/juegos&f=994&sis=msx	War in Middle Earth (Melbourne Ho 1988).zip
 MSX	f_ad=WallThe.zip&n_ar=Wall, The (msx)&dd=msx/juegos&f=904&sis=msx	Wall, The (Erbe 1985).zip
 MSX	f_ad=Wampcola_msx.zip&n_ar=Wampcola%20(msx)&dd=msx/juegos&f=765&sis=msx	Wampcola (Iber 1988).zip
 MSX	f_ad=WarChess_msx.zip&n_ar=War%20Chess%20(msx)&dd=msx/juegos&f=203&sis=msx	War Chess (Idealogic 1986).zip
@@ -735,9 +735,9 @@ MSX	f_ad=Wrangler_msx.zip&n_ar=Wrangler%20(msx)&dd=msx/juegos&f=198&sis=msx	Wran
 MSX	f_ad=Xenon_msx.zip&n_ar=Xenon (msx)&dd=msx/juegos&f=869&sis=msx	Xenon (Melbourne Ho 1988).zip
 MSX	f_ad=Yahtzee_msx.zip&n_ar=Yahtzee%20(msx)&dd=msx/juegos&f=789&sis=msx	Y'ahtzee (Dimension Ne 1985).zip
 MSX	f_ad=Yesod.zip&n_ar=Yesod (msx)&dd=msx/juegos&f=981&sis=msx	Yesod (P.P.P. Edici 1987).zip
-MSX	f_ad=a-nieto_msx.zip&dd=msx/juegos&f=23&sis=msx	Ángel Nieto Pole 500 (Opera Sport 1990).zip&dd=msx/juegos&f=23&sis=msx
+MSX	f_ad=a-nieto_msx.zip&dd=msx/juegos&f=23&sis=msx	Ángel Nieto Pole 500 (Opera Sport 1990).zip
 MSX	f_ad=a_team_msx.zip&n_ar=A-Team,%20The%20(msx)&dd=msx/juegos&f=163&sis=msx	Equipo A, El (Zafiro 1988).zip
-MSX	f_ad=abadia_msx.zip&dd=msx/juegos&f=166&sis=msx	Abadía del Crimen, La (Opera Soft 1987).zip&dd=msx/juegos&f=166&sis=msx
+MSX	f_ad=abadia_msx.zip&dd=msx/juegos&f=166&sis=msx	Abadía del Crimen, La (Opera Soft 1987).zip
 MSX	f_ad=abracad_msx.zip&n_ar=Abracadabra%20(msx)&dd=msx/juegos&f=173&sis=msx	Abracadabra (Proein 1988).zip
 MSX	f_ad=afrtrail_msx.zip&n_ar=African%20Trail%20Simulator%20(msx)&dd=msx/juegos&f=176&sis=msx	African Trail Simulator (Positive 1990).zip
 MSX	f_ad=after_msx.zip&n_ar=After%20the%20War%20(msx)&dd=msx/juegos&f=21&sis=msx	After the War (Dinamic 1989).zip
@@ -817,7 +817,7 @@ MSX	f_ad=evicario_msx.zip&n_ar=Emilio%20S.%20Vicario%20Grand%20Slam%20(msx)&dd=m
 MSX	f_ad=factoryinfection_msx.zip&n_ar=Factory%20Infection%20(msx)&dd=msx/juegos&f=454&sis=msx	Factory Infection (Karoshi corp 2004).zip
 MSX	f_ad=finalwar_msx.zip&n_ar=Final%20War%20(msx)&dd=msx/juegos&f=457&sis=msx	Final War (Alfredo Delg 1988).zip
 MSX	f_ad=fmartexe_msx.zip&n_ar=Fernando%20Mart%EDn%20Basket%20Master%20Exec.%20(msx)&dd=msx/juegos&f=146&sis=msx	Fernando Martín Basket Master (Dinamic 1987).zip
-MSX	f_ad=fmartin_msx.zip&dd=msx/juegos&f=143&sis=msx	Fernando Martín Basket Master (Dinamic 1987).zip&dd=msx/juegos&f=143&sis=msx
+MSX	f_ad=fmartin_msx.zip&dd=msx/juegos&f=143&sis=msx	Fernando Martín Basket Master (Dinamic 1987).zip
 MSX	f_ad=fredhar2_msx.zip&n_ar=Freddy%20Hardest%20in%20South%20Manhattan%20(msx)&dd=msx/juegos&f=73&sis=msx	Freddy Hardest en Manhattan Sur (Dinamic 1989).zip
 MSX	f_ad=fredhard_msx.zip&n_ar=Freddy%20Hardest%20(msx)&dd=msx/juegos&f=154&sis=msx	Freddy Hardest (Dinamic 1987).zip
 MSX	f_ad=futbol_msx.zip&n_ar=F%FAtbol%20(msx)&dd=msx/juegos&f=468&sis=msx	Fútbol (Indescomp 1985).zip
@@ -850,8 +850,8 @@ MSX	f_ad=lastmiss_msx.zip&n_ar=Last%20Mission%20(msx)&dd=msx/juegos&f=561&sis=ms
 MSX	f_ad=legend_msx.zip&n_ar=Legend%20(msx)&dd=msx/juegos&f=564&sis=msx	Legend (Iber 1988).zip
 MSX	f_ad=liberato_msx.zip&n_ar=Liberator%20(msx)&dd=msx/juegos&f=566&sis=msx	Liberator (Proein 1989).zip
 MSX	f_ad=living2_msx.zip&n_ar=Livingstone%20Supongo%20II%20(msx)&dd=msx/juegos&f=121&sis=msx	Livingstone Supongo II (Opera Soft 1989).zip
-MSX	f_ad=livingst_msx.zip&dd=msx/juegos&f=141&sis=msx&ex=1	Livingstone Supongo (Opera Soft 1986).zip&dd=msx/juegos&f=141&sis=msx&ex=1
-MSX	f_ad=livingstone_msx.zip&dd=msx/juegos&f=141&sis=msx	Livingstone Supongo (Opera Soft 1986).zip&dd=msx/juegos&f=141&sis=msx
+MSX	f_ad=livingst_msx.zip&dd=msx/juegos&f=141&sis=msx&ex=1	Livingstone Supongo (Opera Soft 1986).zip
+MSX	f_ad=livingstone_msx.zip&dd=msx/juegos&f=141&sis=msx	Livingstone Supongo (Opera Soft 1986).zip
 MSX	f_ad=lorna_msx.zip&n_ar=Lorna%20(msx)&dd=msx/juegos&f=125&sis=msx	Lorna (Topo Soft 1990).zip
 MSX	f_ad=madmix2_msx.zip&n_ar=Mad%20Mix%20Game%202%20(msx)&dd=msx/juegos&f=707&sis=msx	Mad Mix 2 (Topo Soft 1990).zip
 MSX	f_ad=madmix_msx.zip&n_ar=Mad%20Mix%20Game%20(msx)&dd=msx/juegos&f=61&sis=msx	Mad Mix Game (Topo Soft 1988).zip
@@ -922,7 +922,7 @@ MSX	f_ad=skywar_msx.zip&n_ar=Sky%20War%20(msx)&dd=msx/juegos&f=801&sis=msx	Sky W
 MSX	f_ad=slapshot_msx.zip&n_ar=Slapshot%20(msx)&dd=msx/juegos&f=382&sis=msx&ex=1	Hockey (Indescomp 1986).zip
 MSX	f_ad=smaily_msx.zip&n_ar=Smaily%20(msx)&dd=msx/juegos&f=381&sis=msx	Smaily (Zigurat 1990).zip
 MSX	f_ad=smuggler_msx.zip&n_ar=Space%20Smugglers%20(msx)&dd=msx/juegos&f=578&sis=msx	Space Smugglers (MHT Ingenier 1989).zip
-MSX	f_ad=solnegro_msx.zip&dd=msx/juegos&f=47&sis=msx	Sol Negro (Opera Soft 1988).zip&dd=msx/juegos&f=47&sis=msx
+MSX	f_ad=solnegro_msx.zip&dd=msx/juegos&f=47&sis=msx	Sol Negro (Opera Soft 1988).zip
 MSX	f_ad=solo_msx.zip&n_ar=Solo%20(msx)&dd=msx/juegos&f=378&sis=msx	Solo (Opera Soft 1989).zip
 MSX	f_ad=sootland_msx.zip&n_ar=Sootland%20(msx)&dd=msx/juegos&f=418&sis=msx	Sootland (Zafiro 1988).zip
 MSX	f_ad=soukoban_msx.zip&n_ar=Soukoban%20Pocket%20Edition%20(msx)&dd=msx/juegos&f=72&sis=msx	Soukoban Pocket Edition (Karoshi corp 2004).zip
@@ -931,7 +931,7 @@ MSX	f_ad=spirits_msx.zip&n_ar=Spirits%20(msx)&dd=msx/juegos&f=372&sis=msx	Spirit
 MSX	f_ad=starbyte_msx.zip&n_ar=Starbyte%20(msx)&dd=msx/juegos&f=369&sis=msx	Starbyte (Mister Chip 1987).zip
 MSX	f_ad=stardust_msx.zip&n_ar=Stardust%20(msx)&dd=msx/juegos&f=367&sis=msx	Stardust (Topo Soft 1987).zip
 MSX	f_ad=stopball_msx.zip&n_ar=Stop%20Ball%20(msx)&dd=msx/juegos&f=341&sis=msx	Stop Ball (Dro Soft 1987).zip
-MSX	f_ad=stratos_msx.zip&dd=msx/juegos&f=2&sis=msx	StratoS (CEZ GS 2004).zip&dd=msx/juegos&f=2&sis=msx
+MSX	f_ad=stratos_msx.zip&dd=msx/juegos&f=2&sis=msx	StratoS (CEZ GS 2004).zip
 MSX	f_ad=survivor_msx.zip&n_ar=Survivor%20(msx)&dd=msx/juegos&f=339&sis=msx	Survivor (Topo Soft 1987).zip
 MSX	f_ad=targetpl_msx.zip&n_ar=Target%20Plus%20(msx)&dd=msx/juegos&f=114&sis=msx	Target Plus (Dinamic 1988).zip
 MSX	f_ad=tekipaki.zip&n_ar=Teki%20Paki%20(msx)&dd=msx/juegos&f=62&sis=msx	Teki Paki (CEZ 2003).zip
@@ -969,7 +969,7 @@ MSX2	f_ad=alien8_msx2.zip&n_ar=Alien%208%20(msx%202)&dd=msx/juegos&f=751&sis=msx
 MSX2	f_ad=goodyv2.zip&n_ar=Goody%20(msx%202)&dd=msx/juegos&f=94&sis=msx2	Goody (Opera Soft 1988).zip
 MSX2	f_ad=knightlore_msx2.zip&n_ar=Knight%20Lore%20Remake%20(msx%202)&dd=msx/juegos&f=761&sis=msx2	Knight Lore Remake (Retroworks 2009).zip
 MSX2	f_ad=lastmiv2.zip&n_ar=Last%20Mission,%20The%20(msx%202)&dd=msx/juegos&f=561&sis=msx2	Last Mission, The (Opera Soft 1987).zip
-MSX2	f_ad=livingv2.zip&dd=msx/juegos&f=141&sis=msx2	Livingstone Supongo (Opera Soft 1986).zip&dd=msx/juegos&f=141&sis=msx2
+MSX2	f_ad=livingv2.zip&dd=msx/juegos&f=141&sis=msx2	Livingstone Supongo (Opera Soft 1986).zip
 PC	f_ad=25.zip&n_ar=25%20(pc)&dd=pc/juegos&f=161&sis=pc%20dos	25 (Devilish gam 1998).zip
 PC	f_ad=3Skulls.zip&n_ar=3%20Skulls%20of%20the%20Toltecs%20(pc)&dd=pc/juegos&f=771&sis=pc%20dos	3 Skulls of the Toltecs (Revistronic 1996).zip
 PC	f_ad=3Skulls_eng.zip&n_ar=3%20Skulls%20of%20the%20Toltecs%20[english]%20(pc)&dd=pc/juegos&f=771&sis=pc%20dos&ex=1	3 Skulls of the Toltecs (Revistronic 1996).zip
@@ -979,11 +979,11 @@ PC	f_ad=A-team_pc.zip&n_ar=A-Team,%20The%20(pc)&dd=pc/juegos&f=163&sis=pc%20dos	
 PC	f_ad=ACCEsinato_pc.zip&n_ar=ACCEsinato%20(pc)&dd=pc/juegos&f=174&sis=pc%20dos	Accesinato (Isxem Games 1996).zip
 PC	f_ad=Autocrash_pc.zip&n_ar=Autocrash%20(pc)&dd=pc/juegos&f=223&sis=pc%20dos	Autocrash (Zigurat 1991).zip
 PC	f_ad=Bcrown_pc.zip&n_ar=Black%20Crown%20(pc)&dd=pc/juegos&f=244&sis=pc%20dos	Black Crown (Topo Soft 1991).zip
-PC	f_ad=BlackJack.zip&dd=pc/juegos&f=995&sis=pc%20dos	Black Jack (Infodisc 1989).zip&dd=pc/juegos&f=995&sis=pc%20dos
+PC	f_ad=BlackJack.zip&dd=pc/juegos&f=995&sis=pc%20dos	Black Jack (Infodisc 1989).zip
 PC	f_ad=Bolix.zip&n_ar=Bolix (pc)&dd=pc/juegos&f=935&sis=pc%20dos	Bolix (ACA Soft 1994).zip
 PC	f_ad=BricksDeluxe.zip&n_ar=Bricks Deluxe (pc)&dd=pc/juegos&f=991&sis=pc%20dos	Bricks (iLogic Soft 1997).zip
 PC	f_ad=CampeonesPC.zip&n_ar=Campeones%20PC%20(pc)&dd=pc/juegos&f=70&sis=pc%20dos	Campeones PC (Topo Soft 1990).zip
-PC	f_ad=Chesshousers.zip&dd=pc/juegos&f=312&sis=pc%20dos	Chess Housers (Diabolic 1990).zip&dd=pc/juegos&f=312&sis=pc%20dos
+PC	f_ad=Chesshousers.zip&dd=pc/juegos&f=312&sis=pc%20dos	Chess Housers (Diabolic 1990).zip
 PC	f_ad=Coleccion92.zip&n_ar=Colección%20de%20Juegos%20'92%20(pc)&dd=pc/juegos&f=816&sis=pc%20dos	Colección de Juegos '92 (Topo Soft 1992).zip
 PC	f_ad=ColeccionDinamic90_pc.zip&n_ar=Colección%20Dinamic%2090%20(pc)&dd=pc/juegos&f=97&sis=pc%20dos	Colección Dinamic 90 (Dinamic 1989).zip
 PC	f_ad=ComicArcadeAventura_pc.zip&n_ar=Comic,%20Arcade%20y%20Aventura%20(pc)&dd=pc/juegos&f=792&sis=pc%20dos	Comic, Arcade & Aventura (Dro Soft 1991).zip
@@ -999,7 +999,7 @@ PC	f_ad=Frogger_pc.zip&n_ar=Div%20Frogger%20(pc)&dd=pc/juegos&f=103&sis=pc%20dos
 PC	f_ad=GrandPrixMaster_pc.zip&n_ar=Grand%20Prix%20Master%20(pc)&dd=pc/juegos&f=27&sis=pc%20dos&ex=1	Aspar G.P. Master (Dinamic 1988).zip
 PC	f_ad=Hammer-Head_pc.zip&n_ar=Hammer-Head%20(pc)&dd=pc/juegos&f=745&sis=pc%20dos	Hammer-Head (Zigurat 1992).zip
 PC	f_ad=HeroesCollection.zip&n_ar=Heroes Collection (pc)&dd=pc/juegos&f=897&sis=pc%20dos	Heroes Collection (Topo Soft 1992).zip
-PC	f_ad=IanBothamsCricket_pc.zip&dd=pc/juegos&f=996&sis=pc%20dos	Ian Botham's Cricket (Celebrity So 1991).zip&dd=pc/juegos&f=996&sis=pc%20dos
+PC	f_ad=IanBothamsCricket_pc.zip&dd=pc/juegos&f=996&sis=pc%20dos	Ian Botham's Cricket (Celebrity So 1991).zip
 PC	f_ad=IntAthletics.zip&n_ar=International Athletics (pc)&dd=pc/juegos&f=650&sis=pc%20dos&ex=1	Olympic Games 92 (Opera Plus 1992).zip
 PC	f_ad=JacksonCity_pc.zip&n_ar=Jackson City (pc)&dd=pc/juegos&f=538&sis=pc%20dos	Jackson City (G.LL. 1990).zip
 PC	f_ad=KomeBumb.zip&n_ar=Kome Bumb (pc)&dd=pc/juegos&f=959&sis=pc%20dos	Kome Bumb (Ediciones Ma 1996).zip
@@ -1013,7 +1013,7 @@ PC	f_ad=Massacre.zip&n_ar=Massacre%20Total%20(pc)&dd=pc/juegos&f=803&sis=pc%20do
 PC	f_ad=Mega4_pc.zip&n_ar=Mega%204%20(pc)&dd=pc/juegos&f=797&sis=pc%20dos	Mega 4 (Topo Soft 1991).zip
 PC	f_ad=MegaBox2_pc.zip&n_ar=Mega%20Box%202%20(pc)&dd=pc/juegos&f=46&sis=pc%20dos	Mega Box 2 (Dinamic 1992).zip
 PC	f_ad=MegaBox_pc.zip&n_ar=Mega%20Box%20(pc)&dd=pc/juegos&f=30&sis=pc%20dos	Mega Box (Dinamic 1991).zip
-PC	f_ad=Memory.zip&dd=pc/juegos&f=999&sis=pc%20dos	Memory (Compulogical 1988).zip&dd=pc/juegos&f=999&sis=pc%20dos
+PC	f_ad=Memory.zip&dd=pc/juegos&f=999&sis=pc%20dos	Memory (Compulogical 1988).zip
 PC	f_ad=MultiSportsII_pc.zip&n_ar=Multi%20Sports%20II%20(pc)&dd=pc/juegos&f=829&sis=pc%20dos	Multi Sports II (Dinamic 1992).zip
 PC	f_ad=MultiSports_pc.zip&n_ar=Multi%20Sports%20(pc)&dd=pc/juegos&f=35&sis=pc%20dos	Multi Sports (Dinamic 1991).zip
 PC	f_ad=O92Atletismo.zip&n_ar=Olimpiadas%2092:%20Atletismo%20(pc)&dd=pc/juegos&f=722&sis=pc%20dos	Olimpiadas 92: Atletismo (Topo Soft 1992).zip
@@ -1043,7 +1043,7 @@ PC	f_ad=RolCrusaders.zip&n_ar=Rol%20Crusaders%20(pc)&dd=pc/juegos&f=239&sis=pc%2
 PC	f_ad=RolCrusaders_en.zip&n_ar=Rol%20Crusaders%20[english]%20(pc)&dd=pc/juegos&f=239&sis=pc%20dos&ex=1	Rol Crusaders (Noria Works 1995).zip
 PC	f_ad=RompeMuros.zip&n_ar=Rompe%20Muros%20(pc)&dd=pc/juegos&f=984&sis=pc%20dos	Rompe Muros (Infodisc 1989).zip
 PC	f_ad=Sabotaje_pc.zip&n_ar=Sabotaje%20(pc)&dd=pc/juegos&f=478&sis=pc%20dos	Sabotaje (Sygran 1988).zip
-PC	f_ad=Scrylis.zip&dd=pc/juegos&f=943&sis=pc%20dos	Scrylis (Goldy Games 1993).zip&dd=pc/juegos&f=943&sis=pc%20dos
+PC	f_ad=Scrylis.zip&dd=pc/juegos&f=943&sis=pc%20dos	Scrylis (Goldy Games 1993).zip
 PC	f_ad=Sextris.zip&n_ar=Sextris%20(pc)&dd=pc/juegos&f=619&sis=pc%20dos	Sextris (Íñigo Ayo 1993).zip
 PC	f_ad=SilasQuest.zip&n_ar=Sila's Quest (pc)&dd=pc/juegos&f=950&sis=pc%20dos	Sila's Quest (Ediciones Ma 1997).zip
 PC	f_ad=SilentShadow_pc.zip&n_ar=Silent%20Shadow%20(pc)&dd=pc/juegos&f=116&sis=pc%20dos	Silent Shadow (Topo Soft 1988).zip
@@ -1063,14 +1063,14 @@ PC	f_ad=TrilogiaCi-U-Than.zip&n_ar=Trilogía%20de%20Ci-U-Than,%20La%20(pc)&dd=pc/
 PC	f_ad=ViajeColon.zip&n_ar=Viaje%20de%20Colón,%20El%20(pc)&dd=pc/juegos&f=835&sis=pc%20dos	Viaje de Colón, El (Micronet 1992).zip
 PC	f_ad=Viaje_Tierra_pc.zip&n_ar=Viaje%20al%20Centro%20de%20la%20Tierra%20(pc)&dd=pc/juegos&f=55&sis=pc%20dos	Viaje al Centro de la Tierra (Topo Soft 1989).zip
 PC	f_ad=Zampabolas_pc.zip&n_ar=Zampabolas (pc)&dd=pc/juegos&f=189&sis=pc%20dos	Zampabolas (System 4 1990).zip
-PC	f_ad=abadia_crimen_pc.zip&dd=pc/juegos&f=166&sis=pc%20dos	Abadía del Crimen, La (Opera Soft 1987).zip&dd=pc/juegos&f=166&sis=pc%20dos
+PC	f_ad=abadia_crimen_pc.zip&dd=pc/juegos&f=166&sis=pc%20dos	Abadía del Crimen, La (Opera Soft 1987).zip
 PC	f_ad=aesp_pc.zip&n_ar=Aventura%20Espacial,%20La%20(pc)&dd=pc/juegos&f=36&sis=pc%20dos	Aventura Espacial, La (Aventuras AD 1990).zip
 PC	f_ad=african_pc.zip&n_ar=African%20Trail%20Simulator%20(pc)&dd=pc/juegos&f=176&sis=pc%20dos	African Trail Simulator (Positive 1990).zip
 PC	f_ad=afterwar_pc.zip&n_ar=After%20the%20War%20(pc)&dd=pc/juegos&f=21&sis=pc%20dos&ex=1	After the War (Dinamic 1989).zip
 PC	f_ad=akbarr_pc.zip&n_ar=Akbarr%20(pc)&dd=pc/juegos&f=182&sis=pc%20dos	Akbarr (A. Viedma 1991).zip
 PC	f_ad=amnesiarol_pc.zip&n_ar=Amnesiarol%20(pc)&dd=pc/juegos&f=194&sis=pc%20dos	Amnesiarol (Calendonyunt 1995).zip
 PC	f_ad=amomundo_pc.zip&n_ar=Amo%20del%20Mundo,%20El%20(pc)&dd=pc/juegos&f=196&sis=pc%20dos	Amo del Mundo (Positive 1990).zip
-PC	f_ad=anieto_pc.zip&dd=pc/juegos&f=23&sis=pc%20dos	Ángel Nieto Pole 500 (Opera Sport 1990).zip&dd=pc/juegos&f=23&sis=pc%20dos
+PC	f_ad=anieto_pc.zip&dd=pc/juegos&f=23&sis=pc%20dos	Ángel Nieto Pole 500 (Opera Sport 1990).zip
 PC	f_ad=arctic_pc.zip&n_ar=Arctic%20Moves%20(pc)&dd=pc/juegos&f=127&sis=pc%20dos	Arctic Moves (Dinamic Mult 1995).zip
 PC	f_ad=armymove_pc.zip&n_ar=Army%20Moves%20(pc)&dd=pc/juegos&f=24&sis=pc%20dos	Army Moves (Dinamic 1986).zip
 PC	f_ad=aspar_pc.zip&n_ar=Aspar%20GP%20Master%20(pc)&dd=pc/juegos&f=27&sis=pc%20dos	Aspar G.P. Master (Dinamic 1988).zip
@@ -1079,7 +1079,7 @@ PC	f_ad=avsiglo24_pc.zip&n_ar=Aventura%20en%20el%20Siglo%20XXIV%20(pc)&dd=pc/jue
 PC	f_ad=avwild.zip&n_ar=Aventura%20en%20Wildland%20(pc)&dd=pc/juegos&f=226&sis=pc%20dos	Aventura en Wildland (Infodisc 1989).zip
 PC	f_ad=barbquest_pc.zip&n_ar=Barbarian%20Quest%20(pc)&dd=pc/juegos&f=232&sis=pc%20dos	Barbarian Quest (Darkkat Adve 1995).zip
 PC	f_ad=bmaster_pc.zip&n_ar=Basket%20Master%20(pc)&dd=pc/juegos&f=143&sis=pc%20dos&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip
-PC	f_ad=bugaboo.zip&dd=remakes/juegos&n_ar=Bugaboo:%20The%20Flea%20-remake-%20(pc)&dd=pc/juegos&f=78&sis=pc%20dos	Bugaboo (The Flea) Remake (Paul Robson 2001).zip&dd=remakes/juegos
+PC	f_ad=bugaboo.zip&dd=remakes/juegos&n_ar=Bugaboo:%20The%20Flea%20-remake-%20(pc)&dd=pc/juegos&f=78&sis=pc%20dos	Bugaboo (The Flea) Remake (Paul Robson 2001).zip
 PC	f_ad=buggyranger_pc.zip&n_ar=Buggy%20Ranger%20(pc)&dd=pc/juegos&f=285&sis=pc%20dos	Buggy Ranger (Dinamic 1990).zip
 PC	f_ad=buho_pc.zip&n_ar=En%20la%20Sima%20del%20Buho%20Maldito%20(pc)&dd=pc/juegos&f=434&sis=pc%20dos	En la Sima del Buho Maldito (Jarel 1990).zip
 PC	f_ad=buitre_pc.zip&n_ar=Emilio%20Butrague%F1o%20F%FAtbol%20(pc)&dd=pc/juegos&f=153&sis=pc%20dos	Emilio Butragueño ¡Fútbol! (Topo Soft 1988).zip
@@ -1096,7 +1096,7 @@ PC	f_ad=corsario_pc.zip&n_ar=Corsarios%20(pc)&dd=pc/juegos&f=60&sis=pc%20dos	Cor
 PC	f_ad=cosmicsheriff_pc.zip&n_ar=Cosmic%20Sheriff%20(pc)&dd=pc/juegos&f=356&sis=pc%20dos	Cosmic Sheriff (Dinamic 1989).zip
 PC	f_ad=cozumel_pc.zip&n_ar=Cozumel%20(pc)&dd=pc/juegos&f=65&sis=pc%20dos	Cozumel (Aventuras AD 1990).zip
 PC	f_ad=crb_pc.zip&n_ar=C.R.B.%20[Break%20Balls%20Corp.]%20(pc)&dd=pc/juegos&f=291&sis=pc%20dos	C.R.B. (Kronos 1993).zip
-PC	f_ad=crimen_pc.zip&dd=remakes/juegos&n_ar=Abad%EDa%20del%20Crimen%20La,%20-remake-%20(pc)&dd=pc/juegos&f=106&sis=pc%20dos	Abadía del Crimen Remake, La (A. Giner 2004).zip&dd=remakes/juegos
+PC	f_ad=crimen_pc.zip&dd=remakes/juegos&n_ar=Abad%EDa%20del%20Crimen%20La,%20-remake-%20(pc)&dd=pc/juegos&f=106&sis=pc%20dos	Abadía del Crimen Remake, La (A. Giner 2004).zip
 PC	f_ad=ctrueno_pc.zip&n_ar=Capit%E1n%20Trueno%20(pc)&dd=pc/juegos&f=665&sis=pc%20dos	Capitán Trueno, El (Dinamic 1989).zip
 PC	f_ad=cyberbig_pc.zip&n_ar=Cyberbig%20(pc)&dd=pc/juegos&f=191&sis=pc%20dos	Cyberbig (Animagic 1989).zip
 PC	f_ad=ddmsoccer96_pc.zip&n_ar=DDM%20Soccer%2096%20(pc)&dd=pc/juegos&f=389&sis=pc%20dos	DDM Soccer '96 (DDM 1996).zip
@@ -1110,8 +1110,8 @@ PC	f_ad=enigma_pc.zip&n_ar=Enigma%20de%20Aceps,%20El%20(pc)&dd=pc/juegos&f=437&s
 PC	f_ad=escoba_pc.zip&n_ar=Escoba,%20La%20(pc)&dd=pc/juegos&f=440&sis=pc%20dos	Escoba, La (Bass Softwar 1995).zip
 PC	f_ad=espada_pc.zip&n_ar=Espada%20Sagrada,%20La%20(pc)&dd=pc/juegos&f=447&sis=pc%20dos	Espada Sagrada, La (Topo Soft 1990).zip
 PC	f_ad=eudoxio_pc.zip&n_ar=Poder%20de%20la%20Kimbreton,%20El%20%28pc%29&dd=pc/juegos&f=613&sis=pc%20dos	Poder de la Kínbreton, El (D. Cárdenas 1996).zip
-PC	f_ad=eyedballs.zip&dd=remakes/juegos&n_ar=Eyed%20Balls%20(pc)&dd=pc/juegos&f=101&sis=pc%20dos	Eyed balls (J.S. Oliver 1997).zip&dd=remakes/juegos
-PC	f_ad=fmartin_pc.zip&dd=pc/juegos&f=143&sis=pc%20dos	Fernando Martín Basket Master (Dinamic 1987).zip&dd=pc/juegos&f=143&sis=pc%20dos
+PC	f_ad=eyedballs.zip&dd=remakes/juegos&n_ar=Eyed%20Balls%20(pc)&dd=pc/juegos&f=101&sis=pc%20dos	Eyed balls (J.S. Oliver 1997).zip
+PC	f_ad=fmartin_pc.zip&dd=pc/juegos&f=143&sis=pc%20dos	Fernando Martín Basket Master (Dinamic 1987).zip
 PC	f_ad=freddy_pc.zip&n_ar=Freddy%20Hardest%20(pc)&dd=pc/juegos&f=154&sis=pc%20dos	Freddy Hardest (Dinamic 1987).zip
 PC	f_ad=freddyhard2_pc.zip&n_ar=Freddy%20Hardest%20in%20South%20Manhattan%20(pc)&dd=pc/juegos&f=73&sis=pc%20dos	Freddy Hardest en Manhattan Sur (Dinamic 1989).zip
 PC	f_ad=fripp.zip&n_ar=Fripp%20(pc)&dd=pc/juegos&f=742&sis=pc%20dos	Fripp (M.F.G.C. 1997).zip
@@ -1139,7 +1139,7 @@ PC	f_ad=kong_pc.zip&n_ar=Kong's%20Revenge%20(pc)&dd=pc/juegos&f=555&sis=pc%20dos
 PC	f_ad=lands2_pc.zip&n_ar=Lands%20II%20(pc)&dd=pc/juegos&f=560&sis=pc%20dos	Lands 2: El Aprendiz (Alien Soft 1995).zip
 PC	f_ad=lib-silvania.zip&n_ar=Liberaci%F3n%20de%20Silvania,%20La%20(pc)&dd=pc/juegos&f=565&sis=pc%20dos	Liberación de Silvania, La (Aventuras FJ 1991).zip
 PC	f_ad=livin2_pc.zip&n_ar=Livingstone%20Supongo%20II%20(pc)&dd=pc/juegos&f=121&sis=pc%20dos	Livingstone Supongo II (Opera Soft 1989).zip
-PC	f_ad=livin_pc.zip&dd=pc/juegos&f=141&sis=pc%20dos	Livingstone Supongo (Opera Soft 1986).zip&dd=pc/juegos&f=141&sis=pc%20dos
+PC	f_ad=livin_pc.zip&dd=pc/juegos&f=141&sis=pc%20dos	Livingstone Supongo (Opera Soft 1986).zip
 PC	f_ad=llaves_pc.zip&n_ar=Llaves%20del%20Tiempo,%20Las%20(pc)&dd=pc/juegos&f=567&sis=pc%20dos	Llaves del Tiempo, Las (Jarel 1999).zip
 PC	f_ad=lmision_pc.zip&n_ar=Last%20Mission,%20The%20(pc)&dd=pc/juegos&f=561&sis=pc%20dos	Last Mission, The (Opera Soft 1987).zip
 PC	f_ad=lola_pc.zip&n_ar=Lola%20huele%20bien%20y%20adora...%20(pc)&dd=pc/juegos&f=570&sis=pc%20dos	Lola huele bien y adora el Marisco (A. Bárcena 1988).zip
@@ -1156,7 +1156,7 @@ PC	f_ad=miedoso_pc.zip&n_ar=Miedoso%20(pc)&dd=pc/juegos&f=685&sis=pc%20dos	Miedo
 PC	f_ad=mortayfile2_pc.zip&n_ar=Mortadelo%20y%20Filem%F3n%20II%20(pc)&dd=pc/juegos&f=678&sis=pc%20dos	Mortadelo y Filemón II (Dro Soft 1989).zip
 PC	f_ad=mot_pc.zip&n_ar=Mot%20(pc)&dd=pc/juegos&f=32&sis=pc%20dos	Mot (Opera Soft 1989).zip
 PC	f_ad=mountain_pc.zip&n_ar=Mountain%20Bike%20Racer%20(pc)&dd=pc/juegos&f=672&sis=pc%20dos	Mountain Bike Racer (Positive 1990).zip
-PC	f_ad=mundial_pc.zip&dd=pc/juegos&f=670&sis=pc%20dos	Mundial de Fútbol (Opera Sport 1990).zip&dd=pc/juegos&f=670&sis=pc%20dos
+PC	f_ad=mundial_pc.zip&dd=pc/juegos&f=670&sis=pc%20dos	Mundial de Fútbol (Opera Sport 1990).zip
 PC	f_ad=mutan_pc.zip&n_ar=Mutan%20Zone%20(pc)&dd=pc/juegos&f=666&sis=pc%20dos	Mutan Zone (Opera Soft 1988).zip
 PC	f_ad=mythos_pc.zip&n_ar=Mythos%20(pc)&dd=pc/juegos&f=664&sis=pc%20dos	Mithos (Opera Soft 1990).zip
 PC	f_ad=nanuk_pc.zip&n_ar=Nanuk%20(pc)&dd=pc/juegos&f=663&sis=pc%20dos	Nanuk (Mago Soft 1994).zip
@@ -1173,7 +1173,7 @@ PC	f_ad=ouija_pc.zip&n_ar=Ouija%20%28pc%29&dd=pc/juegos&f=645&sis=pc%20dos	Ouija
 PC	f_ad=pajaros_bangkok_pc.zip&n_ar=P%E1jaros%20de%20Bangkok,%20Los%20(pc)&dd=pc/juegos&f=126&sis=pc%20dos	Pájaros de Bangkok, Los (AD 1988).zip
 PC	f_ad=parisdakar_pc.zip&n_ar=Paris-Dakar%20(pc)&dd=pc/juegos&f=42&sis=pc%20dos	París-Dakar (Zigurat 1988).zip
 PC	f_ad=pcargentina_pc.zip&n_ar=PC%20F%FAtbol%20T.%20Clausura%2095%20%28pc%29&dd=pc/juegos&f=630&sis=pc%20dos	PC Fútbol Argentina (Dinamic Mult 1995).zip
-PC	f_ad=pcasteroids.zip&dd=remakes/juegos&n_ar=PC%20Asteroids%20(pc)&dd=pc/juegos&f=85&sis=pc%20dos	PC Asteroids (Robe Inie 2001).zip&dd=remakes/juegos
+PC	f_ad=pcasteroids.zip&dd=remakes/juegos&n_ar=PC%20Asteroids%20(pc)&dd=pc/juegos&f=85&sis=pc%20dos	PC Asteroids (Robe Inie 2001).zip
 PC	f_ad=pcbasket20_pc.zip&n_ar=PC%20Basket%202.0%20(pc)&dd=pc/juegos&f=637&sis=pc%20dos	PC Basket 2.0 (Dinamic Mult 1994).zip
 PC	f_ad=pcbasket3.zip&n_ar=PC%20Basket%203.0%20(pc)&dd=pc/juegos&f=768&sis=pc%20dos	PC Basket 3.0 (Dinamic Mult 1995).zip
 PC	f_ad=pcbasket4_pc.zip&n_ar=PC%20Basket%204.0%20%28pc%29&dd=pc/juegos&f=636&sis=pc%20dos	PC Basket 4.0 (Dinamic Mult 1996).zip
@@ -1202,7 +1202,7 @@ PC	f_ad=quien_pc.zip&n_ar=%BFQuien%20es%20Cualo?%20(pc)&dd=pc/juegos&f=581&sis=p
 PC	f_ad=rath-ta_pc.zip&n_ar=Rath-tha%20(pc)&dd=pc/juegos&f=574&sis=pc%20dos	Rath-tha (Positive 1989).zip
 PC	f_ad=rgolfo_pc.zip&n_ar=Rescate%20en%20el%20Golfo%20(pc)&dd=pc/juegos&f=511&sis=pc%20dos	Rescate en el Golfo (Opera Soft 1991).zip
 PC	f_ad=rimblenden_pc.zip&n_ar=Rimblend%E9n%20(pc)&dd=pc/juegos&f=506&sis=pc%20dos	Rimblendén (Jarel 1998).zip
-PC	f_ad=risky_pc.zip&dd=pc/juegos&f=43&sis=pc%20dos	Risky Woods (Dinamic 1992).zip&dd=pc/juegos&f=43&sis=pc%20dos
+PC	f_ad=risky_pc.zip&dd=pc/juegos&f=43&sis=pc%20dos	Risky Woods (Dinamic 1992).zip
 PC	f_ad=satan_pc.zip&n_ar=Satan%20(pc)&dd=pc/juegos&f=45&sis=pc%20dos&ex=1	Satan (Dinamic 1989).zip
 PC	f_ad=shivani_pc.zip&n_ar=Shivani,%20Ciudad%20del%20Mal%20(pc)&dd=pc/juegos&f=429&sis=pc%20dos	Danger World (69 Soft 1997).zip
 PC	f_ad=simprofut_pc.zip&n_ar=Simulador%20Profesional%20de%20F%FAtbol%20(pc)&dd=pc/juegos&f=424&sis=pc%20dos	Simulador Profesional de Fútbol (Dinamic 1992).zip
@@ -1210,7 +1210,7 @@ PC	f_ad=simprote-p_pc.zip&n_ar=Professional%20Tennis%20Simulator%20(pc)&dd=pc/ju
 PC	f_ad=simprote_pc.zip&n_ar=Simulador%20Profesional%20de%20Tenis%20(pc)&dd=pc/juegos&f=420&sis=pc%20dos	Simulador Profesional de Tenis (Dinamic 1990).zip
 PC	f_ad=sirwood_pc.zip&n_ar=Sirwood%20(pc)&dd=pc/juegos&f=386&sis=pc%20dos	Sirwood (Opera Soft 1990).zip
 PC	f_ad=sitopons_pc.zip&n_ar=Sito%20Pons%20500cc.%20GP%20(pc)&dd=pc/juegos&f=385&sis=pc%20dos	Sito Pons 500 c.c. Grand Prix (Zigurat 1991).zip
-PC	f_ad=solnegro_pc.zip&dd=pc/juegos&f=47&sis=pc%20dos	Sol Negro (Opera Soft 1988).zip&dd=pc/juegos&f=47&sis=pc%20dos
+PC	f_ad=solnegro_pc.zip&dd=pc/juegos&f=47&sis=pc%20dos	Sol Negro (Opera Soft 1988).zip
 PC	f_ad=solo_pc.zip&n_ar=Solo%20(pc)&dd=pc/juegos&f=378&sis=pc%20dos	Solo (Opera Soft 1989).zip
 PC	f_ad=soviet_pc.zip&n_ar=Soviet%20(pc)&dd=pc/juegos&f=375&sis=pc%20dos	Soviet (Opera Soft 1990).zip
 PC	f_ad=speedhaste_pc.zip&n_ar=Speed%20Haste%20(pc)&dd=pc/juegos&f=373&sis=pc%20dos	Speed Haste (Noria Works 1995).zip
@@ -1241,15 +1241,15 @@ PCW	f_ad=Inhumanos_pcw.zip&n_ar=Inhumanos, Los (pcw)&dd=amstrad/pcw&f=532&sis=pc
 PCW	f_ad=Krom_pcw.zip&n_ar=Krom (pcw)&dd=amstrad/pcw&f=748&sis=pcw	Krom (OMK 1989).zip
 PCW	f_ad=LastMission_pcw.zip&n_ar=Last%20Mission,%20The%20(pcw)&dd=amstrad/pcw&f=561&sis=pcw	Last Mission, The (Opera Soft 1987).zip
 PCW	f_ad=Livingstone2_pcw.zip&n_ar=Livingstone%20Supongo%20II%20(pcw)&dd=amstrad/pcw&f=121&sis=pcw	Livingstone Supongo II (Opera Soft 1989).zip
-PCW	f_ad=Livingstone_pcw.zip&dd=amstrad/pcw&f=141&sis=pcw	Livingstone Supongo (Opera Soft 1986).zip&dd=amstrad/pcw&f=141&sis=pcw
-PCW	f_ad=MundialFutbol_pcw.zip&dd=amstrad/pcw&f=670&sis=pcw	Mundial de Fútbol (Opera Sport 1990).zip&dd=amstrad/pcw&f=670&sis=pcw
+PCW	f_ad=Livingstone_pcw.zip&dd=amstrad/pcw&f=141&sis=pcw	Livingstone Supongo (Opera Soft 1986).zip
+PCW	f_ad=MundialFutbol_pcw.zip&dd=amstrad/pcw&f=670&sis=pcw	Mundial de Fútbol (Opera Sport 1990).zip
 PCW	f_ad=MutanZone_pcw.zip&n_ar=Mutan%20Zone%20(pcw)&dd=amstrad/pcw&f=666&sis=pcw	Mutan Zone (Opera Soft 1988).zip
 PCW	f_ad=RescateGolfo_pcw.zip&n_ar=Rescate%20en%20el%20Golfo%20(pcw)&dd=amstrad/pcw&f=511&sis=pcw	Rescate en el Golfo (Opera Soft 1991).zip
 PCW	f_ad=SirLancelot.zip&n_ar=Sir%20Lancelot%20(pcw)&dd=amstrad/pcw&f=802&sis=pcw	Sir Lancelot (OMK 1985).zip
-PCW	f_ad=SolNegro_pcw.zip&dd=amstrad/pcw&f=47&sis=pcw	Sol Negro (Opera Soft 1988).zip&dd=amstrad/pcw&f=47&sis=pcw
+PCW	f_ad=SolNegro_pcw.zip&dd=amstrad/pcw&f=47&sis=pcw	Sol Negro (Opera Soft 1988).zip
 PCW	f_ad=Soviet_pcw.zip&n_ar=Soviet%20(pcw)&dd=amstrad/pcw&f=375&sis=pcw	Soviet (Opera Soft 1990).zip
-PCW	f_ad=Strip-Poker.zip&dd=amstrad/pcw&f=997&sis=pcw	Strip-Poker (OMK 1987).zip&dd=amstrad/pcw&f=997&sis=pcw
-PCW	f_ad=anieto_pcw.zip&dd=amstrad/pcw&f=23&sis=pcw	Ángel Nieto Pole 500 (Opera Sport 1990).zip&dd=amstrad/pcw&f=23&sis=pcw
+PCW	f_ad=Strip-Poker.zip&dd=amstrad/pcw&f=997&sis=pcw	Strip-Poker (OMK 1987).zip
+PCW	f_ad=anieto_pcw.zip&dd=amstrad/pcw&f=23&sis=pcw	Ángel Nieto Pole 500 (Opera Sport 1990).zip
 PCW	f_ad=buran_pcw.zip&n_ar=Buran%20(pcw)&dd=amstrad/pcw&f=289&sis=pcw	Buran (OMK 1990).zip
 PCW	f_ad=corsarios_pcw.zip&n_ar=Corsarios%20(pcw)&dd=amstrad/pcw&f=60&sis=pcw	Corsarios (Opera Soft 1989).zip
 PCW	f_ad=jaialai_pcw.zip&n_ar=Jai-Alai%20(pcw)&dd=amstrad/pcw&f=157&sis=pcw	Jai Alai (Opera Sport 1991).zip
@@ -1281,7 +1281,7 @@ SP	f_ad=ArmyMoves(eng).zip&n_ar=Army%20Moves%20[english]%20(spectrum)&dd=spectru
 SP	f_ad=Astra.zip&n_ar=Astra%20(spectrum)&dd=spectrum/juegos&f=338&sis=spectrum	Astra (Sygran 1987).zip
 SP	f_ad=AutostopistaGalacticoV2.zip&n_ar=Autostopista%20Gal%E1ctico%20v2%20(spectrum)&dd=spectrum/juegos&f=256&sis=spectrum	Autostopista Galáctico (v2) (Ventamatic 1984).zip
 SP	f_ad=Babaliba(eng).zip&n_ar=Babaliba%20[english]%20(spectrum)&dd=spectrum/juegos&f=228&sis=spectrum&ex=1	Babaliba (Dinamic 1984).zip
-SP	f_ad=BasketMaster.zip&dd=spectrum/juegos&f=143&sis=spectrum&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip&dd=spectrum/juegos&f=143&sis=spectrum&ex=1
+SP	f_ad=BasketMaster.zip&dd=spectrum/juegos&f=143&sis=spectrum&ex=1	Fernando Martín Basket Master (Dinamic 1987).zip
 SP	f_ad=Betiled.zip&n_ar=BeTiled!%20(spectrum)&dd=spectrum/juegos&f=19&sis=spectrum	BeTiled! (CEZ Silver 2007).zip
 SP	f_ad=Betiled_en.zip&n_ar=BeTiled!%20[english](spectrum)&dd=spectrum/juegos&f=19&sis=spectrum&ex=1	BeTiled! (CEZ Silver 2007).zip
 SP	f_ad=BlackBeard(eng).zip&n_ar=Black%20Beard%20[english]%20(spectrum)&dd=spectrum/juegos&f=242&sis=spectrum&ex=1	Black Beard (Topo Soft 1988).zip
@@ -1356,9 +1356,9 @@ SP	f_ad=KnightGhost.zip&n_ar=Knight%20Ghost%20(spectrum)&dd=spectrum/juegos&f=55
 SP	f_ad=Krom.zip&n_ar=Krom%20(spectrum)&dd=spectrum/juegos&f=748&sis=spectrum	Krom (OMK 1989).zip
 SP	f_ad=LastCommando.zip&n_ar=Last%20Commando,%20The%20(spectrum)&dd=spectrum/juegos&f=327&sis=spectrum&ex=1	Comando Tracer (Dinamic 1988).zip
 SP	f_ad=Last_Mission.zip&n_ar=Last%20Mission,%20The%20(spectrum)&dd=spectrum/juegos&f=561&sis=spectrum	Last Mission, The (Opera Soft 1987).zip
-SP	f_ad=LightCorridor.zip&dd=spectrum/juegos&f=1000&sis=spectrum	Light Corridor, The (Infogrames 1990).zip&dd=spectrum/juegos&f=1000&sis=spectrum
+SP	f_ad=LightCorridor.zip&dd=spectrum/juegos&f=1000&sis=spectrum	Light Corridor, The (Infogrames 1990).zip
 SP	f_ad=Livingstone_2.zip&n_ar=Livingstone%20Supongo%20II%20(spectrum)&dd=spectrum/juegos&f=121&sis=spectrum	Livingstone Supongo II (Opera Soft 1989).zip
-SP	f_ad=Livingstone_I_Presume.zip&dd=spectrum/juegos&f=141&sis=spectrum&ex=1	Livingstone Supongo (Opera Soft 1986).zip&dd=spectrum/juegos&f=141&sis=spectrum&ex=1
+SP	f_ad=Livingstone_I_Presume.zip&dd=spectrum/juegos&f=141&sis=spectrum&ex=1	Livingstone Supongo (Opera Soft 1986).zip
 SP	f_ad=Lorna.zip&n_ar=Lorna%20(spectrum)&dd=spectrum/juegos&f=125&sis=spectrum	Lorna (Topo Soft 1990).zip
 SP	f_ad=Mach3.zip&n_ar=Mach 3 (spectrum)&dd=spectrum/juegos&f=944&sis=spectrum	Mach 3 (Loriciels 1987).zip
 SP	f_ad=MadCars.zip&n_ar=Mad%20Cars%20(spectrum)&dd=spectrum/juegos&f=48&sis=spectrum	Mad Cars (Ventamatic 1984).zip
@@ -1466,7 +1466,7 @@ SP	f_ad=Ygor.zip&n_ar=Ygor%20(spectrum)&dd=spectrum/juegos&f=836&sis=spectrum	Yg
 SP	f_ad=Zhak.zip&n_ar=Zhak%20(spectrum)&dd=spectrum/juegos&f=187&sis=spectrum	Zhak (Microhobby 1988).zip
 SP	f_ad=Zona_0.zip&n_ar=Zona%200%20(spectrum)&dd=spectrum/juegos&f=171&sis=spectrum	Zona 0 (Topo Soft 1991).zip
 SP	f_ad=Zortron.zip&n_ar=Zortron%20(spectrum)&dd=spectrum/juegos&f=167&sis=spectrum	Zortron (GTS 1987).zip
-SP	f_ad=abadia.zip&dd=spectrum/juegos&f=166&sis=spectrum	Abadía del Crimen, La (Opera Soft 1987).zip&dd=spectrum/juegos&f=166&sis=spectrum
+SP	f_ad=abadia.zip&dd=spectrum/juegos&f=166&sis=spectrum	Abadía del Crimen, La (Opera Soft 1987).zip
 SP	f_ad=abracadabra.zip&n_ar=Abracadabra%20(spectrum)&dd=spectrum/juegos&f=173&sis=spectrum	Abracadabra (Proein 1988).zip
 SP	f_ad=abusimb.zip&n_ar=Abu%20Simbel%20Profanation%20(spectrum)&dd=spectrum/juegos&f=594&sis=spectrum	Abu Simbel Profanation (Dinamic 1985).zip
 SP	f_ad=afrtrail.zip&n_ar=African%20Trail%20Simulator%20(spectrum)&dd=spectrum/juegos&f=176&sis=spectrum	African Trail Simulator (Positive 1990).zip
@@ -1481,7 +1481,7 @@ SP	f_ad=amc(eng).zip&n_ar=Astro%20Marine%20Corps%20[english]%20(spectrum)&dd=spe
 SP	f_ad=amc.zip&n_ar=Astro%20Marine%20Corps%20(spectrum)&dd=spectrum/juegos&f=29&sis=spectrum	Astro Marine Corps (Dinamic 1989).zip
 SP	f_ad=amomundo.zip&n_ar=Amo%20del%20Mundo,%20El%20(spectrum)&dd=spectrum/juegos&f=196&sis=spectrum	Amo del Mundo (Positive 1990).zip
 SP	f_ad=amotos.zip&n_ar=Amoto's%20Puf%20(spectrum)&dd=spectrum/juegos&f=199&sis=spectrum	Amoto's Puf (SPE 1988).zip
-SP	f_ad=angel_cc.zip&dd=spectrum/juegos&f=23&sis=spectrum	Ángel Nieto Pole 500 (Opera Sport 1990).zip&dd=spectrum/juegos&f=23&sis=spectrum
+SP	f_ad=angel_cc.zip&dd=spectrum/juegos&f=23&sis=spectrum	Ángel Nieto Pole 500 (Opera Sport 1990).zip
 SP	f_ad=antanes.zip&n_ar=Antares%20-Dro-%20(spectrum)&dd=spectrum/juegos&f=205&sis=spectrum	Antares (Dro Soft 1987).zip
 SP	f_ad=antares.zip&n_ar=Antares%20-Microhobby-%20(spectrum)&dd=spectrum/juegos&f=206&sis=spectrum	Antares (Microhobby 1985).zip
 SP	f_ad=antmisil.zip&n_ar=Anti%20Misil%20(spectrum)&dd=spectrum/juegos&f=207&sis=spectrum	Anti-Misil (Videospectru 1984).zip
@@ -1575,7 +1575,7 @@ SP	f_ad=diatmar.zip&n_ar=Diatmar%20(spectrum)&dd=spectrum/juegos&f=399&sis=spect
 SP	f_ad=donjuan.zip&n_ar=Don%20Juan%20(spectrum)&dd=spectrum/juegos&f=403&sis=spectrum	Don Juan (F.J. Rodrígu 1990).zip
 SP	f_ad=doubletennis.zip&n_ar=Double%20Tennis%20(spectrum)&dd=spectrum/juegos&f=406&sis=spectrum	Double Tennis (VM Soft 1990).zip
 SP	f_ad=dquixote.zip&n_ar=Don%20Quijote%20-Level%2010-%20(spectrum)&dd=spectrum/juegos&f=404&sis=spectrum	Don Quijote de La Mancha (Level 10 1989).zip
-SP	f_ad=drakkar.zip&dd=spectrum/juegos&f=408&sis=spectrum	Drakkar (Delta 1990).zip&dd=spectrum/juegos&f=408&sis=spectrum
+SP	f_ad=drakkar.zip&dd=spectrum/juegos&f=408&sis=spectrum	Drakkar (Delta 1990).zip
 SP	f_ad=duck_out.zip&n_ar=Duck%20Out%20(spectrum)&dd=spectrum/juegos&f=410&sis=spectrum	Duck Out (Dro Soft 1989).zip
 SP	f_ad=dustin.zip&n_ar=Dustin%20(spectrum)&dd=spectrum/juegos&f=411&sis=spectrum	Dustin (Dinamic 1986).zip
 SP	f_ad=eagle.zip&n_ar=Eagle%20(spectrum)&dd=spectrum/juegos&f=413&sis=spectrum	Eagle (Juliet Soft 1987).zip
@@ -1596,7 +1596,7 @@ SP	f_ad=examen.zip&n_ar=Examen,%20El%20(spectrum)&dd=spectrum/juegos&f=451&sis=s
 SP	f_ad=excessus.zip&n_ar=Excessus%20(spectrum)&dd=spectrum/juegos&f=452&sis=spectrum	Excessus (Wazertown Wo 1990).zip
 SP	f_ad=expl31.zip&n_ar=Explorer%20XXXI%20(spectrum)&dd=spectrum/juegos&f=453&sis=spectrum	Explorer XXXI (Dro Soft 1988).zip
 SP	f_ad=fankypunky.zip&n_ar=Fanky%20Punky%20(spectrum)&dd=spectrum/juegos&f=455&sis=spectrum	Funky Punky (Sygran 1987).zip
-SP	f_ad=fmbm.zip&dd=spectrum/juegos&f=143&sis=spectrum	Fernando Martín Basket Master (Dinamic 1987).zip&dd=spectrum/juegos&f=143&sis=spectrum
+SP	f_ad=fmbm.zip&dd=spectrum/juegos&f=143&sis=spectrum	Fernando Martín Basket Master (Dinamic 1987).zip
 SP	f_ad=frankiep.zip&n_ar=Frankie%20(spectrum)&dd=spectrum/juegos&f=464&sis=spectrum	Frankie (Microhobby 1988).zip
 SP	f_ad=fred.zip&n_ar=Fred%20(spectrum)&dd=spectrum/juegos&f=96&sis=spectrum	Fred (Indescomp 1983).zip
 SP	f_ad=freddy.zip&n_ar=Freddy%20Hardest%20(spectrum)&dd=spectrum/juegos&f=154&sis=spectrum	Freddy Hardest (Dinamic 1987).zip
@@ -1657,7 +1657,7 @@ SP	f_ad=lastw.zip&n_ar=Last%20Warrior,%20The%20(spectrum)&dd=spectrum/juegos&f=5
 SP	f_ad=legend.zip&n_ar=Legend%20(spectrum)&dd=spectrum/juegos&f=563&sis=spectrum	Legend (Delta 1990).zip
 SP	f_ad=leonard.zip&n_ar=King%20Leonard%20(spectrum)&dd=spectrum/juegos&f=553&sis=spectrum	King Leonard (Mind Games 1986).zip
 SP	f_ad=liberator.zip&n_ar=Liberator%20(spectrum)&dd=spectrum/juegos&f=566&sis=spectrum	Liberator (Proein 1989).zip
-SP	f_ad=livingstone.zip&dd=spectrum/juegos&f=141&sis=spectrum	Livingstone Supongo (Opera Soft 1986).zip&dd=spectrum/juegos&f=141&sis=spectrum
+SP	f_ad=livingstone.zip&dd=spectrum/juegos&f=141&sis=spectrum	Livingstone Supongo (Opera Soft 1986).zip
 SP	f_ad=madmix.zip&n_ar=Mad%20Mix%20Game%20(spectrum)&dd=spectrum/juegos&f=61&sis=spectrum	Mad Mix Game (Topo Soft 1988).zip
 SP	f_ad=madmix2.zip&n_ar=Mad%20Mix%20Game%202%20(spectrum)&dd=spectrum/juegos&f=707&sis=spectrum	Mad Mix 2 (Topo Soft 1990).zip
 SP	f_ad=madmixp.zip&n_ar=Mad%20Mix%20Game%20(Pepsi%20Challenge)%20(spectrum)&dd=spectrum/juegos&f=61&sis=spectrum&ex=1	Mad Mix Game (Topo Soft 1988).zip
@@ -1691,7 +1691,7 @@ SP	f_ad=mot.zip&n_ar=Mot%20(spectrum)&dd=spectrum/juegos&f=32&sis=spectrum	Mot (
 SP	f_ad=motcross.zip&n_ar=Motocross%20(spectrum)&dd=spectrum/juegos&f=675&sis=spectrum	Moto Cross (Ventamatic 1985).zip
 SP	f_ad=motojet.zip&n_ar=Motojet%20(spectrum)&dd=spectrum/juegos&f=674&sis=spectrum	Motojet (Jorge Pérez 1986).zip
 SP	f_ad=mr_gas.zip&n_ar=Mr.%20Gas%20(spectrum)&dd=spectrum/juegos&f=671&sis=spectrum	Mister Gas (Proein 1989).zip
-SP	f_ad=mundial.zip&dd=spectrum/juegos&f=670&sis=spectrum	Mundial de Fútbol (Opera Sport 1990).zip&dd=spectrum/juegos&f=670&sis=spectrum
+SP	f_ad=mundial.zip&dd=spectrum/juegos&f=670&sis=spectrum	Mundial de Fútbol (Opera Sport 1990).zip
 SP	f_ad=mundofan.zip&n_ar=Mundo%20Fant%E1stico%20(spectrum)&dd=spectrum/juegos&f=668&sis=spectrum	Mundo Fantástico (D.T. Soft 1989).zip
 SP	f_ad=mutzone.zip&n_ar=Mutan%20Zone%20(spectrum)&dd=spectrum/juegos&f=666&sis=spectrum	Mutan Zone (Opera Soft 1988).zip
 SP	f_ad=mys_nile.zip&n_ar=Mystery%20of%20the%20Nile,%20The%20(spectrum)&dd=spectrum/juegos&f=129&sis=spectrum&ex=1	Misterio del Nilo, El (Zigurat 1987).zip
@@ -1720,7 +1720,7 @@ SP	f_ad=phantis.zip&n_ar=Phantis%20(spectrum)&dd=spectrum/juegos&f=123&sis=spect
 SP	f_ad=phantom2.zip&n_ar=Phantomas%202%20(spectrum)&dd=spectrum/juegos&f=109&sis=spectrum	Phantomas 2 (Dinamic 1986).zip
 SP	f_ad=piramida.zip&n_ar=Pir%E1mide%20%28spectrum%29&dd=spectrum/juegos&f=617&sis=spectrum	Pirámide (Vacaloca 1989).zip
 SP	f_ad=piso_zero.zip&n_ar=Piso%20Zero%20(spectrum)&dd=spectrum/juegos&f=614&sis=spectrum	Piso Zero (Zigurat 1991).zip
-SP	f_ad=pitfallzx.zip&dd=spectrum/juegos&f=4&sis=spectrum	Pitfall ZX (CEZ Silver 2003).zip&dd=spectrum/juegos&f=4&sis=spectrum
+SP	f_ad=pitfallzx.zip&dd=spectrum/juegos&f=4&sis=spectrum	Pitfall ZX (CEZ Silver 2003).zip
 SP	f_ad=pointdash.zip&n_ar=Point%20and%20Dash%20%28spectrum%29&dd=spectrum/juegos&f=611&sis=spectrum	Point and Dash (Creativos Ed 1985).zip
 SP	f_ad=pon_taran.zip&n_ar=Pon%20una%20Tar%E1ntula%20en%20tu%20Vida%20%28spectrum%29&dd=spectrum/juegos&f=607&sis=spectrum	Pon una Tarántula en tu Vida (Nosequesoft 1988).zip
 SP	f_ad=powermag.zip&n_ar=Power%20and%20Magic%20(spectrum)&dd=spectrum/juegos&f=604&sis=spectrum	Power Magic (Zigurat 1990).zip
@@ -1758,7 +1758,7 @@ SP	f_ad=sirfred.zip&n_ar=Sir%20Fred%20(spectrum)&dd=spectrum/juegos&f=415&sis=sp
 SP	f_ad=sirwood.zip&n_ar=Sirwood%20(spectrum)&dd=spectrum/juegos&f=386&sis=spectrum	Sirwood (Opera Soft 1990).zip
 SP	f_ad=sito_pons.zip&n_ar=Sito%20Pons%20500cc.%20GP%20(spectrum)&dd=spectrum/juegos&f=385&sis=spectrum	Sito Pons 500 c.c. Grand Prix (Zigurat 1991).zip
 SP	f_ad=smaily.zip&n_ar=Smaily%20(spectrum)&dd=spectrum/juegos&f=381&sis=spectrum	Smaily (Zigurat 1990).zip
-SP	f_ad=sol_negro.zip&dd=spectrum/juegos&f=47&sis=spectrum	Sol Negro (Opera Soft 1988).zip&dd=spectrum/juegos&f=47&sis=spectrum
+SP	f_ad=sol_negro.zip&dd=spectrum/juegos&f=47&sis=spectrum	Sol Negro (Opera Soft 1988).zip
 SP	f_ad=solador.zip&n_ar=Solador%20(spectrum)&dd=spectrum/juegos&f=380&sis=spectrum	Solador (Microhobby 1985).zip
 SP	f_ad=solitari.zip&n_ar=Solitario%20(spectrum)&dd=spectrum/juegos&f=379&sis=spectrum	Solitario (Microhobby 1985).zip
 SP	f_ad=solo.zip&n_ar=Solo%20(spectrum)&dd=spectrum/juegos&f=378&sis=spectrum	Solo (Opera Soft 1989).zip
@@ -1801,7 +1801,7 @@ SP	f_ad=undergro.zip&n_ar=Underground%20(spectrum)&dd=spectrum/juegos&f=261&sis=
 SP	f_ad=undostre.zip&n_ar=Un%20Dos%20Tres%20(spectrum)&dd=spectrum/juegos&f=262&sis=spectrum	Un, Dos, Tres Responda otra Vez (Belltons 1984).zip
 SP	f_ad=undostres_eng.zip&n_ar=3,%202,%201%20(spectrum)&dd=spectrum/juegos&f=262&sis=spectrum&ex=1	Un, Dos, Tres Responda otra Vez (Belltons 1984).zip
 SP	f_ad=vampire.zip&n_ar=Vampire%20(spectrum)&dd=spectrum/juegos&f=109&sis=spectrum&ex=1	Phantomas 2 (Dinamic 1986).zip
-SP	f_ad=vegasolaris.zip&dd=spectrum/juegos&f=706&sis=spectrum	Vega Solaris (Dinamic NP).zip&dd=spectrum/juegos&f=706&sis=spectrum
+SP	f_ad=vegasolaris.zip&dd=spectrum/juegos&f=706&sis=spectrum	Vega Solaris (Dinamic NP).zip
 SP	f_ad=venganza.zip&n_ar=Venganza%20(spectrum)&dd=spectrum/juegos&f=260&sis=spectrum	Venganza, La (Dro Soft 1986).zip
 SP	f_ad=viaje-ext.zip&n_ar=Viaje%20al%20Centro%20de%20la%20Tierra%20-versión%20extendida-%20(spectrum)&dd=spectrum/juegos&f=759&sis=spectrum	Viaje al Centro de la Tierra (Topo Siglo X 2008).zip
 SP	f_ad=viaje.zip&n_ar=Viaje%20al%20Centro%20de%20la%20Tierra%20(spectrum)&dd=spectrum/juegos&f=55&sis=spectrum	Viaje al Centro de la Tierra (Topo Soft 1989).zip
@@ -1817,7 +1817,7 @@ SP	f_ad=zeon.zip&n_ar=Zeon%20(spectrum)&dd=spectrum/juegos&f=188&sis=spectrum	Ze
 SP	f_ad=zinco-sp.zip&n_ar=Zinco%20(spectrum)&dd=spectrum/juegos&f=755&sis=spectrum	Zinco (MicroHobby 1987).zip
 SP	f_ad=zipizape.zip&n_ar=Zipi%20y%20Zape%20(spectrum)&dd=spectrum/juegos&f=172&sis=spectrum	Zipi y Zape (Dro Soft 1989).zip
 SP	f_ad=zx-mus.zip&n_ar=ZX-Mus%20(spectrum)&dd=spectrum/juegos&f=165&sis=spectrum	ZX-Mus (Alberto 1985).zip
-ST	f_ad=AngelNieto_st.zip&dd=atari/juegos&f=23&sis=atari%20st	Ángel Nieto Pole 500 (Opera Sport 1990).zip&dd=atari/juegos&f=23&sis=atari%20st
+ST	f_ad=AngelNieto_st.zip&dd=atari/juegos&f=23&sis=atari%20st	Ángel Nieto Pole 500 (Opera Sport 1990).zip
 ST	f_ad=ArcticMoves_st.zip&n_ar=Arctic%20Moves%20(atari%20st)&dd=atari/juegos&f=127&sis=atari%20st	Arctic Moves (Dinamic Mult 1995).zip
 ST	f_ad=ArmyMoves_st.zip&n_ar=Army%20Moves%20(atari%20st)&dd=atari/juegos&f=24&sis=atari%20st&ex=1	Army Moves (Dinamic 1986).zip
 ST	f_ad=Corona_st.zip&n_ar=Corona%20M%E1gica,%20La%20(atari%20st)&dd=atari/juegos&f=138&sis=atari%20st	Corona Mágica, La (Proein 1990).zip
@@ -1844,17 +1844,17 @@ ST	f_ad=freddysm_st.zip&n_ar=Freddy%20Hardest%20in%20South%20Manhattan%20(atari%
 ST	f_ad=freeclA_047.zip&n_ar=Free%20Climbing%20(atari%20st)&dd=atari/juegos&f=140&sis=atari%20st	Free Climbing (Zafiro 1988).zip
 ST	f_ad=g_angelmboys085.zip&n_ar=Guardian%20Angel%20(atari%20st)&dd=atari/juegos&f=73&sis=atari%20st&ex=1	Freddy Hardest en Manhattan Sur (Dinamic 1989).zip
 ST	f_ad=jabato_st.zip&n_ar=Jabato%20(atari%20st)&dd=atari/juegos&f=120&sis=atari%20st	Jabato (Aventuras AD 1989).zip
-ST	f_ad=livinA_060.zip&dd=atari/juegos&f=141&sis=atari%20st&ex=1	Livingstone Supongo (Opera Soft 1986).zip&dd=atari/juegos&f=141&sis=atari%20st&ex=1
+ST	f_ad=livinA_060.zip&dd=atari/juegos&f=141&sis=atari%20st&ex=1	Livingstone Supongo (Opera Soft 1986).zip
 ST	f_ad=living2_st.zip&n_ar=Livingstone%20Supongo%20II%20(atari%20st)&dd=atari/juegos&f=121&sis=atari%20st	Livingstone Supongo II (Opera Soft 1989).zip
-ST	f_ad=livingstone_st.zip&dd=atari/juegos&f=141&sis=atari%20st	Livingstone Supongo (Opera Soft 1986).zip&dd=atari/juegos&f=141&sis=atari%20st
+ST	f_ad=livingstone_st.zip&dd=atari/juegos&f=141&sis=atari%20st	Livingstone Supongo (Opera Soft 1986).zip
 ST	f_ad=madmixA_025.zip&n_ar=Mad%20Mix%20Game%20(Pepsi%20Challenge)%20(atari%20st)&dd=atari/juegos&f=61&sis=atari%20st&ex=1	Mad Mix Game (Topo Soft 1988).zip
 ST	f_ad=madmix_st.zip&n_ar=Mad%20Mix%20Game%20(atari%20st)&dd=atari/juegos&f=61&sis=atari%20st	Mad Mix Game (Topo Soft 1988).zip
 ST	f_ad=motA_199.zip&n_ar=Mot%20(atari%20st)&dd=atari/juegos&f=32&sis=atari%20st	Mot (Opera Soft 1989).zip
 ST	f_ad=nmovesA_180.zip&n_ar=Navy%20Moves%20(atari%20st)&dd=atari/juegos&f=34&sis=atari%20st&ex=1	Navy Moves (Dinamic 1988).zip
 ST	f_ad=pop!_st.zip&n_ar=Pop!%20(atari%20st)&dd=atari/juegos&f=64&sis=atari%20st	Pop! (Bit culture 1993).zip
-ST	f_ad=riskywdbug130.zip&dd=atari/juegos&f=43&sis=atari%20st	Risky Woods (Dinamic 1992).zip&dd=atari/juegos&f=43&sis=atari%20st
+ST	f_ad=riskywdbug130.zip&dd=atari/juegos&f=43&sis=atari%20st	Risky Woods (Dinamic 1992).zip
 ST	f_ad=satan_st.zip&n_ar=Satan%20(atari%20st)&dd=atari/juegos&f=45&sis=atari%20st&ex=1	Satan (Dinamic 1989).zip
-ST	f_ad=solnegA_452.zip&dd=atari/juegos&f=47&sis=atari%20st	Sol Negro (Opera Soft 1988).zip&dd=atari/juegos&f=47&sis=atari%20st
+ST	f_ad=solnegA_452.zip&dd=atari/juegos&f=47&sis=atari%20st	Sol Negro (Opera Soft 1988).zip
 ST	f_ad=templos_st.zip&n_ar=Templos%20Sagrados,%20Los%20(atari%20st)&dd=atari/juegos&f=50&sis=atari%20st	Templos Sagrados, Los (Aventuras AD 1991).zip
 ST	f_ad=toiacid_st.zip&n_ar=Toi%20Acid%20Game%20(atari%20st)&dd=atari/juegos&f=113&sis=atari%20st	Toi Acid Game (Iber 1989).zip
 ST	f_ad=viaje_st.zip&n_ar=Viaje%20al%20Centro%20de%20la%20Tierra%20(atari%20st)&dd=atari/juegos&f=55&sis=atari%20st	Viaje al Centro de la Tierra (Topo Soft 1989).zip
@@ -1922,7 +1922,7 @@ WIN	f_ad=retrocompophantomasaredux.zip&n_ar=Phantomasa%20Redux%20Remake%20(pc)&d
 WIN	f_ad=retrocompospirits.zip&n_ar=Spirits%20Remake%20(pc)&dd=pc/juegos&f=713&sis=windows	Spirits Remake (M.A. Soft 2007).zip
 WIN	f_ad=solomons.zip&n_ar=Solomon's%20Key%20Remake%20[windows]%20(pc)&dd=pc/juegos&f=725&sis=windows	Solomon's Key Remake (Zikitrake So 2004).zip
 WIN	f_ad=stransball2-v15-windows.zip&n_ar=Super%20Transball%202%20[windows]%20(pc)&dd=pc/juegos&f=71&sis=windows	Super Transball 2 (Brain games 2002).zip
-WIN	f_ad=summav1_pc.zip&dd=pc/juegos&f=346&sis=windows	Summa (J.S. Franses 1999).zip&dd=pc/juegos&f=346&sis=windows
+WIN	f_ad=summav1_pc.zip&dd=pc/juegos&f=346&sis=windows	Summa (J.S. Franses 1999).zip
 WIN	f_ad=supertour3.zip&n_ar=Super%20Tour%203%20(pc)&dd=pc/juegos&f=343&sis=windows	Super Tour 3 (Haza 2002).zip
 WIN	f_ad=uprising.zip&n_ar=Phantomas%20Saga%200:%20Uprising%20(pc)&dd=pc/juegos&f=736&sis=windows	Phantomas Saga 0: Uprising (CEZ GS 2008).zip
 WIN	f_ad=watman.zip&n_ar=Watman%20(Batman%20remake)%20(pc)&dd=pc/juegos&f=593&sis=windows	Watman (Kakarot 2000).zip
