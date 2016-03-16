@@ -23,9 +23,9 @@ foreach ($pages as $page)
 	{
 		$url = explode('"', $row);
 		$url = $url[0];
-		$ext = explode('.', $url);
+		$ext = pathinfo($url, PATHINFO_EXTENSION);
 
-		if (strtolower($ext[count($ext)-1])=='zip')
+		if (strtolower($ext) == 'zip')
 		{
 			if (!$r_query[$url])
 			{

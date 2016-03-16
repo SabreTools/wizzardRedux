@@ -63,7 +63,6 @@ for ($xpage = 0; $xpage < $max; $xpage++)
 				$dl = $dl[0];
 
 				$url = $dir.$dl;
-
 				$ext = explode('.', $dl);
 				$add = $ext[count($ext) - 2];
 				$ext = $ext[count($ext) - 1];

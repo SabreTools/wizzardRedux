@@ -21,14 +21,14 @@ foreach ($content as $row)
 	{
 		$url = explode('"', $row);
 		$url = $url[0];
-		$ext = explode('.', $url);
+		$ext = pathinfo($url, PATHINFO_EXTENSION);
 
 		$title = explode('</a>', $row);
 		$title = trim(strip_tags('<a href="'.$title[0].'</a>'));
 
 		if (!$r_query[$url])
 		{
-			$found[] = array($url, $title.".".$ext[count($ext) - 1]);
+			$found[] = array($url, $title.".".$ext]);
 			$new++;
 		}
 		else

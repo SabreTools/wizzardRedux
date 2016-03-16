@@ -28,8 +28,7 @@ foreach ($query as $row)
 
 	foreach ($newrows as $row)
 	{
-		$ext = explode('.', $row[1]);
-		$ext = $ext[count($ext) - 1];
+		$ext = pathinfo($row[1], PATHINFO_EXTENSION);
 
 		$alt = explode('/', $row[1]);
 		$alt = $alt[count($alt) - 1];

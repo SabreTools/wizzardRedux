@@ -31,8 +31,7 @@ for ($page = 0; $page < $max; $page++)
 
 		foreach ($queryb as $DL)
 		{
-			$ext = explode('.', $DL);
-			$ext = $ext[count($ext) - 1];
+			$ext = pathinfo($DL, PATHINFO_EXTENSION);
 			
 			if ($r_query[$DL] === NULL)
 			{
@@ -82,9 +81,7 @@ foreach ($dirs as $dir)
 	{
 		$title = $row[0];
 		$DL = $row[1];
-	
-		$ext = explode('.', $DL);
-		$ext = $ext[count($ext) - 1];
+		$ext = pathinfo($DL, PATHINFO_EXTENSION);
 
 		if (!$r_query[$DL])
 		{
@@ -138,9 +135,7 @@ foreach ($newrows as $row)
 	{
 		$title2 = $row[0];
 		$DL = $row[1];
-		
-		$ext = explode('.', $DL);
-		$ext = $ext[count($ext) - 1];
+		$ext = pathinfo($DL, PATHINFO_EXTENSION);
 	
 		if (!$r_query[$DL])
 		{

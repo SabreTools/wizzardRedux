@@ -43,10 +43,10 @@ foreach ($dirs as $dir)
 	foreach ($newrows as $row)
 	{
 		$url = $row[0];
-		$ext = explode('.', $url);
+		$ext = pathinfo($dl, PATHINFO_EXTENSION);
 		$title = $row[1];
 		
-		if ($ext[count($ext) - 1] == 'rar')
+		if ($ext == 'rar')
 		{
 			if (!$r_query[$url])
 			{

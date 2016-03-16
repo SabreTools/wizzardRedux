@@ -50,8 +50,7 @@ foreach ($newrows as $row)
 		foreach ($DLs as $DL)
 		{
 			$DL = $dir.$DL;
-			$ext = explode('.', $DL);
-			$ext = $ext[count($ext) - 1];
+			$ext = pathinfo($DL, PATHINFO_EXTENSION);
 			
 			if (!$r_query[$DL])
 			{

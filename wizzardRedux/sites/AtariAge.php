@@ -216,8 +216,7 @@ if ($type == "forum")
 								$dl_title = $dl[1];
 
 								// Get the extension from the title
-								$dl_ext = explode('.', $dl_title);
-								$dl_ext = strtolower($dl_ext[count($dl_ext) - 1]);
+								$dl_ext = strtolower(pathinfo($dl_title, PATHINFO_EXTENSION));
 								$dl_title = substr($dl_title, 0, -(strlen($dl_ext) + 1));
 								
 								// If the extension isn't a known bad one, add it to the list of found

@@ -19,8 +19,6 @@ foreach ($dirs as $dir)
 
 	foreach ($query as $row)
 	{
-		$ext = explode('.', $row);
-	
 		if (!$r_query[$row])
 		{
 			$found[] = array($row, $row);

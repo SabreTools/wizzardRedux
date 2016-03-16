@@ -58,9 +58,7 @@ foreach ($pages as $newfile)
 		foreach ($dls as $dl)
 		{
 			$dl = str_replace("\"", "", $dl);
-				
-			$ext = explode('.', $dl);
-			$ext = $ext[count($ext)-1];
+			$ext = pathinfo($dl, PATHINFO_EXTENSION);
 
 			if ($r_query[$dl] != "")
 			{

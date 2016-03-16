@@ -51,9 +51,7 @@ foreach ($dirs as $dir)
 	{
 		$url = $row[0];
 		$title = $row[1];
-		
-		$ext = explode('.', $url);
-		$ext = $ext[count($ext) - 1];
+		$ext = pathinfo($url, PATHINFO_EXTENSION);
 
 		if (!in_array($ext, $bad_ext))
 		{
