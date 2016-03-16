@@ -5,11 +5,14 @@
  Original code by Matt Nadareski (darksabre76)
  -----------------------------------------------------------------------------------*/
 
-//http://nadeausoftware.com/articles/2007/06/php_tip_how_get_web_page_using_curl
-//http://stackoverflow.com/questions/4372710/php-curl-https
 /**
  * Get a web file (HTML, XHTML, XML, image, etc.) from a URL.  Return an
  * array containing the HTTP server response header fields and content.
+ * 
+ * @link http://nadeausoftware.com/articles/2007/06/php_tip_how_get_web_page_using_curl
+ * @link http://stackoverflow.com/questions/4372710/php-curl-https
+ * 
+ * @param $url
  */
 function get_data($url)
 {
