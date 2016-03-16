@@ -72,8 +72,14 @@ if (!isset($_GET["source"]))
 		if (preg_match("/^.*\.php$/", $file))
 		{
 			$file = substr($file, 0, sizeof($file) - 5);
-			echo "<a href=\"?page=onlinecheck&source=".$file."\">".htmlspecialchars($file).
-				"</a>".(in_array($file, $dead) ? " (Dead)" : "")."<br/>\n";
+			if (in_array($file, $dead))
+			{
+				echo "<a>".htmlspecialchars($file)."</a> (Dead)<br/>\n";
+			}
+			else
+			{
+				echo "<a href=\"?page=onlinecheck&source=".$file."\">".htmlspecialchars($file)."</a><br/>\n";
+			}
 		}
 	}
 	
