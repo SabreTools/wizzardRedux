@@ -57,7 +57,7 @@ if ($mega == "1")
 }
 
 // If not generating or creating MEGAMERGED, show the list of all available DATs
-if ($generate != "1" && $mega != "1" && auto != "1")
+if ($generate != "1" && $mega != "1" && $auto != "1")
 {
 	echo <<<EOL
 <h2>Export to Datfile</h2>
@@ -173,7 +173,7 @@ EOL;
 }
 
 // If not generating or creating MEGAMERGED, generate of all available DATs
-elseif ($generate != "1" && $mega != "1")
+elseif ($generate != "1" && $mega != "1" && $auto == "1")
 {
 	echo "<h2>Generate All DATs</h2>";
 	
