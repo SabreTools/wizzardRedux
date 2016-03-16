@@ -67,7 +67,7 @@ if ($system == "" && $source == "" && $mega != "1")
 	if ($auto != "1")
 	{
 		echo "<h3>Available Systems</h3>
-<form action='?page=generate' method='get'>
+<form action='' method='get'>
 <input type='hidden' name='page' value='generate' />
 <select name='dats' id='dats'>
 <option value=' ' selected='selected'>Choose a DAT</option>\n";
