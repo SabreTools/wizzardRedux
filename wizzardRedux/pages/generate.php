@@ -7,17 +7,20 @@ Original code by Matt Nadareski (darksabre76), emuLOAD
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
-TODO: Feature request from nombre002: Add the ability to select which sources are included in the merged DAT
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
 $getvars = array(
-		"system",			// systems.id
-		"source",			// sources.id
-		"old",				// set this to 1 for the old style output
-		"dats",				// systems.id-sources.id
 		"mega",				// override to create complete merged DAT
 		"auto",				// auto-create all available DATs
+);
+
+$postvars = array(
+		"generate",			// If a DAT should be generated (only on submit)
+		"system",			// systems.id
+		"source",			// sources.id
+		"all",				// All sources selected
+		"old",				// Set this to 1 for the old style output
 );
 
 // Map systems to headers for datfile creation
@@ -39,40 +42,140 @@ foreach ($getvars as $var)
 	$$var = (isset($_GET[$var]) ? trim($_GET[$var]) : "");
 }
 
+//Get the values for all parameters
+foreach ($postvars as $var)
+{
+	$$var = (isset($_POST[$var]) ? trim($_POST[$var]) : "");
+}
+
 // Specifically deal with MEGA being set
 if ($mega == "1")
 {
 	$system = "";
 	$source = "";
-	ini_set("memory_limit", "1024M");
+	ini_set("memory_limit", "-1"); // 1024M didn't cut it for the biggest database
 }
 
-// Use dropdown value to override others, if applicable
-if ($dats != "" && $dats != "0")
+// If not generating or creating MEGAMERGED, show the list of all available DATs
+if ($generate != "1" && $mega != "1" && auto != "1")
 {
-	$dats = explode("-", $_GET["dats"]);
-	$system = ($dats[0] == "0" ? "" : $dats[0]);
-	$source = ($dats[1] == "0" ? "" : $dats[1]);
-	$loc = "?page=generate&system=".$system."&source=".$source.(isset($_GET["old"]) && $_GET["old"] == 1 ? "&old=1" : "");
-	header("Location: ".$loc);
-	exit;
-}
+	echo <<<EOL
+<h2>Export to Datfile</h2>
+<table>
+<tr><th>System</th><th>Source</th></tr>
+<tr><td>
+<form name="systemselect" action="?page=generate" method="post">
+<select name="system" onChange="window.document.forms['systemselect'].submit();">\n
+EOL;
 
+	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
+		FROM systems
+		JOIN games
+			ON systems.id=games.system
+		ORDER BY systems.manufacturer, systems.system";
+	$result = mysqli_query($link, $query);
 
-// If nothing is set, show the list of all available DATs (or generate all DATs)
-if ($system == "" && $source == "" && $mega != "1")
-{
-	echo "<h2>Export to Datfile</h2>";
-	
-	// If we are creating all DATs, don't show the form
-	if ($auto != "1")
+	// Either generate options for custom and system-merged DATs OR generate them in auto mode
+	while($sys = mysqli_fetch_assoc($result))
 	{
-		echo "<h3>Available Systems</h3>
-<form action='' method='get'>
-<input type='hidden' name='page' value='generate' />
-<select name='dats' id='dats'>
-<option value=' ' selected='selected'>Choose a DAT</option>\n";
+		echo "<option value='".$sys["id"]."'".($system == $sys["id"] ? " selected='selected'" : "").">".$sys["manufacturer"]." - ".$sys["system"]."</option>\n";
 	}
+
+	echo <<<EOL
+</select></form></td>
+<td>
+<form name="sourceselect" action="?page=generate" method="post">
+<select name="source" onChange="window.document.forms['sourceselect'].submit();">\n
+EOL;
+		
+	// Generate options for source-merged DATs
+	$query = "SELECT DISTINCT sources.id, sources.name
+		FROM sources
+		JOIN games
+			ON sources.id=games.source
+		ORDER BY sources.name";
+	$result = mysqli_query($link, $query);
+	
+	while($src = mysqli_fetch_assoc($result))
+	{
+		// If the source is not one of the import-only ones
+		if ((int) $src["id"] > 14)
+		{
+			echo "<option value='".$src["id"]."'".($source == $src["id"] ? " selected='selected'" : "").">".$src["name"]."</option>\n";
+		}
+	}
+	
+	echo "</select><br/>
+</form></tr></table>";
+	
+	// If the system is set, it takes precidence in DAT creation
+	if ($system != "")
+	{
+		echo <<<EOL
+<form name="dat" action="?page=generate" method="post">
+<input type="hidden" name="generate" value="1">
+<input type="hidden" name="system" value="$system">
+<h3>Sources:</h3>
+<input type="radio" name="all" value="1" checked>All sources <b> OR </b> <input type="radio" name="all" value="0">Select a source below:<p/>\n
+
+EOL;
+			
+		$query = "SELECT DISTINCT sources.id, sources.name
+		FROM systems
+		JOIN games
+			ON systems.id=games.system
+		JOIN sources
+			ON games.source=sources.id
+		WHERE systems.id=".$system.
+		" ORDER BY sources.name";
+		$result = mysqli_query($link, $query);
+		
+		while($src = mysqli_fetch_assoc($result))
+		{
+			echo "<input type=\"checkbox\" name=\"".$src["id"]."\" value=\"1\">".$src["name"]."<br/>";
+		}
+	}
+	
+	// If the source is set, show all values for the source
+	else if ($source != "")
+	{
+		echo <<<EOL
+<form name="dat" action="?page=generate" method="post">
+<input type="hidden" name="generate" value="1">
+<input type="hidden" name="source" value="$source">
+<h3>Systems:</h3>
+<input type="radio" name="all" value="1" checked>All systems <b> OR </b> <input type="radio" name="all" value="0">Select a system below:<p/>\n
+
+EOL;
+		
+		$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
+		FROM sources
+		JOIN games
+			ON sources.id=games.source
+		JOIN systems
+			ON games.system=systems.id
+		WHERE sources.id=".$source.
+		" ORDER BY systems.manufacturer, systems.system";
+		$result = mysqli_query($link, $query);
+		
+		while($sys = mysqli_fetch_assoc($result))
+		{
+			echo "<input type=\"checkbox\" name=\"".$sys["id"]."\" value=\"1\">".$sys["manufacturer"]." - ".$sys["system"]."<br/>";
+		}
+	}
+	
+	echo "<br/><h3>Datfile format:</h3>
+<input type='radio' name='old' value='0' checked>XML Format<br/>
+<input type='radio' name='old' value='1'>Old Format<p/>
+<input type='submit' value='Submit'>
+</form><p/>
+<a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>";
+}
+
+// If not generating or creating MEGAMERGED, generate of all available DATs
+elseif ($generate != "1" && $mega != "1")
+{
+	echo "<h2>Generate All DATs</h2>";
 	
 	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
 		FROM systems
@@ -82,129 +185,141 @@ if ($system == "" && $source == "" && $mega != "1")
 	$result = mysqli_query($link, $query);
 	
 	// Either generate options for custom and system-merged DATs OR generate them in auto mode
-	while($system = mysqli_fetch_assoc($result))
+	while($sys = mysqli_fetch_assoc($result))
 	{
-		if ($auto != "1")
-		{
-			echo "<option value='".$system["id"]."-0'>".$system["manufacturer"]." - ".$system["system"]." (merged)</option>\n";
-		}
-		else
-		{
-			echo "Beginning generate ".$system["manufacturer"]." - ".$system["system"]." (merged)<br/>\n";
-			generate_dat($system["id"], "");
-			sleep(2);
-		}
-		
-		$query = "SELECT DISTINCT sources.id, sources.name
-			FROM systems
-			JOIN games
-				ON systems.id=games.system
-			JOIN sources
-				ON games.source=sources.id
-			WHERE systems.id=".$system["id"];
-		$sresult = mysqli_query($link, $query);
-		
-		while($source = mysqli_fetch_assoc($sresult))
-		{
-			// If the source is not one of the import-only ones
-			if ((int) $source["id"] > 14)
-			{
-				if ($auto != "1")
-				{
-					echo "<option value='".$system["id"]."-".$source["id"]."'>".$system["manufacturer"]." - ".$system["system"]." (".$source["name"].")</option>\n";
-				}
-				else
-				{
-					echo "Beginning generate ".$system["manufacturer"]." - ".$system["system"]." (".$source["name"].")<br/>\n";
-					generate_dat($system["id"], $source["id"]);
-				}
-			}
-		}
-		
-		// Free up the memory 
-		unset($sresult);
+		echo "Beginning generate ".$system["manufacturer"]." - ".$system["system"]." (merged)<br/>\n";
+		generate_dat($system["id"], "");
+		sleep(2);
 	}
 	
-	// Free up the memory
-	unset($result);
-	
-	// Either generate options for source-merged DATs OR generate them in auto mode
+	// Generate options for source-merged DATs
 	$query = "SELECT DISTINCT sources.id, sources.name
 		FROM sources
 		JOIN games
-			ON sources.id=games.source";
+			ON sources.id=games.source
+		ORDER BY sources.name";
 	$result = mysqli_query($link, $query);
 	
-	while($source = mysqli_fetch_assoc($result))
+	while($src = mysqli_fetch_assoc($result))
 	{
 		// If the source is not one of the import-only ones
-		if ((int) $source["id"] > 14)
+		if ((int) $src["id"] > 14)
 		{
-			if ($auto != "1")
+			echo "Beginning generate ALL (".$source["name"].")<br/>\n";
+			generate_dat("", $source["id"]);
+			
+			$query = "SELECT DISTINCT sources.id, sources.name
+				FROM systems
+				JOIN games
+					ON systems.id=games.system
+				JOIN sources
+					ON games.source=sources.id
+				WHERE systems.id=".$system.
+				" ORDER BY sources.name";
+			$sresult = mysqli_query($link, $query);
+			
+			while($src = mysqli_fetch_assoc($sresult))
 			{
-				echo "<option value='0-".$source["id"]."'>ALL (".$source["name"].")</option>\n";
-			}
-			else
-			{
-				echo "Beginning generate ALL (".$source["name"].")<br/>\n";
-				generate_dat("", $source["id"]);
+				echo "Beginning generate ".$sys["manufacturer"]." - ".$sys["system"]." (".$src["name"].")<br/>\n";
+				generate_dat($sys["id"], $src["id"]);
 			}
 		}
 	}
 	
-	// Free up the memory
-	unset($result);
-	
-	// If we're not in auto mode, then end the form and show the remaining links
-	if ($auto != "1")
+	// Create the MEGAMERGED as part of the generation process
+	ini_set("memory_limit", "-1"); // Set the maximum memory to infinite. This is a bad idea in production.
+	echo "Beginning generate ALL (merged)<br/>\n";
+	generate_dat("", "");
+
+	//echo "Creating new zipfile...<br/>\n";
+	$zip = new ZipArchive();
+	$zip->open("temp/dats-".date("Ymd").".zip", ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
+
+	// Seems unnecessary, but helps make sure the zipfile is populated correctly
+	$zip->addEmptyDir("merged-system");
+	$zip->addEmptyDir("merged-source");
+	$zip->addEmptyDir("custom");
+
+	//echo "Zipfile created successfully!<br/>\n";
+	foreach (scandir("temp/output") as $item)
 	{
-		echo "</select><br/>
-<input type='checkbox' name='old' value='1'>Use old DAT format<br/><br/>
-<input type='submit'>\n</form><br/>
-<a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>";
+		if (strpos($item, ".xml") !== FALSE || strpos($item, ".dat") !== FALSE)
+		{
+			//echo "Adding ".$item."<br/>\n";
+			$zip->addFile("temp/output/".$item,
+					(strpos($item, "ALL (merged") !== FALSE ? $item :
+							(strpos($item, "merged") !== FALSE ? "merged-system/".$item :
+									(strpos($item, "ALL") !== FALSE ? "merged-source/".$item : "custom/".$item))));
+		}
 	}
-	// If we're in auto mode, create the MEGAMERGED, zip up the files and clean up
+
+	$zip->close();
+
+	// http://php.net/manual/en/function.unlink.php#109971
+	array_map("unlink", glob("temp/output/*.*"));
+}
+
+// If we are generating an individual DAT
+elseif ($generate == "1" || $mega == "1")
+{
+	$systems = array();
+	$sources = array();
+	
+	// If we have a source, treat all POST vars as systems
+	if ($system == "" && $source != "")
+	{
+		$sources = $source;
+		
+		if ($all == "1")
+		{
+			$systems = "";
+		}
+		else
+		{
+			foreach ($_POST as $key => $value)
+			{
+				if (!in_array($key, $postvars) && $value == "1")
+				{
+					$systems[] = $key;
+				}
+			}
+			
+			$systems = implode(", ", $systems);
+		}
+	}
+	// If we have a system, treat all POST vars as sources
+	elseif ($system != "" && $source == "")
+	{
+		$systems = $system;
+		
+		if ($all == "1")
+		{
+			$sources = "";
+		}
+		else
+		{
+			foreach ($_POST as $key => $value)
+			{
+				if (!in_array($key, $postvars) && $value == "1")
+				{
+					$sources[] = $key;
+				}
+			}
+			
+			$sources = implode(", ", $sources);
+		}
+	}
+	// If we have neither, then it's MEGA
 	else
 	{
-		ini_set("memory_limit", "-1"); // Set the maximum memory to infinite. This is a bad idea in production.
-		echo "Beginning generate ALL (merged)<br/>\n";
-		generate_dat("", "");
-		
-		//echo "Creating new zipfile...<br/>\n";
-		$zip = new ZipArchive();
-		$zip->open("temp/dats-".date("Ymd").".zip", ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE);
-		
-		// Seems unnecessary, but helps make sure the zipfile is populated correctly
-		$zip->addEmptyDir("merged-system");
-		$zip->addEmptyDir("merged-source");
-		$zip->addEmptyDir("custom");
-		
-		//echo "Zipfile created successfully!<br/>\n";
-		foreach (scandir("temp/output") as $item)
-		{
-			if (strpos($item, ".xml") !== FALSE || strpos($item, ".dat") !== FALSE)
-			{
-				//echo "Adding ".$item."<br/>\n";
-				$zip->addFile("temp/output/".$item,
-						(strpos($item, "ALL (merged") !== FALSE ? $item :
-						(strpos($item, "merged") !== FALSE ? "merged-system/".$item :
-						(strpos($item, "ALL") !== FALSE ? "merged-source/".$item : "custom/".$item))));
-			}
-		}
-		
-		$zip->close();
-		
-		// http://php.net/manual/en/function.unlink.php#109971
-		array_map("unlink", glob("temp/output/*.*"));
+		$systems = "";
+		$sources = "";
 	}
-}
-// If we have system, source, or mega set, generate the appropriate DAT
-else
-{
+	
 	// If the source is not one of the import-only ones
-	if ((int) $source["id"] > 14)
+	if (!($sources != "" && sizeof(explode(", ", $sources)) == 1 && (int) $sources <= 14))
 	{
-		generate_dat($system, $source, true);
+		generate_dat($systems, $sources, true);
 	}
 	exit();
 }
@@ -214,16 +329,16 @@ else
  If just the system is set, create a DAT that has each game suffixed by source and merged (merged)
  If both system and source are set, create a DAT that has each rom unsuffixed and unmerged (custom)
  */
-function generate_dat ($system, $source, $lone = false)
+function generate_dat ($systems, $sources, $lone = false)
 {
 	global $link, $headers;
-	
+
 	// Check the validity of the source id
-	if ($source != "")
+	if ($sources != "")
 	{
-		$query = "SELECT * FROM sources WHERE id=".$source;
+		$query = "SELECT * FROM sources WHERE id IN (".$sources.")";
 		$result = mysqli_query($link, $query);
-	
+
 		// If the source doesn't exist, tell the user and don't proceed
 		if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 		{
@@ -231,17 +346,14 @@ function generate_dat ($system, $source, $lone = false)
 			echo "<a href='?page=generate'>Go Back</a>";
 			exit;
 		}
-		
-		// Free up the memory
-		unset($result);
 	}
-	
+
 	// Check the validity of the system id
-	if ($system != "")
+	if ($systems != "")
 	{
-		$query = "SELECT * FROM systems WHERE id=".$system;
+		$query = "SELECT * FROM systems WHERE id IN (".$systems.")";
 		$result = mysqli_query($link, $query);
-	
+
 		// If the system doesn't exist, tell the user and don't proceed
 		if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 		{
@@ -249,11 +361,8 @@ function generate_dat ($system, $source, $lone = false)
 			echo "<a href='?page=generate'>Go Back</a>";
 			exit;
 		}
-		
-		// Free up the memory
-		unset($result);
 	}
-	
+
 	// Since the source and/or system are valid, retrive all files
 	$query = "SELECT systems.manufacturer AS manufacturer, systems.system AS system, sources.name AS source, sources.url AS url,
 				games.name AS game, files.name AS name, files.type AS type, checksums.size AS size, checksums.crc AS crc,
@@ -267,10 +376,10 @@ function generate_dat ($system, $source, $lone = false)
 				ON games.id=files.setid
 			JOIN checksums
 				ON files.id=checksums.file".
-					($system != "" || $source != "" ? " WHERE" : "").
-					($source != "" ? " sources.id=".$source : "").
-					($source != "" && $system != "" ? " AND" : "").
-					($system != "" ? " systems.id=".$system : "")."
+				($systems != "" || $sources != "" ? " WHERE" : "").
+				($sources != "" ? " sources.id IN (".$sources.")" : "").
+				($sources != "" && $systems != "" ? " AND" : "").
+				($systems != "" ? " systems.id IN (".$systems.")" : "")."
 			ORDER BY games.name ASC, files.name ASC";
 	$result = mysqli_query($link, $query);
 
@@ -288,22 +397,60 @@ function generate_dat ($system, $source, $lone = false)
 	{
 		array_push($roms, $rom);
 	}
-	
-	// Free up the memory
-	unset($result);
 
 	// Process the roms
-	$roms = process_roms($roms, $system, $source);
+	$roms = process_roms($roms, $systems, $sources);
 
 	$version = date("YmdHis");
-	$datname = ($system != "" ? $roms[0]["manufacturer"]." - ".$roms[0]["system"] : "ALL").
-	" (".($source != "" ? $roms[0]["source"] : "merged")." ".$version.")";
 	
+	// Get the systems and sources names for the given inputs
+	$querysy = "SELECT manufacturer, system FROM systems WHERE systems.id IN (".$systems.")";
+	$resultsy = mysqli_query($link, $querysy);
+	
+	$syslist;
+	if (gettype($resultsy) != "boolean" && mysqli_num_rows($resultsy) > 0)
+	{
+		$syslist = array();
+		
+		while ($sys = mysqli_fetch_assoc($resultsy))
+		{
+			$syslist[] = $sys["manufacturer"]." - ".$sys["system"];
+		}
+		
+		$syslist = implode(", ", $syslist);
+	}
+	else
+	{
+		$syslist = "";
+	}
+	
+	$queryso = "SELECT name FROM sources WHERE sources.id IN (".$sources.")";
+	$resultso = mysqli_query($link, $queryso);
+	
+	$srclist;
+	if (gettype($resultso) != "boolean" && mysqli_num_rows($resultso) > 0)
+	{
+		$srclist = array();
+	
+		while ($src = mysqli_fetch_assoc($resultso))
+		{
+			$srclist[] = $src["name"];
+		}
+		
+		$srclist = implode(", ", $srclist);
+	}
+	else
+	{
+		$srclist = "";
+	}
+	
+	$datname = ($syslist != "" ? $syslist : "ALL")." (".($srclist != "" ? $srclist : "merged")." ".$version.")";
+
 	// Create and open an output file for writing (currently uses current time, change to "last updated time"
 	if ($lone)
 	{
 		ob_end_clean();
-		
+
 		//First thing first, push the http headers
 		header('content-type: application/x-gzip');
 		header('Content-Disposition: attachment; filename="'.$datname.($old == "1" ? ".dat" : ".xml").'.gz"');
@@ -313,25 +460,25 @@ function generate_dat ($system, $source, $lone = false)
 		echo "Opening file for writing: temp/output/".$datname.($old == "1" ? ".dat" : ".xml")."<br/>\n";
 		$handle = fopen("temp/output/".$datname.($old == "1" ? ".dat" : ".xml"), "w");
 	}
-	
+
 	// Temporarilly set $system if we're in MEGAMERGED mode
-	if ($system == "" && $source == "")
+	if ($systems == "" && $sources == "")
 	{
-		$system = "0";
+		$systems = "0";
 	}
-	
+
 	$header_old = "clrmamepro (
 	name \"".htmlspecialchars($datname)."\"
 	description \"".htmlspecialchars($datname)."\"
 	version \"".$version."\"
-	".($system != "" && array_key_exists($system, $headers) ? " header \"".$headers[$system]."\"" : "")."
+	".($system != "" && array_key_exists($systems, $headers) ? " header \"".$headers[$systems]."\"" : "")."
 	comment \"\"
 	author \"The Wizard of DATz\"
 )\n";
-	
+
 	$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 	<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">
-	
+
 	<datafile>
 		<header>
 			<name>".htmlspecialchars($datname)."</name>
@@ -340,11 +487,11 @@ function generate_dat ($system, $source, $lone = false)
 			<version>".$version."</version>
 			<date>".$version."</date>
 			<author>The Wizard of DATz</author>
-			<clrmamepro".($system != "" && array_key_exists($system, $headers) ? " header=\"".$headers[$system]."\"" : "")."/>
+			<clrmamepro".($systems != "" && array_key_exists($systems, $headers) ? " header=\"".$headers[$systems]."\"" : "")."/>
 		</header>\n";
-	
+
 	$footer = "\n</datafile>";
-	
+
 	// Unset $system again if we're in MEGAMERGED mode
 	if ($system == "0" && $source == "")
 	{
@@ -367,7 +514,7 @@ function generate_dat ($system, $source, $lone = false)
 		{
 			fwrite($handle, $header_old);
 		}
-		
+
 		// Write out each of the machines and roms
 		foreach ($roms as $rom)
 		{
@@ -382,14 +529,14 @@ function generate_dat ($system, $source, $lone = false)
 						"\tname \"".$rom["game"]."\"\n";
 			}
 			$state = $state."\t".$rom["type"]." ( name \"".$rom["name"]."\"".
-				($rom["size"] != "0" ? " size ".$rom["size"] : "").
-				($rom["crc"] != "" ? " crc ".$rom["crc"] : "").
-				($rom["md5"] != "" ? " md5 ".$rom["md5"] : "").
-				($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
-				" )\n";
-	
+					($rom["size"] != "0" ? " size ".$rom["size"] : "").
+					($rom["crc"] != "" ? " crc ".$rom["crc"] : "").
+					($rom["md5"] != "" ? " md5 ".$rom["md5"] : "").
+					($rom["sha1"] != "" ? " sha1 ".$rom["sha1"] : "").
+					" )\n";
+
 			$lastgame = $rom["game"];
-			
+				
 			if ($lone)
 			{
 				echo gzencode($state, 9);
@@ -399,7 +546,7 @@ function generate_dat ($system, $source, $lone = false)
 				fwrite($handle, $state);
 			}
 		}
-		
+
 		if ($lone)
 		{
 			echo gzencode(")", 9);
@@ -420,16 +567,16 @@ function generate_dat ($system, $source, $lone = false)
 		{
 			fwrite($handle, $header);
 		}
-		
+
 		// Write out each of the machines and roms
 		foreach ($roms as $rom)
 		{
 			// Preprocess each game and rom name for safety
 			$rom["game"] = htmlspecialchars(utf8_encode($rom["game"]));
 			$rom["name"] = htmlspecialchars(utf8_encode($rom["name"]));
-			
-			$state = "";
 				
+			$state = "";
+
 			if ($lastgame != "" && $lastgame != $rom["game"])
 			{
 				$state = $state."\t</machine>\n";
@@ -447,7 +594,7 @@ function generate_dat ($system, $source, $lone = false)
 					" />\n";
 
 			$lastgame = $rom["game"];
-				
+
 			if ($lone)
 			{
 				echo gzencode($state, 9);
@@ -457,7 +604,7 @@ function generate_dat ($system, $source, $lone = false)
 				fwrite($handle, $state);
 			}
 		}
-		
+
 		if ($lone)
 		{
 			echo gzencode("\t</machine>", 9);
@@ -467,12 +614,9 @@ function generate_dat ($system, $source, $lone = false)
 		{
 			fwrite($handle, "\t</machine>");
 			fwrite($handle, $footer);
-		}	
+		}
 	}
 	
-	// Free up the memory
-	unset($roms);
-
 	if (!$lone)
 	{
 		fclose($handle);
@@ -481,7 +625,7 @@ function generate_dat ($system, $source, $lone = false)
 }
 
 // Change duplicate names and remove duplicates (merged only)
-function process_roms ($roms, $system, $source)
+function process_roms ($roms, $systems, $sources)
 {
 	// First, go through and rename any necessary
 	$lastname = ""; $lastgame = "";
@@ -504,34 +648,34 @@ function process_roms ($roms, $system, $source)
 			{
 				$samegame = ($lastgame == $rom["game"]);
 			}
-				
-			// If the name and set are the same, rename it 
+
+			// If the name and set are the same, rename it
 			if ($samename && $samegame)
 			{
 				$rom["name"] = preg_replace("/^(.*)(\..*)/", "\1 (".
 						($rom["crc"] != "" ? $rom["crc"] :
-							($rom["md5"] != "" ? $rom["md5"] :
-									($rom["sha1"] != "" ? $rom["sha1"] : "Alt"))).
-					")\2", $rom["name"]);
-				array_push($newroms, $rom);
+								($rom["md5"] != "" ? $rom["md5"] :
+										($rom["sha1"] != "" ? $rom["sha1"] : "Alt"))).
+						")\2", $rom["name"]);
+										array_push($newroms, $rom);
 			}
 			// Otherwise, just add it the way it is
 			else
 			{
 				array_push($newroms, $rom);
 			}
-	
+
 			$lastname = $rom["name"];
 			$lastgame = $rom["game"];
 		}
 	}
-	
+
 	// If we're in a merged mode, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
-	if ($system == "" || $source == "")
-	{		
+	if ($systems == "" || sizeof(explode(", ", $systems)) > 1 || $sources == "" || sizeof(explode(", ", $sources)) > 1)
+	{
 		$roms = $newroms;
 		unset($newroms);
-		
+
 		// First resort all roms by source and crc (or md5 or sha1)
 		usort($roms, function ($a, $b)
 		{
@@ -543,7 +687,7 @@ function process_roms ($roms, $system, $source)
 			$md5_b = strtolower($b["md5"]);
 			$sha1_b = strtolower($b["sha1"]);
 			$source_b = $b["source"];
-		
+
 			if ($crc_a == "" || $crc_b == "")
 			{
 				if ($md5_a == "" || $md5_b == "")
@@ -558,7 +702,7 @@ function process_roms ($roms, $system, $source)
 			}
 			return strcmp($crc_a, $crc_b);
 		});
-		
+
 		$lastsize = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lasttype = "";
 		$newroms = array();
 		foreach ($roms as $rom)
@@ -592,7 +736,7 @@ function process_roms ($roms, $system, $source)
 				{
 					$samesha1 = ($lastsha1 == $rom["sha1"]);
 				}
-				
+
 				// If we have a rom, we need at least the size and one criteria to match
 				if ($rom["type"] == "rom")
 				{
@@ -616,26 +760,26 @@ function process_roms ($roms, $system, $source)
 				$lastsha1 = $rom["sha1"];
 				$lasttype = $rom["type"];
 			}
-		}		
-		
+		}
+
 		// Then rename the sets to include the proper source
 		foreach ($newroms as &$rom)
-		{			
+		{
 			$rom["game"] = $rom["game"].
-				($system == "" ? " [".$rom["manufacturer"]." - ".$rom["system"]."]" : "").
-				($source == "" ? " [".$rom["source"]."]" : "");
+			($systems == "" || sizeof(explode(", ", $systems)) > 1 ? " [".$rom["manufacturer"]." - ".$rom["system"]."]" : "").
+			($sources == "" || sizeof(explode(", ", $sources)) > 1 ? " [".$rom["source"]."]" : "");
 		}
 	}
-	
+
 	// Once it's pruned, revert the order of the files by sorting by game
 	usort($newroms, function ($a, $b)
-	{		
+	{
 		$game_a = strtolower($a["game"]);
 		$game_b = strtolower($b["game"]);
-		
+
 		return strcmp($game_a, $game_b);
 	});
-	
+
 	// Finally, change the pointer of $roms to the new array
 	return $newroms;
 }
