@@ -39,7 +39,7 @@ else
 {
 	echo "<a href='page=parsenointro&auto=1'>Auto-generate no-intro name to system mapping</a><br/><br/>\n";
 	
-	$gameid = 1; $maxid = 2;
+	$gameid = 1; $maxid = 10;
 	$errorpage = false;
 	$roms = array(); // name, size, crc, md5, sha1
 	while (!$errorpage)
@@ -81,10 +81,16 @@ else
 		unset($rominfo[0]);
 		
 		// Strip out the extension and number
-		$rominfo[1] = preg_replace("/\d{4} - (.*?)\..*/", "$1", $rominfo[1]);
+		preg_match("/\d{4} - (.*)\.(.*)/", $rominfo[1], $rominfo[1]);
 		
 		// Add the currently accepted rom to the array
-		$roms[] = array($rominfo[1], $rominfo[2], $rominfo[3], $rominfo[4], $rominfo[5]);
+		$roms[] = array(
+				"game" => $rominfo[1][1],
+				"name" => $rominfo[1][1].".".$rominfo[1][2],
+				"size" => $rominfo[2],
+				"crc" => $rominfo[3],
+				"md5" => $rominfo[4],
+				"sha1" => $rominfo[5]);
 		
 		// To make sure we don't match initial rom information, remove everything before Scene releases
 		$query = explode("Scene releases", $query);
@@ -131,7 +137,13 @@ else
 		// Add all of the scene roms to the array
 		foreach ($sceneinfo as $scene)
 		{
-			$roms[] = array($scene[3]."_".$scene[0], $rominfo[2], $scene[4], $scene[5], "");
+			$roms[] = array(
+					"game" => $rominfo[1][1],
+					"name" => $scene[3]."_".$scene[0].".".$rominfo[1][2],
+					"size" => $rominfo[2],
+					"crc" => $scene[4],
+					"md5" => $scene[5],
+					"sha1" => "");
 		}
 		
 		// Increment the game pointer
@@ -141,8 +153,67 @@ else
 		sleep(5);
 	}
 	
-	echo "Error page hit or ran out of numbers.<br/>";
-	var_dump($roms);
+	//echo "Error page hit or ran out of numbers.<br/>";
+	//var_dump($roms);
+	
+	// Use hacked version of generate code here
+	ob_end_clean();
+	
+	//First thing first, push the http headers
+	header('content-type: application/x-gzip');
+	header('Content-Disposition: attachment; filename="No-Intro.xml.gz"');
+	
+	$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+	<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">
+	
+	<datafile>
+		<header>
+			<name>No-Intro</name>
+			<description>No-Intro</description>
+			<category>The Wizard of DATz</category>
+			<version></version>
+			<date></date>
+			<author>The Wizard of DATz</author>
+			<clrmamepro/>
+		</header>\n";
+	
+	$footer = "\n</datafile>";
+	
+	// Write the header out
+	echo gzencode($header, 9);
+	
+	// Write out each of the machines and roms
+	foreach ($roms as $rom)
+	{
+		// Preprocess each game and rom name for safety
+		$rom["game"] = htmlspecialchars(utf8_encode($rom["game"]));
+		$rom["name"] = htmlspecialchars(utf8_encode($rom["name"]));
+			
+		$state = "";
+	
+		if ($lastgame != "" && $lastgame != $rom["game"])
+		{
+			$state = $state."\t</machine>\n";
+		}
+		if ($lastgame != $rom["game"])
+		{
+			$state = $state."\t<machine name=\"".$rom["game"]."\">\n".
+					"\t\t<description>".$rom["game"]."</description>\n";
+		}
+		$state = $state."\t\t<rom name=\"".$rom["name"]."\"".
+				($rom["size"] != "" ? " size=\"".$rom["size"]."\"" : "").
+				($rom["crc"] != "" ? " crc=\"".$rom["crc"]."\"" : "").
+				($rom["md5"] != "" ? " md5=\"".$rom["md5"]."\"" : "").
+				($rom["sha1"] != "" ? " sha1=\"".$rom["sha1"]."\"" : "").
+				" />\n";
+	
+		$lastgame = $rom["game"];
+
+		echo gzencode($state, 9);
+	}
+	echo gzencode("\t</machine>", 9);
+	echo gzencode($footer, 9);
+	exit();
 }
 
 ?>
