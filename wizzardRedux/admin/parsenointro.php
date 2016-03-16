@@ -7,24 +7,8 @@ Original code by Matt Nadareski (darksabre76)
 Requires
 	auto		Set to 1 if a new no-intro mapping needs to be created
 	
-TODO: Better figure out how to differentiate between individual dumps on a page more effectively than duped filds
+TODO: Match redumps as well as good and scene
 ------------------------------------------------------------------------------------ */
-
-// Create a name to field mapping for each of the findable fields
-$field_mapping = array (
-		"Size:" => "size",
-		"CRC32:" => "crc",
-		"MD5:" => "md5",
-		"SHA-1:" => "sha1",
-		"Decrypted CRC32:" => "crc",
-		"Decrypted MD5:" => "md5",
-		"Decrypted SHA-1:" => "sha1",
-		"Directory:" => "dir",
-		"NFO File:" => "nfo",
-		"Group:" => "group",
-		"Released" => "date",
-		"Section:" => "section",
-);
 
 ini_set('max_execution_time', 6000); // Set the execution time higher because DATs can be big
 
@@ -55,9 +39,9 @@ else
 {
 	echo "<a href='page=parsenointro&auto=1'>Auto-generate no-intro name to system mapping</a><br/><br/>\n";
 	
-	$gameid = 1; $maxid = 1;
+	$gameid = 1; $maxid = 2;
 	$errorpage = false;
-	$roms = array();
+	$roms = array(); // name, size, crc, md5, sha1
 	while (!$errorpage)
 	{
 		// Retrieve the page information
@@ -71,90 +55,87 @@ else
 			break;
 		}
 		
-		// Replace tabs and nbsp by blank string (this make sure that spaces in names aren't removed)
-		$query = str_replace("    ", "", $query);
-		$query = str_replace("\t", "", $query);
-		$query = str_replace("&nbsp;", "", $query);
+		// Create all necessary regex patterns
+		$regex_romname = "<tr class=\"romname_section\">\s+<td>\s+&nbsp;(.+?)<br \/>&nbsp;\s+<\/td>";
+		$regex_romsize = "<tr>\s+<td class=\"TableTitle\" colspan=\"3\">ROM data<\/td>\s+<\/tr>\s+<tr>\s+<td.*?>Size:<\/td>\s+<td class=\"TableData\">(.*?)<\/td>\s+<\/tr>";
+		$regex_deccrc = "<tr>\s+<td class=\"TableData\".*?>\s*Decrypted CRC32:\s*<\/td>\s+<td class=\"TableData\">(.*?)<\/td>\s+<\/tr>";
+		$regex_decmd5 = "<tr>\s+<td class=\"TableData\".*?>\s*Decrypted MD5:\s*<\/td>\s+<td class=\"TableData\">(.*?)<\/td>\s+<\/tr>";
+		$regex_decsha1 = "<tr>\s+<td class=\"TableData\".*?>\s*Decrypted SHA-1:\s*<\/td>\s+<td class=\"TableData\">(.*?)<\/td>\s+<\/tr>";
+		$regex_enccrc = "<tr>\s+<td class=\"TableData\".*?>\s*Encrypted CRC32:\s*<\/td>\s+<td class=\"TableData\">(.*?)<\/td>\s+<\/tr>";
+		$regex_encmd5 = "<tr>\s+<td class=\"TableData\".*?>\s*Encrypted MD5:\s*<\/td>\s+<td class=\"TableData\">(.*?)<\/td>\s+<\/tr>";
+		$regex_encsha1 = "<tr>\s+<td class=\"TableData\".*?>\s*Encrypted SHA-1:\s*<\/td>\s+<td class=\"TableData\">(.*?)<\/td>\s+<\/tr>";
 		
-		// Split the page and only take the stuff under the header
-		$query = explode("</header>", $query);
+		// Get initial rom information
+		$regex_rominfo = "/".
+			$regex_romname.".*?".
+			$regex_romsize.".*?".
+			$regex_deccrc.".*?".
+			$regex_decmd5.".*?".
+			$regex_decsha1.".*?".
+			//$regex_enccrc.".*?".
+			//$regex_encmd5.".*?".
+			//$regex_encsha1.".*?".
+		"/s";
+		
+		preg_match($regex_rominfo, $query, $rominfo);
+		unset($rominfo[0]);
+		
+		// Strip out the extension and number
+		$rominfo[1] = preg_replace("/\d{4} - (.*?)\..*/", "$1", $rominfo[1]);
+		
+		// Add the currently accepted rom to the array
+		$roms[] = array($rominfo[1], $rominfo[2], $rominfo[3], $rominfo[4], $rominfo[5]);
+		
+		// To make sure we don't match initial rom information, remove everything before Scene releases
+		$query = explode("Scene releases", $query);
+		
+		// If there are no scene releases, go to the next page
+		if ($query[1] === NULL)
+		{
+			continue;
+		}
 		$query = $query[1];
 		
-		// Split the page and only take the stuff before the sidebar and footer
-		$query = explode("</article>", $query);
-		$query = $query[0];
+		// Create all necessary regex patterns
+		$regex_dir = "<tr.*?>\s+<td width=\"104px\">\s+Directory:\s+<\/td>\s+<td>\s+(.*?)\s+<\/td>\s+<\/tr>";
+		$regex_nfo = "<tr>\s+<td class=\"TableData\" width=\"104px\">\s+NFO File:\s+<\/td>\s+<td class=\"TableData\">\s+(.*?)\s+<\/td>\s+<\/tr>";
+		$regex_group = "<tr>\s+<td class=\"TableData\" width=\"104px\">\s+Group:\s+<\/td>\s+<td class=\"TableData\">\s+(.*?)\s+<\/td>\s+<\/tr>";
+		$regex_released = "<tr>\s+<td class=\"TableData\" width=\"104px\">\s+Released:\s+<\/td>\s+<td class=\"TableData\">\s+(.*?)\s+<\/td>\s+<\/tr>";
 		
-		// Remove all tags from the page to make it easier to parse
-		$query = strip_tags($query);
+		$regex_sceneinfo = "/".
+			$regex_dir.".*?".
+			$regex_nfo.".*?".
+			$regex_group.".*?".
+			$regex_released.".*?".
+			$regex_deccrc.".*?".
+			$regex_decmd5.".*?".
+		"/s";
 		
-		// Get rid of all multiple newline sets (has to be done repeatedly because of how searching works)
-		$query = str_replace("\r\n", "\n", $query);
-		while (strpos($query, "\n\n") !== false)
+		preg_match_all($regex_sceneinfo, $query, $sceneinfo);
+		
+		$scenenew = array();
+		for ($index = 0; $index < sizeof($sceneinfo[0]); $index++)
 		{
-			$query = str_replace("\n\n", "\n", $query);
+			$scenenew[] = array(
+					trim($sceneinfo[1][$index]),
+					trim($sceneinfo[2][$index]),
+					trim($sceneinfo[3][$index]),
+					trim($sceneinfo[4][$index]),
+					trim($sceneinfo[5][$index]),
+					trim($sceneinfo[6][$index]),
+			);
 		}
-		$query = str_replace("\n", "<br/>\n", $query);
+		$sceneinfo = $scenenew;
+		unset($scenenew);
 		
-		// Read the processed page into an array and get rid of the first unnecesary items
-		$query = explode("\n", $query);
-		unset($query[0]); unset($query[1]);
-		
-		$rom = array(); // Individual ROM information
-		$next = ""; // What the key for the next value is
-		foreach ($query as $line)
+		// Add all of the scene roms to the array
+		foreach ($sceneinfo as $scene)
 		{
-			$line = strip_tags($line);
-			
-			// The first line that doesn't mention a trusted dump or verificaiton is the name of the ROM
-			if ($line != "" && $rom["name"] == "")
-			{
-				echo "Name: ".$line."<br/>\n";
-				$rom["name"] = $line;
-			}
-			// Check the key half of all of split-line fields that we know of
-			elseif ($next == "")
-			{
-				foreach ($field_mapping as $key => $value)
-				{
-					if ($line == $key)
-					{
-						// Check if the key is already set in the rom array
-						if ($rom[$value] != NULL && $rom[$value] != "")
-						{
-							// If it is, push the current rom information to the output
-							echo "Pushing rom";
-							array_push($roms, $rom);
-							
-							// We want to blank out everything except size
-							foreach ($field_mapping as $val)
-							{
-								if ($val != "size")
-								{
-									$rom[$val] = "";
-								}
-							}
-						}
-						
-						echo $key." ";
-						$next = $key;
-					}
-				}
-			}			
-			// Check the value half of all split-line fields that we know of
-			else
-			{
-				if (key_exists($next, $field_mapping))
-				{
-					echo $line."<br/>\n";
-					$rom[$field_mapping[$next]] = $line;
-				}
-				$next = "";
-			}
+			$roms[] = array($scene[3]."_".$scene[0], $rominfo[2], $scene[4], $scene[5], "");
 		}
 		
-		array_push($roms, $rom);
+		// Increment the game pointer
 		$gameid++;
-		echo "<br/>";
 		
 		// Wait 5 seconds to avoid flooding the server
 		sleep(5);
@@ -163,20 +144,5 @@ else
 	echo "Error page hit or ran out of numbers.<br/>";
 	var_dump($roms);
 }
-
-//https://davidwalsh.name/curl-download
-/* gets the data from a URL */
-function get_data($url)
-{
-	$ch = curl_init();
-	$timeout = 5;
-	curl_setopt($ch, CURLOPT_URL, $url);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-	$data = curl_exec($ch);
-	curl_close($ch);
-	return $data;
-}
-
 
 ?>
