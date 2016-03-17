@@ -36,6 +36,7 @@ $headers = array(
 );
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
+ini_set("memory_limit", "-1"); // Set the maximum memory to infinite. This is a bad idea in production.
 
 //Get the values for all parameters
 foreach ($getvars as $var)
@@ -54,7 +55,6 @@ if ($mega == "1")
 {
 	$system = "";
 	$source = "";
-	ini_set("memory_limit", "-1"); // 1024M didn't cut it for the biggest database
 }
 
 // If not generating or creating MEGAMERGED, show the list of all available DATs
@@ -175,9 +175,7 @@ EOL;
 
 // If auto is set, create all DATs and zip for distribution
 elseif ($auto == "1")
-{
-	ini_set("memory_limit", "-1"); // Set the maximum memory to infinite. This is a bad idea in production.
-	
+{	
 	echo "<h2>Generate All DATs</h2>";
 	
 	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
@@ -350,18 +348,12 @@ function generate_dat ($systems, $sources, $lone = false)
 	global $link, $headers;
 	
 	// Get the systems and sources names for the given inputs
-	$querysy = "SELECT manufacturer, system FROM systems WHERE systems.id IN (".$systems.")";
+	$querysy = "SELECT manufacturer, system FROM systems WHERE id IN (".$systems.")";
 	$resultsy = mysqli_query($link, $querysy);
 	
 	$syslist = "";
-	// If the system doesn't exist, tell the user and don't proceed
-	if (gettype($resultsy) == "boolean" || mysqli_num_rows($resultsy) == 0)
-	{
-		echo "No system could be found by that ID. Please check and try again.<br/>";
-		echo "<a href='?page=generate'>Go Back</a>";
-		exit;
-	}
-	elseif (gettype($resultsy) != "boolean" && mysqli_num_rows($resultsy) > 0)
+	// If the result has data, populate the srclist
+	if (gettype($resultsy) != "boolean" && mysqli_num_rows($resultsy) > 0)
 	{
 		$syslist = array();
 		while ($sys = mysqli_fetch_assoc($resultsy))
@@ -374,18 +366,12 @@ function generate_dat ($systems, $sources, $lone = false)
 	// Free up some memory if possible
 	unset($resultsy);
 	
-	$queryso = "SELECT name FROM sources WHERE sources.id IN (".$sources.")";
+	$queryso = "SELECT name FROM sources WHERE id IN (".$sources.")";
 	$resultso = mysqli_query($link, $queryso);
 	
 	$srclist = "";
-	// If the system doesn't exist, tell the user and don't proceed
-	if (gettype($resultso) == "boolean" || mysqli_num_rows($resultso) == 0)
-	{
-		echo "No system could be found by that ID. Please check and try again.<br/>";
-		echo "<a href='?page=generate'>Go Back</a>";
-		exit;
-	}
-	elseif (gettype($resultso) != "boolean" && mysqli_num_rows($resultso) > 0)
+	// If the result has data, populate the srclist
+	if (gettype($resultso) != "boolean" && mysqli_num_rows($resultso) > 0)
 	{
 		$srclist = array();
 		while ($src = mysqli_fetch_assoc($resultso))
