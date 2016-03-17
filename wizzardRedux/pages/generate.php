@@ -7,7 +7,6 @@ Original code by Matt Nadareski (darksabre76), emuLOAD
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
-TODO: Figure out why the information doesn't show immediately
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
@@ -79,6 +78,11 @@ EOL;
 	// Either generate options for custom and system-merged DATs OR generate them in auto mode
 	while($sys = mysqli_fetch_assoc($result))
 	{
+		// If nothing is set, use the default option
+		if ($system == "" && $source == "")
+		{
+			$system = $sys["id"];
+		}
 		echo "<option value='".$sys["id"]."'".($system == $sys["id"] ? " selected='selected'" : "").">".$sys["manufacturer"]." - ".$sys["system"]."</option>\n";
 	}
 
