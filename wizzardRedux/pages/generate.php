@@ -633,14 +633,17 @@ function process_roms($systems, $sources)
 			$samegame = ($lastgame == $rom["game"]);
 		}
 		
+		$lastname = $rom["name"];
+		$lastgame = $rom["game"];
+		
 		// If the name and set are the same, rename it with whatever is different
 		if ($samename && $samegame)
 		{
-			$rom["name"] = preg_replace("/^(.*)(\..*)/", "\1 (".
+			$rom["name"] = preg_replace("/^(.*)(\..*)/", "$1 (".
 					($rom["crc"] != "" ? $rom["crc"] :
 							($rom["md5"] != "" ? $rom["md5"] :
 									($rom["sha1"] != "" ? $rom["sha1"] : "Alt"))).
-					")\2", $rom["name"]);
+					")$2", $rom["name"]);
 		}
 	}
 	
