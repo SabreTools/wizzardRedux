@@ -7,6 +7,7 @@ Original code by Matt Nadareski (darksabre76), emuLOAD
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
 TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
+TODO: Figure out why the information doesn't show immediately
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
@@ -175,6 +176,8 @@ EOL;
 // If auto is set, create all DATs and zip for distribution
 elseif ($auto == "1")
 {
+	ini_set("memory_limit", "-1"); // Set the maximum memory to infinite. This is a bad idea in production.
+	
 	echo "<h2>Generate All DATs</h2>";
 	
 	$query = "SELECT DISTINCT systems.id, systems.manufacturer, systems.system
@@ -211,7 +214,13 @@ elseif ($auto == "1")
 				sleep(2);
 			}
 		}
+		
+		// Free up some memory if possible
+		unset($sresult);
 	}
+	
+	// Free up some memory if possible
+	unset($result);
 	
 	// Generate source-merged DATs
 	$query = "SELECT DISTINCT sources.id, sources.name
@@ -228,10 +237,15 @@ elseif ($auto == "1")
 		sleep(2);
 	}
 	
+	// Free up some memory if possible
+	unset($result);
+	
+	// Commenting out MEGAMERGED until memory leak cleaned up
+	/*
 	// Create the MEGAMERGED as part of the generation process
-	ini_set("memory_limit", "-1"); // Set the maximum memory to infinite. This is a bad idea in production.
 	echo "Beginning generate ALL (merged)<br/>\n";
 	generate_dat("", "");
+	*/
 
 	//echo "Creating new zipfile...<br/>\n";
 	$zip = new ZipArchive();
@@ -365,43 +379,8 @@ function generate_dat ($systems, $sources, $lone = false)
 		}
 	}
 
-	// Since the source and/or system are valid, retrive all files
-	$query = "SELECT systems.manufacturer AS manufacturer, systems.system AS system, sources.name AS source, sources.url AS url,
-				games.name AS game, files.name AS name, files.type AS type, checksums.size AS size, checksums.crc AS crc,
-				checksums.md5 AS md5, checksums.sha1 AS sha1
-			FROM systems
-			JOIN games
-				ON systems.id=games.system
-			JOIN sources
-				ON games.source=sources.id
-			JOIN files
-				ON games.id=files.setid
-			JOIN checksums
-				ON files.id=checksums.file".
-				($systems != "" || $sources != "" ? " WHERE" : "").
-				($sources != "" ? " sources.id IN (".$sources.")" : "").
-				($sources != "" && $systems != "" ? " AND" : "").
-				($systems != "" ? " systems.id IN (".$systems.")" : "")."
-			ORDER BY games.name ASC, files.name ASC";
-	$result = mysqli_query($link, $query);
-
-	// If there are no games for this set of parameters, tell the user
-	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
-	{
-		echo "No games could be found with those inputs. Please check and try again.<br/>";
-		echo "<a href='?page=generate'>Go Back</a>";
-		exit;
-	}
-
-	// Get all roms from the result for processing
-	$roms = array();
-	while($rom = mysqli_fetch_assoc($result))
-	{
-		array_push($roms, $rom);
-	}
-
 	// Process the roms
-	$roms = process_roms($roms, $systems, $sources);
+	$roms = process_roms($systems, $sources);
 
 	$version = date("YmdHis");
 	
@@ -426,6 +405,9 @@ function generate_dat ($systems, $sources, $lone = false)
 		$syslist = "";
 	}
 	
+	// Free up some memory if possible
+	unset($resultsy);
+	
 	$queryso = "SELECT name FROM sources WHERE sources.id IN (".$sources.")";
 	$resultso = mysqli_query($link, $queryso);
 	
@@ -445,6 +427,9 @@ function generate_dat ($systems, $sources, $lone = false)
 	{
 		$srclist = "";
 	}
+	
+	// Free up some memory if possible
+	unset($resultso);
 	
 	$datname = ($syslist != "" ? $syslist : "ALL")." (".($srclist != "" ? $srclist : "merged")." ".$version.")";
 
@@ -627,163 +612,92 @@ function generate_dat ($systems, $sources, $lone = false)
 }
 
 // Change duplicate names and remove duplicates (merged only)
-function process_roms ($roms, $systems, $sources)
+function process_roms($systems, $sources)
 {
-	// First, go through and rename any necessary
-	$lastname = ""; $lastgame = "";
-	$newroms = array();
-	foreach ($roms as $rom)
+	global $link;
+	
+	// Check if we're in a merged mode
+	$sysmerged = $systems == "" || sizeof(explode(", ", $systems)) > 1;
+	$srcmerged = $sources == "" || sizeof(explode(", ", $sources)) > 1;
+	$merged = $sysmerged || $srcmerged;
+	
+	// Since the source and/or system are valid, retrive all files
+	$query = "SELECT systems.manufacturer AS manufacturer, systems.system AS system, systems.id AS systemid,
+				sources.name AS source, sources.url AS url, sources.id AS sourceid,
+				games.name AS game, files.name AS name, files.type AS type, checksums.size AS size, checksums.crc AS crc,
+				checksums.md5 AS md5, checksums.sha1 AS sha1
+			FROM systems
+			JOIN games
+				ON systems.id=games.system
+			JOIN sources
+				ON games.source=sources.id
+			JOIN files
+				ON games.id=files.setid
+			JOIN checksums
+				ON files.id=checksums.file".
+				($systems != "" || $sources != "" ? " WHERE" : "").
+				($sources != "" ? " sources.id IN (".$sources.")" : "").
+				($sources != "" && $systems != "" ? " AND" : "").
+				($systems != "" ? " systems.id IN (".$systems.")" : "").
+			($merged ? " GROUP BY checksums.size, checksums.crc, checksums.md5, checksums.sha1" : "").
+"			ORDER BY checksums.size, checksums.crc, checksums.md5, checksums.sha1, systems.id, sources.id";
+	$result = mysqli_query($link, $query);
+
+	// If there are no games for this set of parameters, tell the user
+	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
-		if ($lastname == "")
-		{
-			array_push($newroms, $rom);
-		}
-		else
-		{
-			// Determine which matching criteria is available and match on them
-			$samename = false; $samegame = false;
-			if ($rom["name"] != "")
-			{
-				$samename = ($lastname == $rom["name"]);
-			}
-			if ($rom["game"] != "")
-			{
-				$samegame = ($lastgame == $rom["game"]);
-			}
-
-			// If the name and set are the same, rename it
-			if ($samename && $samegame)
-			{
-				$rom["name"] = preg_replace("/^(.*)(\..*)/", "\1 (".
-						($rom["crc"] != "" ? $rom["crc"] :
-								($rom["md5"] != "" ? $rom["md5"] :
-										($rom["sha1"] != "" ? $rom["sha1"] : "Alt"))).
-						")\2", $rom["name"]);
-										array_push($newroms, $rom);
-			}
-			// Otherwise, just add it the way it is
-			else
-			{
-				array_push($newroms, $rom);
-			}
-
-			$lastname = $rom["name"];
-			$lastgame = $rom["game"];
-		}
+		echo "No games could be found with those inputs. Please check and try again.<br/>";
+		echo "<a href='?page=generate'>Go Back</a>";
+		exit;
 	}
-
-	// If we're in a merged mode, go through and remove any duplicates (size, CRC/MD5/SHA1 match)
-	if ($systems == "" || sizeof(explode(", ", $systems)) > 1 || $sources == "" || sizeof(explode(", ", $sources)) > 1)
+	
+	// Retrieve the array from the sql result
+	$roms = mysqli_fetch_all($result, MYSQLI_ASSOC);
+	
+	// Sort the array by machine title and rom name
+	foreach ($roms as $key => $val)
 	{
-		$roms = $newroms;
-		unset($newroms);
-
-		// First resort all roms by source and crc (or md5 or sha1)
-		usort($roms, function ($a, $b)
-		{
-			$crc_a = strtolower($a["crc"]);
-			$md5_a = strtolower($a["md5"]);
-			$sha1_a = strtolower($a["sha1"]);
-			$source_a = $a["source"];
-			$crc_b = strtolower($b["crc"]);
-			$md5_b = strtolower($b["md5"]);
-			$sha1_b = strtolower($b["sha1"]);
-			$source_b = $b["source"];
-
-			if ($crc_a == "" || $crc_b == "")
-			{
-				if ($md5_a == "" || $md5_b == "")
-				{
-					if ($sha1_a == "" || $sha1_b == "")
-					{
-						return $source_a - $source_b;
-					}
-					return strcmp($sha1_a, $sha1_b);
-				}
-				return strcmp($md5_a, $md5_b);
-			}
-			return strcmp($crc_a, $crc_b);
-		});
-
-		$lastsize = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lasttype = "";
-		$newroms = array();
-		foreach ($roms as $rom)
-		{
-			if ($lastsize == "")
-			{
-				$lastsize = $rom["size"];
-				$lastcrc = $rom["crc"];
-				$lastmd5 = $rom["md5"];
-				$lastsha1 = $rom["sha1"];
-				$lasttype = $rom["type"];
-				array_push($newroms, $rom);
-			}
-			else
-			{
-				// Determine which matching criteria is available and match on them
-				$samesize = false; $samecrc = false; $samemd5 = false; $samesha1 = false;
-				if ($rom["size"] != "")
-				{
-					$samesize = ($lastsize == $rom["size"]);
-				}
-				if ($rom["crc"] != "")
-				{
-					$samecrc = ($lastcrc == $rom["crc"]);
-				}
-				if ($rom["md5"] != "")
-				{
-					$samemd5 = ($lastmd5 == $rom["md5"]);
-				}
-				if ($rom["sha1"] != "")
-				{
-					$samesha1 = ($lastsha1 == $rom["sha1"]);
-				}
-
-				// If we have a rom, we need at least the size and one criteria to match
-				if ($rom["type"] == "rom")
-				{
-					if (!($samesize && ($samecrc || $samemd5 || $samesha1)))
-					{
-						array_push($newroms, $rom);
-					}
-				}
-				// If we have a disk, it generally only has an md5 or sha1
-				else
-				{
-					if (!($samemd5 || $samesha1))
-					{
-						array_push($newroms, $rom);
-					}
-				}
-					
-				$lastsize = $rom["size"];
-				$lastcrc = $rom["crc"];
-				$lastmd5 = $rom["md5"];
-				$lastsha1 = $rom["sha1"];
-				$lasttype = $rom["type"];
-			}
-		}
-
-		// Then rename the sets to include the proper source
-		foreach ($newroms as &$rom)
+		$game[$key] = $val["game"];
+		$name[$key] = $val["name"];
+	}
+	array_multisort($game, SORT_ASC, $name, SORT_ASC, $roms);
+	
+	// Rename the games and roms if necessary
+	$lastname = ""; $lastgame = "";
+	foreach ($roms as &$rom)
+	{
+		// If we're in merged mode, rename the game associated
+		if ($merged)
 		{
 			$rom["game"] = $rom["game"].
-			($systems == "" || sizeof(explode(", ", $systems)) > 1 ? " [".$rom["manufacturer"]." - ".$rom["system"]."]" : "").
-			($sources == "" || sizeof(explode(", ", $sources)) > 1 ? " [".$rom["source"]."]" : "");
+				($sysmerged ? " [".$rom["manufacturer"]." - ".$rom["system"]."]" : "").
+				($srcmerged ? " [".$rom["source"]."]" : "");
+		}
+		
+		// Now relable any roms that have the same name inside of the same game
+		$samename = false; $samegame = false;
+		if ($rom["name"] != "")
+		{
+			$samename = ($lastname == $rom["name"]);
+		}
+		if ($rom["game"] != "")
+		{
+			$samegame = ($lastgame == $rom["game"]);
+		}
+		
+		// If the name and set are the same, rename it with whatever is different
+		if ($samename && $samegame)
+		{
+			$rom["name"] = preg_replace("/^(.*)(\..*)/", "\1 (".
+					($rom["crc"] != "" ? $rom["crc"] :
+							($rom["md5"] != "" ? $rom["md5"] :
+									($rom["sha1"] != "" ? $rom["sha1"] : "Alt"))).
+					")\2", $rom["name"]);
 		}
 	}
-
-	// Once it's pruned, revert the order of the files by sorting by game
-	usort($newroms, function ($a, $b)
-	{
-		$game_a = strtolower($a["game"]);
-		$game_b = strtolower($b["game"]);
-
-		return strcmp($game_a, $game_b);
-	});
-
-	// Finally, change the pointer of $roms to the new array
-	return $newroms;
+	
+	// Return the sorted list of roms
+	return $roms;
 }
 
 ?>
