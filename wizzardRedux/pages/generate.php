@@ -172,8 +172,8 @@ EOL;
 <a href='?page=generate&mega=1'>Create DAT of all available files</a><br/>";
 }
 
-// If not generating or creating MEGAMERGED, generate of all available DATs
-elseif ($generate != "1" && $mega != "1" && $auto == "1")
+// If auto is set, create all DATs and zip for distribution
+elseif ($auto == "1")
 {
 	echo "<h2>Generate All DATs</h2>";
 	
@@ -184,15 +184,36 @@ elseif ($generate != "1" && $mega != "1" && $auto == "1")
 		ORDER BY systems.manufacturer, systems.system";
 	$result = mysqli_query($link, $query);
 	
-	// Either generate options for custom and system-merged DATs OR generate them in auto mode
+	// Generate system-merged and custom DATs
 	while($sys = mysqli_fetch_assoc($result))
 	{
-		echo "Beginning generate ".$system["manufacturer"]." - ".$system["system"]." (merged)<br/>\n";
-		generate_dat($system["id"], "");
+		echo "Beginning generate ".$sys["manufacturer"]." - ".$sys["system"]." (merged)<br/>\n";
+		generate_dat($sys["id"], "");
 		sleep(2);
+		
+		$squery = "SELECT DISTINCT sources.id, sources.name
+				FROM systems
+				JOIN games
+					ON systems.id=games.system
+				JOIN sources
+					ON games.source=sources.id
+				WHERE systems.id=".$sys["id"]."
+				ORDER BY sources.name";
+		$sresult = mysqli_query($link, $squery);
+		
+		while($src = mysqli_fetch_assoc($sresult))
+		{
+			// If the source is not one of the import-only ones
+			if ((int) $src["id"] > 14)
+			{
+				echo "Beginning generate ".$sys["manufacturer"]." - ".$sys["system"]." (".$src["name"].")<br/>\n";
+				generate_dat($sys["id"], $src["id"]);
+				sleep(2);
+			}
+		}
 	}
 	
-	// Generate options for source-merged DATs
+	// Generate source-merged DATs
 	$query = "SELECT DISTINCT sources.id, sources.name
 		FROM sources
 		JOIN games
@@ -202,28 +223,9 @@ elseif ($generate != "1" && $mega != "1" && $auto == "1")
 	
 	while($src = mysqli_fetch_assoc($result))
 	{
-		// If the source is not one of the import-only ones
-		if ((int) $src["id"] > 14)
-		{
-			echo "Beginning generate ALL (".$source["name"].")<br/>\n";
-			generate_dat("", $source["id"]);
-			
-			$query = "SELECT DISTINCT sources.id, sources.name
-				FROM systems
-				JOIN games
-					ON systems.id=games.system
-				JOIN sources
-					ON games.source=sources.id
-				WHERE systems.id=".$system.
-				" ORDER BY sources.name";
-			$sresult = mysqli_query($link, $query);
-			
-			while($src = mysqli_fetch_assoc($sresult))
-			{
-				echo "Beginning generate ".$sys["manufacturer"]." - ".$sys["system"]." (".$src["name"].")<br/>\n";
-				generate_dat($sys["id"], $src["id"]);
-			}
-		}
+		echo "Beginning generate ALL (".$src["name"].")<br/>\n";
+		generate_dat($sys["id"], "");
+		sleep(2);
 	}
 	
 	// Create the MEGAMERGED as part of the generation process
