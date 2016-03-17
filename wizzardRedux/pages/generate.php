@@ -379,7 +379,7 @@ function generate_dat ($systems, $sources, $lone = false)
 		}
 	}
 
-	// Process the roms
+	// Retrieve the roms in a preprocessed order
 	$roms = process_roms($systems, $sources);
 
 	$version = date("YmdHis");
@@ -431,6 +431,7 @@ function generate_dat ($systems, $sources, $lone = false)
 	// Free up some memory if possible
 	unset($resultso);
 	
+	// Create a name for the file based on the retrieved information
 	$datname = ($syslist != "" ? $syslist : "ALL")." (".($srclist != "" ? $srclist : "merged")." ".$version.")";
 
 	// Create and open an output file for writing (currently uses current time, change to "last updated time"
@@ -640,7 +641,7 @@ function process_roms($systems, $sources)
 				($sources != "" && $systems != "" ? " AND" : "").
 				($systems != "" ? " systems.id IN (".$systems.")" : "").
 			($merged ? " GROUP BY checksums.size, checksums.crc, checksums.md5, checksums.sha1" : "").
-"			ORDER BY checksums.size, checksums.crc, checksums.md5, checksums.sha1, systems.id, sources.id";
+"			ORDER BY systems.id, sources.id, games.name, files.name";
 	$result = mysqli_query($link, $query);
 
 	// If there are no games for this set of parameters, tell the user
@@ -653,14 +654,6 @@ function process_roms($systems, $sources)
 	
 	// Retrieve the array from the sql result
 	$roms = mysqli_fetch_all($result, MYSQLI_ASSOC);
-	
-	// Sort the array by machine title and rom name
-	foreach ($roms as $key => $val)
-	{
-		$game[$key] = $val["game"];
-		$name[$key] = $val["name"];
-	}
-	array_multisort($game, SORT_ASC, $name, SORT_ASC, $roms);
 	
 	// Rename the games and roms if necessary
 	$lastname = ""; $lastgame = "";
