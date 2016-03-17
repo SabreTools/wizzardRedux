@@ -348,61 +348,27 @@ elseif ($generate == "1" || $mega == "1")
 function generate_dat ($systems, $sources, $lone = false)
 {
 	global $link, $headers;
-
-	// Check the validity of the source id
-	if ($sources != "")
-	{
-		$query = "SELECT * FROM sources WHERE id IN (".$sources.")";
-		$result = mysqli_query($link, $query);
-
-		// If the source doesn't exist, tell the user and don't proceed
-		if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
-		{
-			echo "No source could be found by that ID. Please check and try again.<br/>";
-			echo "<a href='?page=generate'>Go Back</a>";
-			exit;
-		}
-	}
-
-	// Check the validity of the system id
-	if ($systems != "")
-	{
-		$query = "SELECT * FROM systems WHERE id IN (".$systems.")";
-		$result = mysqli_query($link, $query);
-
-		// If the system doesn't exist, tell the user and don't proceed
-		if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
-		{
-			echo "No system could be found by that ID. Please check and try again.<br/>";
-			echo "<a href='?page=generate'>Go Back</a>";
-			exit;
-		}
-	}
-
-	// Retrieve the roms in a preprocessed order
-	$roms = process_roms($systems, $sources);
-
-	$version = date("YmdHis");
 	
 	// Get the systems and sources names for the given inputs
 	$querysy = "SELECT manufacturer, system FROM systems WHERE systems.id IN (".$systems.")";
 	$resultsy = mysqli_query($link, $querysy);
 	
-	$syslist;
-	if (gettype($resultsy) != "boolean" && mysqli_num_rows($resultsy) > 0)
+	$syslist = "";
+	// If the system doesn't exist, tell the user and don't proceed
+	if (gettype($resultsy) == "boolean" || mysqli_num_rows($resultsy) == 0)
+	{
+		echo "No system could be found by that ID. Please check and try again.<br/>";
+		echo "<a href='?page=generate'>Go Back</a>";
+		exit;
+	}
+	elseif (gettype($resultsy) != "boolean" && mysqli_num_rows($resultsy) > 0)
 	{
 		$syslist = array();
-		
 		while ($sys = mysqli_fetch_assoc($resultsy))
 		{
 			$syslist[] = $sys["manufacturer"]." - ".$sys["system"];
 		}
-		
-		$syslist = implode(", ", $syslist);
-	}
-	else
-	{
-		$syslist = "";
+		$syslist = implode("; ", (sizeof($syslist) > 3 ? array($syslist[0], $syslist[1], "etc.") : $syslist));
 	}
 	
 	// Free up some memory if possible
@@ -411,26 +377,32 @@ function generate_dat ($systems, $sources, $lone = false)
 	$queryso = "SELECT name FROM sources WHERE sources.id IN (".$sources.")";
 	$resultso = mysqli_query($link, $queryso);
 	
-	$srclist;
-	if (gettype($resultso) != "boolean" && mysqli_num_rows($resultso) > 0)
+	$srclist = "";
+	// If the system doesn't exist, tell the user and don't proceed
+	if (gettype($resultso) == "boolean" || mysqli_num_rows($resultso) == 0)
+	{
+		echo "No system could be found by that ID. Please check and try again.<br/>";
+		echo "<a href='?page=generate'>Go Back</a>";
+		exit;
+	}
+	elseif (gettype($resultso) != "boolean" && mysqli_num_rows($resultso) > 0)
 	{
 		$srclist = array();
-	
 		while ($src = mysqli_fetch_assoc($resultso))
 		{
 			$srclist[] = $src["name"];
 		}
-		
-		$srclist = implode(", ", $srclist);
-	}
-	else
-	{
-		$srclist = "";
+		$srclist = implode("; ", (sizeof($srclist) > 3 ? array($srclist[0], $srclist[1], "etc.") : $srclist));
 	}
 	
 	// Free up some memory if possible
 	unset($resultso);
-	
+
+	// Retrieve the roms in a preprocessed order
+	$roms = process_roms($systems, $sources);
+
+	$version = date("YmdHis");
+
 	// Create a name for the file based on the retrieved information
 	$datname = ($syslist != "" ? $syslist : "ALL")." (".($srclist != "" ? $srclist : "merged")." ".$version.")";
 
