@@ -231,19 +231,16 @@ elseif ($auto == "1")
 	while($src = mysqli_fetch_assoc($result))
 	{
 		echo "Beginning generate ALL (".$src["name"].")<br/>\n";
-		generate_dat($sys["id"], "");
+		generate_dat("", $src["id"]);
 		sleep(2);
 	}
 	
 	// Free up some memory if possible
 	unset($result);
 	
-	// Commenting out MEGAMERGED until memory leak cleaned up
-	/*
 	// Create the MEGAMERGED as part of the generation process
 	echo "Beginning generate ALL (merged)<br/>\n";
 	generate_dat("", "");
-	*/
 
 	//echo "Creating new zipfile...<br/>\n";
 	$zip = new ZipArchive();
