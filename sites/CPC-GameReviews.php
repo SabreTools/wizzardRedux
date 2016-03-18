@@ -83,10 +83,7 @@ if (($handle = fopen($mainURL."00_table.csv", "r")) !== FALSE)
     }
     fclose($handle);
 }
-
-echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
-
-echo "</table>\n";
+echo "<td>Found new: ".$new.", old: ".$old."</tr>\n</table>\n";
 
 if (sizeof($found) > 0)
 {
