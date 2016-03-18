@@ -2,6 +2,12 @@
 
 /* ------------------------------------------------------------
 Automatically download all No-Intro DATs to the server machine
+
+NOTE: THIS CODE DOES NOT WORK AND PROBABLY WILL NEVER WORK BECAUSE
+	OF HOW NO-INTRO HAS THEIR WEBSITE SET UP. THE VARIABLE CURRENTLY
+	LABELED "Download12" IS VARIABLY NAMED AND IS A FAILSAFE SO
+	THIS EXACT THING CAN'T BE DONE. THIS PAGE IS SAVED FOR FUTURE
+	RESARCH INTO THE SUBJECT
 -------------------------------------------------------------*/
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
