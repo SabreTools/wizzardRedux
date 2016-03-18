@@ -6,7 +6,6 @@ Original code by Matt Nadareski (darksabre76), emuLOAD
 
 TODO: emuload - For CMP, a virtual parent can be created as an empty set and then
 	each set that has it as a parent sets it as cloneof
-TODO: Look at http://www.logiqx.com/Dats/datafile.dtd for XML DAT info
  ------------------------------------------------------------------------------------ */
 
 // All possible $_GET variables that we can use (propogate this to other files?)
@@ -408,7 +407,7 @@ function generate_dat ($systems, $sources, $lone = false)
 		$handle = fopen("temp/output/".$datname.($old == "1" ? ".dat" : ".xml"), "w");
 	}
 
-	// Temporarilly set $system if we're in MEGAMERGED mode
+	// Temporarilly set $system if we're in MEGAMERGED mode to get the right header skip XML
 	if ($systems == "" && $sources == "")
 	{
 		$systems = "0";

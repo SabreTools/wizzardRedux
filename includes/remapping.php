@@ -423,7 +423,7 @@ $mapping_mame = array (
 		"x68k_flop.xml" => "Sharp - X68000",
 		"xegs.xml" => "Atari - 8bit",
 		"xerox820.xml" => "Xerox - 820",
-		"xerox820ii.xml" => "Xerox - 820 II" 
+		"xerox820ii.xml" => "Xerox - 820 II",
 );
 
 // No-Intro DAT name base mapping
@@ -552,7 +552,7 @@ $mapping_redump = array (
 		"Sony - PlayStation 3" => "Sony - PlayStation 3",
 		"Sony - PlayStation 4" => "Sony - PlayStation 4",
 		"Sony - PlayStation Portable" => "Sony - PlayStation Portable",
-		"VTech - V.Flash" => "VTech - V.Flash Home Edutainment System" 
+		"VTech - V.Flash" => "VTech - V.Flash Home Edutainment System",
 );
 
 // TOSEC DAT name base mapping
@@ -790,7 +790,7 @@ $mapping_tosec = array (
 		"Tiger Game.com" => "Tiger - Game.com",
 		"Tiki Data Kontiki-100 & Tiki-100" => "Tiki Data - Kontiki-100, Tiki-100",
 		"Tomy KISS-Site" => "Tomy - Kiss-site",
-		"Tomy Tutor & Pyuuta => Tomy - Tutor, Pyuuta",
+		"Tomy Tutor & Pyuuta" => "Tomy - Tutor, Pyuuta",
 		"Tsukuda Original Othello Multivision" => "Sega - SG-1000, SC-3000, SF-7000, Othello Multivision",
 		"University of Cambridge EDSAC" => "University of Cambridge - EDSAC",
 		"University of Tokyo PC-1" => "University of Tokyo - PC-1",

@@ -28,7 +28,7 @@ foreach ($content as $row)
 
 		if (!$r_query[$url])
 		{
-			$found[] = array($url, $title.".".$ext]);
+			$found[] = array($url, $title.".".$ext);
 			$new++;
 		}
 		else
