@@ -313,7 +313,7 @@ function import_dat ($filename)
 			// Process SoftwareList XML-derived DATs
 			elseif ($format == "softwarelist" && !$comment)
 			{
-				if (strpos($line, "<software") !== false)
+				if (strpos($line, "<software ") !== false)
 				{
 					$machinefound = true;
 					$xml = simplexml_load_string($line."</software>");
