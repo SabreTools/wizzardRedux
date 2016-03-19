@@ -255,22 +255,18 @@ function import_dat ($filename)
 			// If the input style hasn't been set, set it according to the header
 			if ($format == "")
 			{
-				if (strpos($line, "<!DOCTYPE datafile") !== false)
+				if (strpos($line, "<?xml version=\"1.0\" encoding=\"utf-8\"?>") !== false)
 				{
 					$format = "logiqx";
-				}
-				elseif (strpos($line, "<!DOCTYPE softwarelist") !== false)
-				{
-					$format = "softwarelist";
 				}
 				elseif (strpos($line, "clrmamepro (") !== false || strpos($line, "romvault (") !== false)
 				{
 					$format = "romvault";
 				}
-				else
-				{
-					$format = "unknown";
-				}
+			}
+			elseif (strpos($line, "<!DOCTYPE softwarelist") !== false)
+			{
+				$format = "softwarelist";
 			}
 			
 			// If there's an XML-style comment, stop the presses and skip until it's over
