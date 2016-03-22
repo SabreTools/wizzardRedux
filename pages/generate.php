@@ -581,36 +581,26 @@ function process_roms($systems, $sources)
 	$merged = $sysmerged || $srcmerged;
 	
 	// Since the source and/or system are valid, retrive all files
-	$query = "SELECT systems.manufacturer AS manufacturer, systems.system AS system, systems.id AS systemid,
-				sources.name AS source, sources.url AS url, sources.id AS sourceid,
-				games.name AS game, files.name AS name, files.type AS type, checksums.size AS size, checksums.crc AS crc,
-				checksums.md5 AS md5, checksums.sha1 AS sha1
-			FROM systems
-			JOIN games
-				ON systems.id=games.system
-			JOIN sources
-				ON games.source=sources.id
-			JOIN files
-				ON games.id=files.setid
-			JOIN checksums
-				ON files.id=checksums.file".
-				($systems != "" || $sources != "" ? " WHERE" : "").
-				($sources != "" ? " sources.id IN (".$sources.")" : "").
-				($sources != "" && $systems != "" ? " AND" : "").
-				($systems != "" ? " systems.id IN (".$systems.")" : "").
-				($systems == "" && $sources == "" ? "\nWHERE" : " AND").
-				"\n files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'".
-					(merged ? "\nGROUP BY checksums.size, checksums.crc" : "") + " )".
-				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'".
-					(merged ? "\nGROUP BY checksums.size, checksums.md5" : "") + " )".
-				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'".
-					(merged ? "\nGROUP BY checksums.size, checksums.sha1" : "") + " )".
-				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='disk'".
-					(merged ? "\nGROUP BY checksums.md5" : "") + " )".
-				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='disk'".
-					(merged ? "\nGROUP BY checksums.sha1" : "") + " )".
-			($merged ? " GROUP BY checksums.size, checksums.crc, checksums.md5, checksums.sha1" : "").
-"			ORDER BY systems.id, sources.id, games.name, files.name";
+	$query = "SELECT DISTINCT systems.manufacturer AS manufacturer, systems.system AS system, systems.id AS systemid,
+	sources.name AS source, sources.url AS url, sources.id AS sourceid,
+	games.name AS game, files.name AS name, files.type AS type, checksums.size AS size, checksums.crc AS crc,
+	checksums.md5 AS md5, checksums.sha1 AS sha1
+FROM systems
+JOIN games
+	ON systems.id=games.system
+JOIN sources
+	ON games.source=sources.id
+JOIN files
+	ON games.id=files.setid
+JOIN checksums
+	ON files.id=checksums.file".
+	(!$sysmerged || !$srcmerged ? "\nWHERE" : "").
+	(!$srcmerged ? " sources.id IN (".$sources.")" : "").
+	(!$srcmerged && !$sysmerged ? " AND" : "") +
+	(!$sysmerged ? " systems.id IN (".$systems.")" : "")."
+ORDER BY ".
+	($merged ? "checksums.size, checksums.crc, checksums.md5, checksums.sha1"
+			: "systems.id, sources.id, games.name, files.name");
 	$result = mysqli_query($link, $query);
 
 	// If there are no games for this set of parameters, tell the user
@@ -623,6 +613,64 @@ function process_roms($systems, $sources)
 	
 	// Retrieve the array from the sql result
 	$roms = mysqli_fetch_all($result, MYSQLI_ASSOC);
+	
+	// If we're in merged mode, take care of merging before renaming
+	if ($merged)
+	{
+		// First, dedupe the set
+		$lasttype = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lastsize = -1;
+		foreach ($roms as &$rom)
+		{
+			// Check if the rom is a duplicate
+			$dupe = false;
+			if ($rom["type"] == "rom" && $lasttype == "rom")
+			{
+				$dupe = (($rom["size"] != -1 && $rom["size"] == $lastsize) && (
+						($rom["crc"] != "" && $lastcrc != "" && $rom["crc"] == $lastcrc) ||
+						($rom["md5"] != "" && $lastmd5 != "" && $rom["md5"] == $lastmd5) ||
+						($rom["sha1"] != "" && $lastsha1 != "" && $rom["sha1"] == $lastsha1)
+					)
+				);
+			}
+			else if ($rom["type"] == "disk" && $lasttype == "disk")
+			{
+				$dupe = (($rom["md5"] != "" && $lastmd5 != "" && $rom["md5"] == $lastmd5) ||
+						($rom["sha1"] != "" && $lastsha1 != "" && $rom["sha1"] == $lastsha1)
+					);
+			}
+			
+			// Set the next variables
+			$lasttype = $rom["type"];
+			$lastsize = $rom["size"];
+			$lastcrc = $rom["crc"];
+			$lastmd5 = $rom["md5"];
+			$lastsha1 = $rom["sha1"];
+			
+			// If it's a duplicate, unset it so it's not in the output
+			if ($dupe)
+			{
+				unset($rom);
+			}
+		}
+		
+		// Then we put it in the right order
+		usort($roms, function ($a, $b)
+		{
+			if ($a["systemid"] == $b["systemid"])
+			{
+				if ($a["sourceid"] == $b["sourceid"])
+				{
+					if ($a["game"] == $b["game"])
+					{
+						return strcmp($a["name"], $b["name"]);
+					}
+					return strcmp($a["game"], $b["game"]);
+				}
+				return (int) $a["sourceid"] - (int) $b["sourceid"];
+			}
+			return (int) $a["systemid"] - (int) $b["systemid"];
+		});
+	}
 	
 	// Rename the games and roms if necessary
 	$lastname = ""; $lastgame = "";
