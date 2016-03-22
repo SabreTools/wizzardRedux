@@ -598,17 +598,17 @@ function process_roms($systems, $sources)
 				($sources != "" ? " sources.id IN (".$sources.")" : "").
 				($sources != "" && $systems != "" ? " AND" : "").
 				($systems != "" ? " systems.id IN (".$systems.")" : "").
-				($systems == "" && $sources == "" ? "\nWHERE" : " AND") +
-				"\n files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'" +
-					(merged ? "\nGROUP BY checksums.size, checksums.crc" : "") + " )" +
-				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'" +
-					(merged ? "\nGROUP BY checksums.size, checksums.md5" : "") + " )" +
-				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'" +
-					(merged ? "\nGROUP BY checksums.size, checksums.sha1" : "") + " )" +
-				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='disk'" +
-					(merged ? "\nGROUP BY checksums.md5" : "") + " )" +
-				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='disk'" +
-					(merged ? "\nGROUP BY checksums.sha1" : "") + " )" +
+				($systems == "" && $sources == "" ? "\nWHERE" : " AND").
+				"\n files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'".
+					(merged ? "\nGROUP BY checksums.size, checksums.crc" : "") + " )".
+				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'".
+					(merged ? "\nGROUP BY checksums.size, checksums.md5" : "") + " )".
+				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='rom'".
+					(merged ? "\nGROUP BY checksums.size, checksums.sha1" : "") + " )".
+				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='disk'".
+					(merged ? "\nGROUP BY checksums.md5" : "") + " )".
+				"\n OR files.id IN ( SELECT checksums.file FROM checksums JOIN files ON checksums.file=files.id WHERE files.type='disk'".
+					(merged ? "\nGROUP BY checksums.sha1" : "") + " )".
 			($merged ? " GROUP BY checksums.size, checksums.crc, checksums.md5, checksums.sha1" : "").
 "			ORDER BY systems.id, sources.id, games.name, files.name";
 	$result = mysqli_query($link, $query);
