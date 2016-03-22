@@ -522,9 +522,9 @@ function add_rom_helper ($machinename, $romtype, $gameid, $name, $date, $size, $
 					")
 					VALUES (".$romid.
 						($size != "" ? ", ".$size : "").
-						($crc != "" ? ", '".strtoupper($crc)."'" : "").
-						($md5 != "" ? ", '".strtoupper($md5)."'" : "").
-						($sha1 != "" ? ", '".strtoupper($sha1)."'" : "").
+						($crc != "" ? ", '".strtolower($crc)."'" : "").
+						($md5 != "" ? ", '".strtolower($md5)."'" : "").
+						($sha1 != "" ? ", '".strtolower($sha1)."'" : "").
 					")";
 			
 			$result = mysqli_query($link, $query);
