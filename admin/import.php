@@ -7,7 +7,6 @@ Original code by Matt Nadareski (darksabre76)
 Requires:
 	filename	File name in one of a few formats, see $datpattern
 	size		Sort the list by size of the DAT file (handy for multiple imports)
-	type		If defined, sets the mapping to use on DAT import
 
 TODO: Auto-generate DATs affected by import (merged and custom)?
 TODO: Figure out if some systems need to have their data removed before importing again
@@ -16,15 +15,6 @@ TODO: RomCenter format? http://www.logiqx.com/DatFAQs/RomCenter.php
 	Seems based on INI format; see PHP reference http://php.net/manual/en/function.parse-ini-file.php
 ------------------------------------------------------------------------------------ */
 
-// Special import types
-$type = array(
-		"mame",
-		"nointro",
-		"redump",
-		"tosec",
-		"trurip",
-);
-
 echo "<h2>Import From Datfile</h2>";
 
 ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
@@ -32,23 +22,16 @@ ini_set('max_execution_time', 0); // Set the execution time to infinite. This is
 // Verify GET variables
 $auto = isset($_GET["auto"]) && $_GET["auto"] == "1";
 $size = isset($_GET["size"]) && $_GET["size"] == "1";
-$type = isset($_GET["type"]) && in_array($_GET["type"], $type) ? $_GET["type"] : "";
 
 // Set import path
 $importroot = "../temp/import/";
 
-// If there's a type defined, set the root accordingly
-if ($type != "")
-{
-	$importroot .= $type."/";
-}
-
 if (!isset($_GET["filename"]))
 {
 	// List all files, auto-generate links to proper pages
-	echo "<p><a href='?page=import&auto=1".($size ? "&size=1" : "").($type != "" ? "&type=".$type : "")."'>Automatically add all DATs</a><br/>\n".
-			"<a href='?page=import".($type != "" ? "&type=".$type : "")."'>Sort list by name</a><br/>\n".
-			"<a href='?page=import&size=1".($type != "" ? "&type=".$type : "")."'>Sort list by size</a></p>\n";
+	echo "<p><a href='?page=import&auto=1".($size ? "&size=1" : "")."'>Automatically add all DATs</a><br/>\n".
+			"<a href='?page=import'>Sort list by name</a><br/>\n".
+			"<a href='?page=import&size=1'>Sort list by size</a></p>\n";
 	
 	$files = scandir($importroot);
 	if (sizeof($files) != 0)
@@ -76,14 +59,12 @@ if (!isset($_GET["filename"]))
 					sleep(1);
 					echo "<script type='text/javascript'>window.location='?page=import&auto=1".
 						($size ? "&size=1" : "").
-						($type != "" ? "&type=".$type : "").
 						"'</script>";
 				}
 				else
 				{
 					echo "<a href=\"?page=import&filename=".$file.
 						($size ? "&size=1" : "").
-						($type != "" ? "&type=".$type : "").
 						"\">".htmlspecialchars($file)."</a> (".filesize($importroot.$file)." bytes)<br/>\n";
 				}
 			}
@@ -99,30 +80,7 @@ else
 
 function import_dat ($filename)
 {
-	global $link, $normalize_chars, $search_pattern, $importroot, $type;
-	
-	// First, get the pattern of the file name. This is required for organization.
-	switch ($type)
-	{
-		case "mame":
-			$datpattern = "/^(.*)\.xml$/";
-			break;
-		case "nointro":
-			$datpattern = "/^(.*?) \((\d{8}-\d{6})_CM\)\.dat$/";
-			break;
-		case "redump":
-			$datpattern = "/^(.*?) \((\d{8} \d{2}-\d{2}-\d{2})\)\.dat$/";
-			break;
-		case "tosec":
-			$datpattern = "/^(.*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/";
-			break;
-		case "trurip":
-			$datpattern = "/^(.*?) - .* \(trurip_XML\)\.dat$/";
-			break;
-		default:
-			$datpattern = "/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/";
-			break;
-	}
+	global $link, $normalize_chars, $search_pattern, $importroot;
 	
 	// Check the file is valid
 	if (!file_exists($importroot.$filename))
@@ -132,11 +90,38 @@ function import_dat ($filename)
 	
 		return;
 	}
-	elseif (!preg_match($datpattern, $filename, $fileinfo))
-	{
-		echo "<b>DAT not in the proper pattern! (Manufacturer - SystemName (Source .*)\.dat)</b><br/>\n";
-		echo "<a href='?page=import".($size ? "&size=1" : "")."'>Go back to import page</a>";
 	
+	// Then determine the type of the DAT
+	$type = "";
+	if (preg_match("/^(.*)\.xml$/", $filename, $fileinfo))
+	{
+		$type = "mame";
+	}
+	elseif (preg_match("/^(.*?) \((\d{8}-\d{6})_CM\)\.dat$/", $filename, $fileinfo))
+	{
+		$type = "nointro";
+	}
+	elseif (preg_match("/^(.*?) \((\d{8} \d{2}-\d{2}-\d{2})\)\.dat$/", $filename, $fileinfo))
+	{
+		$type = "redump";
+	}
+	elseif (preg_match("/^(.*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/", $filename, $fileinfo))
+	{
+		$type = "tosec";
+	}
+	elseif (preg_match("/^(.*?) - .* \(trurip_XML\)\.dat$/", $filename, $fileinfo))
+	{
+		$type = "trurip";
+	}
+	elseif (preg_match("/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/", $filename, $fileinfo))
+	{
+		$type = "custom";
+	}
+	else
+	{
+		echo "<b>DAT type could not be determined from file name!</b><br/>\n";
+		echo "<a href='?page=import".($size ? "&size=1" : "")."'>Go back to import page</a>";
+		
 		return;
 	}
 	
@@ -188,6 +173,7 @@ function import_dat ($filename)
 			$datestring = filemtime($importroot.$filename);
 			$date = date("Y-m-d G:i:s", $datestring);
 			break;
+		case "custom":
 		default:
 			$manufacturer = $fileinfo[1];
 			$system = $fileinfo[2];
