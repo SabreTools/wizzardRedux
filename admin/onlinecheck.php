@@ -118,7 +118,7 @@ elseif (!file_exists("../sites/".$_GET["source"].".php"))
 	die();
 }
 
-// Otherwise, we assume the soruce is good, and we attempt to load it
+// Otherwise, we assume the source is good, and we attempt to load it
 $source = $_GET["source"];
 
 echo "<h2>Loading pages and links...</h2>";
