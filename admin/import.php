@@ -80,7 +80,8 @@ else
 
 function import_dat ($filename)
 {
-	global $link, $normalize_chars, $search_pattern, $importroot;
+	global $link, $normalize_chars, $search_pattern, $importroot,
+		$mapping_mame, $mapping_nointro, $mapping_redump, $mapping_tosec, $mapping_trurip;
 	
 	// Check the file is valid
 	if (!file_exists($importroot.$filename))
