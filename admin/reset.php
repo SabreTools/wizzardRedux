@@ -7,24 +7,28 @@
 
 $allreset = true;
 
-$query = "DELETE FROM checksums;
-ALTER TABLE checksums AUTO_INCREMENT = 1";
-
+// Reset checksums table
+$query = "DELETE FROM checksums";
+$allreset = $allreset && mysqli_query($link, $query);
+$query = "ALTER TABLE checksums AUTO_INCREMENT = 1";
 $allreset = $allreset && mysqli_query($link, $query);
 
-$query = "DELETE FROM files;
-ALTER TABLE files AUTO_INCREMENT = 1";
-
+// Reset files table
+$query = "DELETE FROM files";
+$allreset = $allreset && mysqli_query($link, $query);
+$query = "ALTER TABLE files AUTO_INCREMENT = 1";
 $allreset = $allreset && mysqli_query($link, $query);
 
-$query = "DELETE FROM games;
-ALTER TABLE games AUTO_INCREMENT = 1";
-
+// Reset games table
+$query = "DELETE FROM games";
+$allreset = $allreset && mysqli_query($link, $query);
+$query = "ALTER TABLE games AUTO_INCREMENT = 1";
 $allreset = $allreset && mysqli_query($link, $query);
 
-$query = "DELETE FROM parent;
-ALTER TABLE parent AUTO_INCREMENT = 1";
-
+// Reset parent table
+$query = "DELETE FROM parent";
+$allreset = $allreset && mysqli_query($link, $query);
+$query = "ALTER TABLE parent AUTO_INCREMENT = 1";
 $allreset = $allreset && mysqli_query($link, $query);
 
 if ($allreset)
