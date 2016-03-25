@@ -200,22 +200,19 @@ function import_dat ($filename)
 	$sysid = mysqli_fetch_assoc($result);
 	$sysid = $sysid["id"];
 	
-	if ($sourceid == "")
+	$query = "SELECT id
+		FROM sources
+		WHERE name='".$source."'";
+	$result = mysqli_query($link, $query);
+	
+	if (!gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
-		$query = "SELECT id
-			FROM sources
-			WHERE name='".$source."'";
-		$result = mysqli_query($link, $query);
-		
-		if (!gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
-		{
-			echo('Error: No suitable source found! Please add the source and then try again<br/>');
-			return;
-		}
-		
-		$sourceid = mysqli_fetch_assoc($result);
-		$sourceid = $sourceid["id"];
+		echo('Error: No suitable source found! Please add the source and then try again<br/>');
+		return;
 	}
+	
+	$sourceid = mysqli_fetch_assoc($result);
+	$sourceid = $sourceid["id"];
 	
 	// Then, parse the file and read in the information. Echo it out for safekeeping for now.
 	$handle = fopen($importroot.$filename, "r");
