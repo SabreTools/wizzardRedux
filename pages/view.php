@@ -227,21 +227,13 @@ function show_default($link)
 				ORDER BY manufacturer ASC,
 					system ASC";
 	$result = mysqli_query($link, $query);
-	$systems = array();
-	while ($row = mysqli_fetch_assoc($result))
-	{
-		array_push($systems, $row);
-	}
+	$systems = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 	// Retrieve the sources listing
 	$query = "SELECT id, name FROM sources
 				ORDER BY name ASC";
 	$result = mysqli_query($link, $query);
-	$sources = array();
-	while ($row = mysqli_fetch_assoc($result))
-	{
-		array_push($sources, $row);
-	}
+	$sources = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 	// Output the input selection form
 	echo <<<END
@@ -266,6 +258,22 @@ END;
 	echo "</select><br/>
 <input type='submit'>
 </form><br/><br/>\n";
+	
+	// Retieve the last 30 games to be updated, based on lastupdated time
+	$query = "SELECT games.name as name, files.lastupdated as lu, systems.manufacturer as manufacturer, systems.system as system
+			FROM files
+			JOIN games ON files.setid=games.id
+			JOIN systems ON games.system=systems.id
+			ORDER BY files.lastupdated DESC
+			LIMIT 30";
+	$result = mysqli_query($link, $query);
+	echo "<table style='border: 1'>
+	<tr><th>Game</th><th>System</th><th>Last Updated</th></tr>\n";
+	while ($row = mysqli_fetch_assoc($result))
+	{
+		echo "<tr><td>".$row["name"]."</td><td>".$row["manufacturer"]." - ".$row["system"]."</td><td>".$row["lu"]."</td></tr>\n";
+	}
+	echo "</table><br/><br/>\n";
 }
 
 ?>
