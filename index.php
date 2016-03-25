@@ -26,7 +26,7 @@ if (!$link)
 
 //echo "Connection established!<br/>\n";
 
-if ($_GET["page"] && file_exists("pages/".str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
+if (isset($_GET["page"]) && file_exists("pages/".str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
 {
 	include_once "pages/".$_GET["page"].".php";
 }
@@ -34,8 +34,7 @@ else
 {
 	echo "<p>
 Welcome to the WoD Revival homepage!
-		
-Here, the following functions will be implemented:
+
 <ul>
 	<li><a href='?page=view'>Viewing system, source, and game data</a></li>
 	<li><a href='?page=generate'>Creating and downloading DATs</a><ul>
