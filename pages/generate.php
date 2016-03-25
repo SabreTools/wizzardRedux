@@ -472,7 +472,8 @@ function generate_dat ($systems, $sources, $lone = false)
 			if ($lastgame != $rom["game"])
 			{
 				$state = $state."game (\n".
-						"\tname \"".$rom["game"]."\"\n";
+						"\tname \"".$rom["game"]."\"\n".
+						"\tdescription \"".$rom["game"]."\"\n";
 			}
 			$state = $state."\t".$rom["type"]." ( name \"".$rom["name"]."\"".
 					($rom["size"] != "0" ? " size ".$rom["size"] : "").
