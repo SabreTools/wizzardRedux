@@ -13,6 +13,7 @@ TODO: Figure out if some systems need to have their data removed before importin
 		e.g. TOSEC, Redump, TruRip
 TODO: RomCenter format? http://www.logiqx.com/DatFAQs/RomCenter.php
 	Seems based on INI format; see PHP reference http://php.net/manual/en/function.parse-ini-file.php
+TODO: Check import and parsing of No-Intro DATs; don't seem to be working
 ------------------------------------------------------------------------------------ */
 
 echo "<h2>Import From Datfile</h2>";
@@ -320,7 +321,7 @@ function import_dat ($filename)
 			// Process original style RomVault DATs
 			elseif ($format == "romvault")
 			{
-				if (strpos($line, "game") !== false && !$machinefound)
+				if (strpos($line, "game (") !== false && !$machinefound)
 				{
 					$machinefound = true;
 				}
@@ -338,6 +339,10 @@ function import_dat ($filename)
 					$machinename = $machinename[1];
 					$gameid = add_game($sysid, $machinename, $sourceid);
 				}
+				elseif (strpos($line, "description \"") !== false && $machinefound)
+				{
+					// Placeholder unused
+				}
 				elseif (strpos($line, ")") !== false)
 				{
 					$machinefound = false;
@@ -348,6 +353,7 @@ function import_dat ($filename)
 			}
 		}
 		echo "</table><br/>\n";
+		die();
 		fclose($handle);
 		
 		// Add the imported file to the zip and delete
