@@ -622,38 +622,44 @@ ORDER BY ".
 	if ($merged)
 	{
 		// First, dedupe the set
-		$lasttype = ""; $lastcrc = ""; $lastmd5 = ""; $lastsha1 = ""; $lastsize = -1;
-		foreach ($roms as &$rom)
+		$lastgood = 0;
+		for ($i = 0; $i < sizeof($roms); $i++)
 		{
+			$rom = $roms[$i];
+			$last = $roms[$lastgood];
+			
 			// Check if the rom is a duplicate
 			$dupe = false;
-			if ($rom["type"] == "rom" && $lasttype == "rom")
+			if ($rom["type"] == "rom" && $last["type"] == "rom")
 			{
-				$dupe = (($rom["size"] != -1 && $rom["size"] == $lastsize) && (
-						($rom["crc"] != "" && $lastcrc != "" && $rom["crc"] == $lastcrc) ||
-						($rom["md5"] != "" && $lastmd5 != "" && $rom["md5"] == $lastmd5) ||
-						($rom["sha1"] != "" && $lastsha1 != "" && $rom["sha1"] == $lastsha1)
+				$dupe = (($rom["size"] != -1 && $rom["size"] == $last["size"]) && (
+						($rom["crc"] != "" && $last["crc"] != "" && $rom["crc"] == $last["crc"]) ||
+						($rom["md5"] != "" && $last["md5"] != "" && $rom["md5"] == $last["md5"]) ||
+						($rom["sha1"] != "" && $last["sha1"] != "" && $rom["sha1"] == $last["sha1"])
 					)
 				);
 			}
 			else if ($rom["type"] == "disk" && $lasttype == "disk")
 			{
-				$dupe = (($rom["md5"] != "" && $lastmd5 != "" && $rom["md5"] == $lastmd5) ||
-						($rom["sha1"] != "" && $lastsha1 != "" && $rom["sha1"] == $lastsha1)
+				$dupe = (($rom["md5"] != "" && $last["md5"] != "" && $rom["md5"] == $last["md5"]) ||
+						($rom["sha1"] != "" && $last["sha1"] != "" && $rom["sha1"] == $last["sha1"])
 					);
 			}
 			
-			// Set the next variables
-			$lasttype = $rom["type"];
-			$lastsize = $rom["size"];
-			$lastcrc = $rom["crc"];
-			$lastmd5 = $rom["md5"];
-			$lastsha1 = $rom["sha1"];
-			
-			// If it's a duplicate, unset it so it's not in the output
+			// If it's a duplicate, unset it so it's not in the output, but add the info to the previous item
 			if ($dupe)
 			{
-				unset($rom);
+				$last["crc"] = ($last["crc"] == "" && $rom["crc"] != "" ? $rom["crc"] : $last["crc"]);
+				$last["md5"] = ($last["md5"] == "" && $rom["md5"] != "" ? $rom["md5"] : $last["md5"]);
+				$last["sha1"] = ($last["sha1"] == "" && $rom["sha1"] != "" ? $rom["sha1"] : $last["sha1"]);
+				$roms[$lastgood] = $last;
+				
+				unset($roms[$i]);
+			}
+			// Otherwise, set the last unset rom
+			else
+			{
+				$lastgood = $i;
 			}
 		}
 		
