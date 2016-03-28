@@ -110,7 +110,7 @@ else
 				$has_header = ($lynxa == 1 || $lynxb == 1);
 				break;
 			case "nes":
-				$nes = preg_match("/^.4E45531A/", $header);
+				$nes = preg_match("/^4E45531A/", $header);
 				
 				$has_header = ($nes == 1);
 				break;
