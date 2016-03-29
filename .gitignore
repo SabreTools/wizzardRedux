@@ -1,6 +1,7 @@
-.project
-.settings
+.buildpath
 .classpath
 .metadata
+.project
+.settings
+.vs
 temp
-.buildpath
