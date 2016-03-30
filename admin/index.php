@@ -37,7 +37,7 @@ if (!$link)
 
 //echo "Connection established!<br/>\n";
 
-if ($_GET["page"] && file_exists(str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
+if (isset($_GET["page"]) && file_exists(str_replace("../", "", htmlspecialchars($_GET["page"])).".php"))
 {
 	include_once $_GET["page"].".php";
 }
