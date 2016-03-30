@@ -85,7 +85,7 @@
 		echo "<p>Parent not found. Add new?</p>";
 		echo "
 		Game Family: <input type=\"text\" id=\"new_parent_family\"><br> 
-		Game Title: <input type=\"text\" id=\"new_parent_title\" value=\"".$_GET['name']."\"><br>
+		Game Title: <input type=\"text\" id=\"new_parent_title\" value=\"".(isset($_GET['name']) ? $_GET['name'] : "")."\"><br>
 		<button id=\"new_parent_add\">Add new parent</button>
 		";
     }
