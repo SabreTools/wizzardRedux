@@ -21,7 +21,7 @@ foreach ($getvars as $var)
 }
 
 // Assuming there are no relevent params show the basic page
-if ($system == "" && $source == "" && $game == "" && $file == "")
+if ($system == "" && $source == "" && $game == "")
 {
 	show_default($link);
 }
