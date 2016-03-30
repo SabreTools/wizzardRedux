@@ -51,12 +51,12 @@ foreach ($dirs as $dir)
 	$t_dir = explode("/", $dir);
 	$t_dir[count($t_dir) - 1] = null;
 	$t_dir = implode("/", $t_dir);
+	
+	$new = 0;
+	$old = 0;
 
 	foreach ($links as $row)
-	{
-		$new = 0;
-		$old = 0;
-		
+	{		
 		$url = $t_dir.$row[0];
 		$text = strtr($row[1].' ('.str_replace(', ',') (',$row[2]).')', $normalize_chars);
 		
@@ -98,8 +98,8 @@ foreach ($dirs as $dir)
 				}
 			}
 		}
-		echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 	}
+	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
 echo "</table>\n";
