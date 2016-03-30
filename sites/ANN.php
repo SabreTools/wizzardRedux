@@ -19,7 +19,7 @@ foreach ($dirs as $dir)
 
 	foreach ($query as $row)
 	{
-		if (!$r_query[$row])
+		if (!isset($r_query[$row]))
 		{
 			$found[] = array($row, $row);
 			$new++;

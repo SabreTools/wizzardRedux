@@ -29,15 +29,15 @@ for ($page = 0; $page < $max; $page++)
 		preg_match_all("/<a href='\.\.\/(.+?)'/", str_replace("\r", "", $queryb), $queryb);
 		$queryb = $queryb[1];
 
-		foreach ($queryb as $DL)
+		foreach ($queryb as $dl)
 		{
-			$ext = pathinfo($DL, PATHINFO_EXTENSION);
+			$ext = pathinfo($dl, PATHINFO_EXTENSION);
 			
-			if ($r_query[$DL] === NULL)
+			if ($r_query[$dl] === NULL)
 			{
-				$found[] = array($row.".".$ext, "http://www.apple-iigs.info/".$DL);
+				$found[] = array($row.".".$ext, "http://www.apple-iigs.info/".$dl);
 				$new++;
-				$r_query[$DL] = true;
+				$r_query[$dl] = true;
 			}
 			else
 			{
@@ -80,14 +80,14 @@ foreach ($dirs as $dir)
 	foreach ($newrows as $row)
 	{
 		$title = $row[0];
-		$DL = $row[1];
-		$ext = pathinfo($DL, PATHINFO_EXTENSION);
+		$dl = $row[1];
+		$ext = pathinfo($dl, PATHINFO_EXTENSION);
 
-		if (!$r_query[$DL])
+		if (!$r_query[$dl])
 		{
-			$found[] = array($title.".".$ext, "http://www.apple-iigs.info/".$DL);
+			$found[] = array($title.".".$ext, "http://www.apple-iigs.info/".$dl);
 			$new++;
-			$r_query[$DL] = true;
+			$r_query[$dl] = true;
 		}
 		else
 		{
@@ -134,14 +134,14 @@ foreach ($newrows as $row)
 	foreach ($newrowsb as $row)
 	{
 		$title2 = $row[0];
-		$DL = $row[1];
-		$ext = pathinfo($DL, PATHINFO_EXTENSION);
+		$dl = $row[1];
+		$ext = pathinfo($dl, PATHINFO_EXTENSION);
 	
-		if (!$r_query[$DL])
+		if (!isset($r_query[$dl]))
 		{
-			$found[] = array($title." (".$title2.").".$ext, "http://www.apple-iigs.info/".$DL);
+			$found[] = array($title." (".$title2.").".$ext, "http://www.apple-iigs.info/".$dl);
 			$new++;
-			$r_query[$DL] = true;
+			$r_query[$dl] = true;
 		}
 		else
 		{

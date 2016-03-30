@@ -50,11 +50,11 @@ foreach ($query as $row)
 			$title = $title.".".$ext;
         }
 
-		if (!$r_query[$DL])
+		if (isset($r_query[$title]))
 		{
-			$found[] = array($title, "http://apple2online.com/web_documents/".$DL);
+			$found[] = array($title, "http://apple2online.com/web_documents/".$title);
 			$new++;
-			$r_query[$DL] = true;
+			$r_query[$title] = true;
 		}
 		else
 		{
