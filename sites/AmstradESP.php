@@ -98,9 +98,8 @@ foreach ($dirs as $dir)
 				}
 			}
 		}
+		echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
 	}
-	echo "<td>Found new: ".$new.", old: ".$old."</tr>\n";
-	break;
 }
 
 echo "</table>\n";

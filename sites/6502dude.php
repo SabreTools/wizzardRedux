@@ -48,7 +48,10 @@ foreach ($pages as $newfile)
 	// For each table row, process and get links
 	foreach ($query as $row)
 	{
-		preg_match("/<td.*?>(.+?)<\/td>.*?<td.*?<div.*?>(.*?)<\/div>.*?(<td.*?<\/td>)/s", $row, $rowinfo);
+		if (preg_match("/<td.*?>(.+?)<\/td>.*?<td.*?<div.*?>(.*?)<\/div>.*?(<td.*?<\/td>)/s", $row, $rowinfo) !== 1)
+		{
+			continue;
+		}
 		$title = strip_tags($rowinfo[1]);
 		$info = $rowinfo[2];
 		preg_match_all("/<a href=.*tapescans\/victaps\/(.*?)>/", $rowinfo[3], $dls);

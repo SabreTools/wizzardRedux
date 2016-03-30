@@ -20,7 +20,7 @@ foreach ($newfiles as $newfile)
 
 	foreach ($query as $row)
 	{
-    	if ($r_query[$row] !== NULL)
+    	if (isset($r_query[$row]) && $r_query[$row] !== NULL)
 		{
 			$old++;
 		}
