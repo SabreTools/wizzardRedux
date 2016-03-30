@@ -854,7 +854,7 @@ END;
 		echo "<option value='".$source["id"]."'>".$source["name"]."</option>\n";
 	}
 	
-	echo "</select><br/>
+	echo "</select><p/>
 <input type='submit'>
 </form>
 <h2>Or Add a New One</h2>
@@ -868,7 +868,7 @@ END;
 <b>Manufacturer:</b> <input type='text' name='manufacturer' value='".$system_info["manufacturer"]."' />
 <b>Name:</b> <input type='text' name='systemname' value='".$system_info["system"]."' /><br/><br/>
 
-<input type='submit'>\n</form><br/><br/>\n";
+<input type='submit'>\n</form><p/>\n";
 }
 
 ?>
