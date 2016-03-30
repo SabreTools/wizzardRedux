@@ -2,6 +2,8 @@
 
 // Original code: The Wizard of DATz
 
+//TODO: This needs more work, no roms are found
+
 $dirs = array(
 	'http://amstrad.es/juegosamstrad/todos-los-juegos/index.html',
 	'http://amstrad.es/juegosamstrad/demos/index.html',
