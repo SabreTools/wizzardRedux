@@ -105,7 +105,7 @@ if (!isset($_GET["source"]))
 		echo $sites[$key]."<br/>\n";
 	}
 
-	echo "<br/><a href='".$path_to_root."/index.php'>Return to home</a>";
+	echo "<br/><a href='index.php'>Return to home</a>";
 
 	die();
 }
