@@ -53,7 +53,7 @@ for ($i = 1; $i <= 197; $i++)
 
 foreach ($vals as $id)
 {
-	echo ("Retrieving file information for ".$id);
+	echo ("Retrieving file information for ".$id."<br/>\n");
 	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=28&n=".$id;
 	$query = implode("", file($filename));
 	
