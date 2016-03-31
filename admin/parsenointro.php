@@ -3,9 +3,13 @@
 /* ------------------------------------------------------------------------------------
 Internal test to see if the No-Intro pages can be traversed reasonably
 Original code by Matt Nadareski (darksabre76)
+
+Note: Because it needs to include sleep(5), this will always take
+a couple of hours. It's unfortunate, but necessary because of limitations
+that No-Intro puts on a given IP
 ------------------------------------------------------------------------------------ */
 
-ini_set('max_execution_time', 6000); // Set the execution time higher because DATs can be big
+ini_set('max_execution_time', -1); // Set the execution time higher because DATs can be big
 
 // Copy these from generate.php
 $version = date("YmdHis");
@@ -23,7 +27,7 @@ $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 			<author>The Wizard of DATz</author>
 			<clrmamepro/>
 		</header>\n";
-$footer = "\n</datafile>";
+$footer = "</datafile>";
 
 // Game, Name, CRC, MD5
 $roms = array();
@@ -49,6 +53,7 @@ for ($i = 1; $i <= 197; $i++)
 
 foreach ($vals as $id)
 {
+	echo ("Retrieving file information for ".$id);
 	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=28&n=".$id;
 	$query = implode("", file($filename));
 	
