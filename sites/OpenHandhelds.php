@@ -1,15 +1,19 @@
 <?php
 
-/*
-TODO: Write checker for this site: http://www.openhandhelds.org/index.php?
-TODO: Add source to the sources table (web/desktop)
-TODO: Add new systems for ones not already included (All except Pandora, GP32?)
-TODO: Add read/write from associated txt file
-TODO: Study page layout to make sure that all files are found and catalogued.
-TODO: Be careful of how the URLs are made (mostly 0,0,0,0 etc)
-*/
-
 // Original code: Matt Nadareski (darksabre76)
+
+/*
+TODO: Add source to the sources table (web/desktop)
+	OpenHandhelds	http://www.openhandhelds.org/index.php?
+TODO: Add new systems for ones not already included:
+	OpenPandora - Pandora
+	GamePark - GP2X Caanoo
+	GamePark - Dingoo A-320
+	GamePark - GP2X Wiz
+	GamePark - GP2X
+	Tapwave - Zodiac
+	GamePark - GP32
+*/
 
 $pages = array(
 	"http://dl.openhandhelds.org/cgi-bin/pandora.cgi", // Pandora
@@ -19,7 +23,6 @@ $pages = array(
 	"http://dl.openhandhelds.org/cgi-bin/gp2x.cgi", // GP2X
 	"http://dl.openhandhelds.org/cgi-bin/zodiac.cgi", // Zodiac
 	"http://dl.openhandhelds.org/cgi-bin/gp32.cgi", // GP32
-	
 );
 
 $categories = array(
@@ -39,10 +42,11 @@ $categories = array(
 );
 
 // Loop through each of the main pages
+echo "<table>\n";
 foreach ($pages as $page)
 {
 	// Process the current page
-	$query = get_data($page);
+	parse($page, "?0,0,0,0,1", true);
 	
 	// Process pages in filtered subcategories
 	foreach ($categories as $cat)
@@ -50,16 +54,25 @@ foreach ($pages as $page)
 		parse($page, "?0,0,0,0,".$cat);
 	}
 }
+echo "</table>\n";
 
-function parse($page, $cat)
+if (sizeof($found) > 0)
 {
-	$query = get_data($page.$cat);
+	echo "<h2>New files:</h2>";
+}
+
+foreach ($found as $row)
+{
+	echo "<a href='".$row[1]."'>".$row[0]."</a><br/>\n";
+}
+
+echo "<br/>\n";
+
+function parse($page, $cat, $nocats = false)
+{
+	GLOBAL $found;
 	
-	/*
-	Look at example page: http://dl.openhandhelds.org/cgi-bin/dingoo.cgi?0,0,0,0,6,619
-		for how a file page is laid out
-		Name: (blah) is the filename that is downloaded
-	*/
+	$query = get_data($page.$cat);
 	
 	// Everything before this is header and last updated files
 	$query = explode("<TD>&nbsp;<FONT CLASS=\"mid\"><B>Browse</B></FONT></TD>", $query);
@@ -72,30 +85,61 @@ function parse($page, $cat)
 	// Now separate into category and download pages
 	$query = explode("<TD WIDTH=\"100\"><FONT CLASS=\"mid\"><B>&nbsp;Screenshot</B></FONT></TD>", $query);
 	$categories = $query[0];
-	$downloads = $query[1];
+	$downloads = (isset($query[1]) ? $query[1] : "");
 	
 	// Set found variables
 	$new = 0;
 	$old = 0;
 	
 	// Get and parse all downloads on the page
-	preg_match_all("/HREF='\?0,0,0,0,".$cat.",(.*?)'/", $downloads, $downloads);
-	$downloads = $downloads[1];
+	preg_match_all("/HREF='\?0,0,0,0,(\d+),(\d+)'/", $downloads, $downloads);
+	$newdowns = array();
+	for ($index = 0; $index < sizeof($downloads[0]); $index++)
+	{
+		$newdowns[] = array($downloads[1][$index], $downloads[2][$index]);
+	}
+	$downloads = $newdowns;
+	unset($newdowns);
+	
 	foreach ($downloads as $down)
 	{
-		$dquery = get_data($page.$cat.",".$down);
+		$dquery = get_data($page.$cat.",".$down[1]);
 		
-		var_dump($page.$cat.",".$down, $dquery);
-		die();
+		// Get the name of the program
+		preg_match("/<TD VALIGN=\"TOP\" WIDTH=\"40%\"><FONT CLASS=\"big\">&nbsp;<B>(.*?)<\/B>/", $dquery, $name);
+		$name = $name[1];
+		
+		// Download ID is always static
+		$dl_id = "?0,1,0.0,".$down[0].",".$down[1];
+		
+		if (!isset($r_query[$dl_id]))
+		{
+			preg_match("/http:\/\/dl\.openhandhelds\.org\/cgi-bin\/(.*?)\.cgi/", $page, $system);
+			$system = $system[1];
+			
+			$found[] = array("(".$system.") ".$name, $page.$dl_id);
+			$r_query[$dl_id] = true;
+			$new++;
+		}
+		else
+		{
+			$old++;
+		}
 	}
 	
-	// Get and parse all new categories 
-	preg_match_all("/onclick=\"window\.location\.href='\?0,0,0,0,(.*?)'/", $categories, $categories);
-	$categories = $categories[1];
-	foreach ($categories as $catb)
+	// Get and parse all new categories if we are told to
+	if (!$nocats)
 	{
-		parse($page, "?0,0,0,0,".$catb);
+		preg_match_all("/onclick=\"window\.location\.href='\?0,0,0,0,(.*?)'/", $categories, $categories);
+		$categories = $categories[1];
+		foreach ($categories as $catb)
+		{
+			parse($page, "?0,0,0,0,".$catb);
+		}
 	}
+	
+	// Output the newly found information
+	echo "<tr><td>".$page.$cat."</td><td>Found new: ".$new.", old: ".$old."</tr>\n";
 }
 
 ?>
