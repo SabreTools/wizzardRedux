@@ -54,21 +54,28 @@ function parse($page)
 	$query = get_data($page);
 	
 	/*
-	 Here are things to look for:
-	 	All categories are after:
-	 		<TD>&nbsp;<FONT CLASS="mid"><B>Browse</B></FONT></TD>
-	 	And before:
-	 		<TD WIDTH="100"><FONT CLASS="mid"><B>&nbsp;Screenshot</B></FONT></TD>
-	 	After which is any files until
-	 		<TD ALIGN="RIGHT"><FONT CLASS="small">Downloads from this category
-		
-		All categories are of the form "?0,0,0,0,x"
-		All files are of the form "?0,0,0,0,x,y" where x is the category
-		
-		Look at example page: http://dl.openhandhelds.org/cgi-bin/dingoo.cgi?0,0,0,0,6,619
-			for how a file page is laid out
-			Name: (blah) is the filename that is downloaded
+	All categories are of the form "?0,0,0,0,x"
+	All files are of the form "?0,0,0,0,x,y" where x is the category
+	
+	Look at example page: http://dl.openhandhelds.org/cgi-bin/dingoo.cgi?0,0,0,0,6,619
+		for how a file page is laid out
+		Name: (blah) is the filename that is downloaded
 	*/
+	
+	// Everything before this is header and last updated files
+	$query = explode("<TD>&nbsp;<FONT CLASS=\"mid\"><B>Browse</B></FONT></TD>", $query);
+	$query = $query[1];
+	
+	// Everything after this is the most downloaded and footer
+	$query = explode("<TD ALIGN=\"RIGHT\"><FONT CLASS=\"small\">Downloads from this category", $query);
+	$query = $query[0];
+	
+	// Now separate into category and download pages
+	$query = explode("<TD WIDTH=\"100\"><FONT CLASS=\"mid\"><B>&nbsp;Screenshot</B></FONT></TD>", $query);
+	$categories = $query[0];
+	$downloads = $query[1];
+	
+	
 }
 
 ?>
