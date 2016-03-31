@@ -106,12 +106,8 @@ foreach ($vals as $id)
 		}
 	}
 	
+	// Don't anger the No-Intro admins..
 	sleep(5);
-	
-	if ($id == "0010")
-	{
-		break;
-	}
 }
 
 // Now output the roms
@@ -128,7 +124,7 @@ foreach ($roms as &$rom)
 	
 	$state = "\t<machine name=\"".$rom[0]."\">\n".
 			"\t\t<description>".$rom[0]."</description>\n".
-			"\t\t<rom name=\"".$rom[1]."\" crc=\"".$rom[2]."\" md5=\"".$rom[3]."\" />\n".
+			"\t\t<rom name=\"".$rom[1].".nds\" crc=\"".$rom[2]."\" md5=\"".$rom[3]."\" />\n".
 			"\t</machine>\n";
 	
 	echo gzencode($state, 9);
