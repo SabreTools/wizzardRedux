@@ -8,6 +8,8 @@ Original code by Matt Nadareski (darksabre76)
 ini_set('max_execution_time', 6000); // Set the execution time higher because DATs can be big
 
 // Copy these from generate.php
+$version = date("YmdHis");
+$datname = 'Nintendo DS Scene Releases ('.$version.')';
 $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 	<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">
 
@@ -19,7 +21,7 @@ $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 			<version>".$version."</version>
 			<date>".$version."</date>
 			<author>The Wizard of DATz</author>
-			<clrmamepro".($systems != "" && array_key_exists($systems, $headers) ? " header=\"".$headers[$systems]."\"" : "")."/>
+			<clrmamepro/>
 		</header>\n";
 $footer = "\n</datafile>";
 
@@ -113,7 +115,7 @@ foreach ($vals as $id)
 // Now output the roms
 ob_end_clean();
 header('content-type: application/x-gzip');
-header('Content-Disposition: attachment; filename="Nintendo DS Scene Releases ('.date("YmdHis").').xml.gz"');
+header('Content-Disposition: attachment; filename="'.$datname.'.xml.gz"');
 
 echo gzencode($header, 9);
 foreach ($roms as &$rom)
