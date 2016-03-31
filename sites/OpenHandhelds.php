@@ -29,6 +29,8 @@ $categories = array(
 	"5", // Emulators
 	"42", // Firmwares
 	"3", // Games
+	
+	// These categories aren't relevant to the DAT
 	//"2", // Magazines
 	//"50", // Skins
 	//"17", // Linux
@@ -45,18 +47,15 @@ foreach ($pages as $page)
 	// Process pages in filtered subcategories
 	foreach ($categories as $cat)
 	{
-		$query = get_data($page."?0,0,0,0,".$cat);
+		parse($page, "?0,0,0,0,".$cat);
 	}
 }
 
-function parse($page)
+function parse($page, $cat)
 {
-	$query = get_data($page);
+	$query = get_data($page.$cat);
 	
 	/*
-	All categories are of the form "?0,0,0,0,x"
-	All files are of the form "?0,0,0,0,x,y" where x is the category
-	
 	Look at example page: http://dl.openhandhelds.org/cgi-bin/dingoo.cgi?0,0,0,0,6,619
 		for how a file page is laid out
 		Name: (blah) is the filename that is downloaded
@@ -75,7 +74,28 @@ function parse($page)
 	$categories = $query[0];
 	$downloads = $query[1];
 	
+	// Set found variables
+	$new = 0;
+	$old = 0;
 	
+	// Get and parse all downloads on the page
+	preg_match_all("/HREF='\?0,0,0,0,".$cat.",(.*?)'/", $downloads, $downloads);
+	$downloads = $downloads[1];
+	foreach ($downloads as $down)
+	{
+		$dquery = get_data($page.$cat.",".$down);
+		
+		var_dump($page.$cat.",".$down, $dquery);
+		die();
+	}
+	
+	// Get and parse all new categories 
+	preg_match_all("/onclick=\"window\.location\.href='\?0,0,0,0,(.*?)'/", $categories, $categories);
+	$categories = $categories[1];
+	foreach ($categories as $catb)
+	{
+		parse($page, "?0,0,0,0,".$catb);
+	}
 }
 
 ?>
