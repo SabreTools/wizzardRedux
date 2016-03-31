@@ -7,6 +7,22 @@ Original code by Matt Nadareski (darksabre76)
 
 ini_set('max_execution_time', 6000); // Set the execution time higher because DATs can be big
 
+// Copy these from generate.php
+$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+	<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">
+
+	<datafile>
+		<header>
+			<name>".htmlspecialchars($datname)."</name>
+			<description>".htmlspecialchars($datname)."</description>
+			<category>The Wizard of DATz</category>
+			<version>".$version."</version>
+			<date>".$version."</date>
+			<author>The Wizard of DATz</author>
+			<clrmamepro".($systems != "" && array_key_exists($systems, $headers) ? " header=\"".$headers[$systems]."\"" : "")."/>
+		</header>\n";
+$footer = "\n</datafile>";
+
 // Game, Name, CRC, MD5
 $roms = array();
 $vals = array();
@@ -92,13 +108,33 @@ foreach ($vals as $id)
 	
 	sleep(5);
 	
-	if ($id == "0005")
+	if ($id == "0010")
 	{
 		break;
 	}
 }
 
-var_dump($roms);
+// Now output the roms
+ob_end_clean();
+header('content-type: application/x-gzip');
+header('Content-Disposition: attachment; filename="Nintendo DS Scene Releases ('.date("YmdHis").').xml.gz"');
+
+echo gzencode($header, 9);
+foreach ($roms as &$rom)
+{
+	// Check for blank CRC and MD5
+	$rom[2] = ($rom[2] == "0" ? "00000000" : strtolower($rom[2]));
+	$rom[3] = ($rom[3] == "0" ? "d41d8cd98f00b204e9800998ecf8427e" : strtolower($rom[3]));
+	
+	$state = "\t<machine name=\"".$rom[0]."\">\n".
+			"\t\t<description>".$rom[0]."</description>\n".
+			"\t\t<rom name=\"".$rom[1]."\" crc=\"".$rom[2]."\" md5=\"".$rom[3]."\" />\n".
+			"\t</machine>\n";
+	
+	echo gzencode($state, 9);
+}
+echo gzencode($footer, 9);
+die();
 
 function proc_data($data)
 {
