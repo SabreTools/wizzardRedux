@@ -14,7 +14,15 @@ try again?
 
 ini_set('max_execution_time', -1); // Set the execution time higher because DATs can be big
 
+// Connect to the database so it doesn't have to be done in every page
+$link = mysqli_connect('localhost', 'root', '', 'scene');
+if (!$link)
+{
+	die('Error: Could not connect: ' . mysqli_error($link));
+}
+
 $system = (isset($_GET["system"]) ? $_GET["system"] : "28");
+$start = (isset($_GET["start"]) ? $_GET["start"] : 0);
 
 // System ID to Name mapping
 $systems = array(
@@ -41,14 +49,6 @@ $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 		</header>\n";
 $footer = "</datafile>";
 
-// Make the page ready for output
-ob_end_clean();
-header('content-type: application/x-gzip');
-header('Content-Disposition: attachment; filename="'.$datname.'.xml.gz"');
-echo gzencode($header, 9);
-
-// Game, Name, CRC, MD5
-$roms = array();
 $vals = array();
 
 // Populate vals
@@ -90,16 +90,29 @@ elseif ($system == "53")
 	}
 }
 
-
-foreach ($vals as $id)
+for ($i = $start; $i < $start + 10 || $i < sizeof($vals); $i++)
 {
-	//echo ("Retrieving file information for ".$id."<br/>\n");
+	$id = $vals[$i];
+	
+	echo ("Retrieving file information for ".$id."<br/>\n");
 	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id;
 	$query = implode("", file($filename));
 	
+	// If we're in an error state, wait a minute...
+	while (strpos($query, "I am too busy for this") === FALSE)
+	{
+		echo "\tError page found, waiting 60 seconds<br/>\n";
+		sleep(60);
+		$query = implode("", file($filename));
+	}
+	
 	// Get leading edge of the scene releases
 	$query = explode("Scene releases", $query);
-	if (isset($query[1]))
+	if (!isset($query[1]))
+	{
+		echo "\tNo scene information found<br/>\n";
+	}
+	else
 	{
 		$query = $query[1];
 		
@@ -149,14 +162,25 @@ foreach ($vals as $id)
 			}
 			
 			// Extract the useful bits
-			proc_data($data);
+			proc_data($data, $system);
 		}
 	}
 	
+	ob_flush();
+	flush();
+	
 	// Don't anger the No-Intro admins..
-	sleep(5);
+	sleep(10);
 }
 
+echo "<a href='?page=parsenointro&system=".$system."&start=".($start+10)."'>Next</a><p/>\n";
+
+/*
+// Make the page ready for output
+ob_end_clean();
+header('content-type: application/x-gzip');
+header('Content-Disposition: attachment; filename="'.$datname.'.xml.gz"');
+echo gzencode($header, 9);
 // Now output the roms
 foreach ($roms as &$rom)
 {
@@ -173,10 +197,11 @@ foreach ($roms as &$rom)
 }
 echo gzencode($footer, 9);
 die();
+*/
 
-function proc_data($data)
+function proc_data($data, $system)
 {
-	GLOBAL $roms;
+	GLOBAL $roms, $link;
 	
 	$directory = "";
 	$name = "";
@@ -213,7 +238,34 @@ function proc_data($data)
 		}
 	}
 	
-	$roms[] = array($released."_".$directory, $name, $crc, $md5);
+	// Check if it's in the database. If it's not, add it
+	$query = "SELECT id FROM releases
+WHERE game='".$directory."'
+	AND system=".$system."
+	AND name='".$name."'
+	AND released='".$released."'
+	AND crc='".$crc."'
+	AND md5='".$md5."'";
+	$result = mysqli_query($link, $query);
+	
+	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
+	{
+		$query = "INSERT INTO releases (game, system, name, released, crc, md5)
+	VALUES ('".$directory."', ".$system.", '".$name."', '".$released."', '".$crc."', '".$md5."'";
+		$result = mysqli_query($link, $query);
+		if (gettype($result) == "boolean" && $result)
+		{
+			echo "\tRelease ".$directory." has been added<br/>\n";
+		}
+		else
+		{
+			echo "\tRelease ".$directory." could not be added<br/>\n";
+		}
+	}
+	else
+	{
+		echo "\tRelease ".$directory." already exists<br/>\n";
+	}
 }
 
 ?>
