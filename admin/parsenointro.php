@@ -124,6 +124,12 @@ for ($i = $start; $i < $start + 10 && $i < sizeof($vals); $i++)
 {
 	$id = $vals[$i];
 	
+	// Don't anger the No-Intro admins..
+	echo "Waiting 10 seconds...\n";
+	ob_flush(); flush();
+	sleep(10);
+	
+	
 	echo ("Retrieving file information for ".$id."\n");
 	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id;
 	$query = implode("", file($filename));
@@ -197,10 +203,8 @@ for ($i = $start; $i < $start + 10 && $i < sizeof($vals); $i++)
 		}
 	}
 	
+	// Make sure everything prints to screen
 	ob_flush(); flush();
-	
-	// Don't anger the No-Intro admins..
-	sleep(10);
 }
 
 echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".($start+10)."'>Next</a><p/>\n";
