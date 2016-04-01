@@ -14,6 +14,8 @@ try again?
 
 ini_set('max_execution_time', -1); // Set the execution time higher because DATs can be big
 
+echo "<h2>Scene Information Log</h2>\n<pre>";
+
 // Connect to the database so it doesn't have to be done in every page
 $link = mysqli_connect('localhost', 'root', '', 'scene');
 if (!$link)
@@ -94,15 +96,16 @@ for ($i = $start; $i < $start + 10 || $i < sizeof($vals); $i++)
 {
 	$id = $vals[$i];
 	
-	echo ("Retrieving file information for ".$id."<br/>\n");
+	echo ("Retrieving file information for ".$id."\n");
 	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id;
 	$query = implode("", file($filename));
 	
 	// If we're in an error state, wait a minute...
-	while (strpos($query, "I am too busy for this") === FALSE)
+	while (strpos($query, "I am too busy for this") !== FALSE)
 	{
-		echo "\tError page found, waiting 60 seconds<br/>\n";
-		sleep(60);
+		echo "\tError page found, waiting 5 minutes\n";
+		ob_flush(); flush();
+		sleep(5 * 60);
 		$query = implode("", file($filename));
 	}
 	
@@ -110,7 +113,7 @@ for ($i = $start; $i < $start + 10 || $i < sizeof($vals); $i++)
 	$query = explode("Scene releases", $query);
 	if (!isset($query[1]))
 	{
-		echo "\tNo scene information found<br/>\n";
+		echo "\tNo scene information found\n";
 	}
 	else
 	{
@@ -166,14 +169,13 @@ for ($i = $start; $i < $start + 10 || $i < sizeof($vals); $i++)
 		}
 	}
 	
-	ob_flush();
-	flush();
+	ob_flush(); flush();
 	
 	// Don't anger the No-Intro admins..
 	sleep(10);
 }
 
-echo "<a href='?page=parsenointro&system=".$system."&start=".($start+10)."'>Next</a><p/>\n";
+echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".($start+10)."'>Next</a><p/>\n";
 
 /*
 // Make the page ready for output
@@ -255,16 +257,16 @@ WHERE game='".$directory."'
 		$result = mysqli_query($link, $query);
 		if (gettype($result) == "boolean" && $result)
 		{
-			echo "\tRelease ".$directory." has been added<br/>\n";
+			echo "\tRelease ".$directory." has been added\n";
 		}
 		else
 		{
-			echo "\tRelease ".$directory." could not be added<br/>\n";
+			echo "\tRelease ".$directory." could not be added\n";
 		}
 	}
 	else
 	{
-		echo "\tRelease ".$directory." already exists<br/>\n";
+		echo "\tRelease ".$directory." already exists\n";
 	}
 }
 
