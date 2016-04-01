@@ -31,6 +31,8 @@ $systems = array(
 	"28" => "Nintendo DS",
 	"54" => "Nintendo DSi",
 	"53" => "Nintendo DSi (DLC)",
+	"64" => "Nintendo 3DS",
+	"79" => "Nintendo 3DS (DLC)",
 );
 
 // Copy these from generate.php
@@ -89,6 +91,32 @@ elseif ($system == "53")
 	for ($i = 1; $i <= 393; $i++)
 	{
 		$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
+	}
+}
+elseif ($system == "64")
+{
+	for ($i = 0; $i <= 1470; $i++)
+	{
+		$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
+	}
+	for ($i = 1; $i <= 10; $i++)
+	{
+		$vals[] = "z".str_pad($i, 3, "0", STR_PAD_LEFT);
+	}
+	for ($i = 1; $i <= 44; $i++)
+	{
+		$vals[] = "x".str_pad($i, 3, "0", STR_PAD_LEFT);
+	}
+}
+elseif ($system == "79")
+{
+	for ($i = 0; $i <= 582; $i++)
+	{
+		$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
+	}
+	for ($i = 1; $i <= 298; $i++)
+	{
+		$vals[] = "z".str_pad($i, 3, "0", STR_PAD_LEFT);
 	}
 }
 
@@ -187,8 +215,8 @@ echo gzencode($header, 9);
 foreach ($roms as &$rom)
 {
 	// Check for blank CRC and MD5
-	$rom[2] = ($rom[2] == "0" ? "00000000" : strtolower($rom[2]));
-	$rom[3] = ($rom[3] == "0" ? "d41d8cd98f00b204e9800998ecf8427e" : strtolower($rom[3]));
+	$rom[2] = ($rom[2] == "0" || $rom[2] == "" ? "00000000" : strtolower($rom[2]));
+	$rom[3] = ($rom[3] == "0" || $rom[3] == "" ? "d41d8cd98f00b204e9800998ecf8427e" : strtolower($rom[3]));
 	
 	$state = "\t<machine name=\"".$rom[0]."\">\n".
 			"\t\t<description>".$rom[0]."</description>\n".
