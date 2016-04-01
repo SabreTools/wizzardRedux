@@ -171,6 +171,7 @@ for ($i = $start; $i < $start + 50 && $i < sizeof($vals); $i++)
 		{
 			$data = array();
 			
+			$release = htmlspecialchars($release);
 			$enddiv = strpos($release, "</div>");
 			$xmlr->XML(($enddiv !== false ? "<div>" : "")."<table><tr><td>".$release.($enddiv === false ? "</td></tr></table>" : ""));
 			
@@ -214,20 +215,34 @@ ob_end_clean();
 header('content-type: application/x-gzip');
 header('Content-Disposition: attachment; filename="'.$datname.'.xml.gz"');
 echo gzencode($header, 9);
-// Now output the roms
-foreach ($roms as &$rom)
+
+// Retrieve all of the games, sorted by release date and name
+$query = "SELECT * FROM releases
+WHERE system=".$system."
+ORDER BY released, game";
+$result = mysqli_query($link, $query);
+
+if (gettype($result) != "boolean" && mysqli_num_rows($result) > 0)
 {
-	// Check for blank CRC and MD5
-	$rom[2] = ($rom[2] == "0" || $rom[2] == "" ? "00000000" : strtolower($rom[2]));
-	$rom[3] = ($rom[3] == "0" || $rom[3] == "" ? "d41d8cd98f00b204e9800998ecf8427e" : strtolower($rom[3]));
-	
-	$state = "\t<machine name=\"".$rom[0]."\">\n".
-			"\t\t<description>".$rom[0]."</description>\n".
-			"\t\t<rom name=\"".$rom[1].".nds\" crc=\"".$rom[2]."\" md5=\"".$rom[3]."\" />\n".
-			"\t</machine>\n";
-	
-	echo gzencode($state, 9);
+	$roms = mysqli_fetch_all($result, MYSQLI_ASSOC)
+	$ext = ($system < 60 ? "nds" : "3ds");
+
+	// Now output the roms
+	foreach ($roms as &$rom)
+	{
+		// Check for blank CRC and MD5
+		$rom["crc"] = ($rom["crc"] == "0" || $rom["crc"] == "" ? "00000000" : strtolower($rom["crc"]));
+		$rom["md5"] = ($rom["md5"] == "0" || $rom["md5"] == "" ? "d41d8cd98f00b204e9800998ecf8427e" : strtolower($rom["md5"]));
+		
+		$state = "\t<machine name=\"".$rom["released"]."_".$rom["game"]."\">\n".
+				"\t\t<description>".$rom["released"]."_".$rom["game"]."</description>\n".
+				"\t\t<rom name=\"".$rom["name"].".".$ext."\" crc=\"".$rom["crc"]."\" md5=\"".$rom["md5"]."\" />\n".
+				"\t</machine>\n";
+		
+		echo gzencode($state, 9);
+	}
 }
+
 echo gzencode($footer, 9);
 die();
 */
