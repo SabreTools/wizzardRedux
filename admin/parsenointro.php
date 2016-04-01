@@ -120,7 +120,7 @@ elseif ($system == "79")
 	}
 }
 
-for ($i = $start; $i < $start + 50 && $i < sizeof($vals); $i++)
+for ($i = $start; /*$i < $start + 50 &&*/ $i < sizeof($vals); $i++)
 {
 	$id = $vals[$i];
 	
@@ -133,13 +133,12 @@ for ($i = $start; $i < $start + 50 && $i < sizeof($vals); $i++)
 	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id;
 	$query = implode("", file($filename));
 	
-	// If we're in an error state, wait a minute...
-	while (strpos($query, "I am too busy for this") !== FALSE)
+	// If we're in an error state, break
+	if (strpos($query, "I am too busy for this") !== FALSE)
 	{
-		echo "\tError page found, waiting 5 minutes\n";
-		ob_flush(); flush();
-		sleep(5 * 60);
-		$query = implode("", file($filename));
+		echo "\tError page found, breaking at ".$id."\n";
+		$start = $id;
+		break;
 	}
 	
 	// Get leading edge of the scene releases
@@ -171,7 +170,7 @@ for ($i = $start; $i < $start + 50 && $i < sizeof($vals); $i++)
 		{
 			$data = array();
 			
-			$release = htmlspecialchars($release);
+			$release = str_replace("&", "&amp;", $release);
 			$enddiv = strpos($release, "</div>");
 			$xmlr->XML(($enddiv !== false ? "<div>" : "")."<table><tr><td>".$release.($enddiv === false ? "</td></tr></table>" : ""));
 			
@@ -207,7 +206,7 @@ for ($i = $start; $i < $start + 50 && $i < sizeof($vals); $i++)
 	ob_flush(); flush();
 }
 
-echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".($start+50)."'>Next</a><p/>\n";
+echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".$start."'>Next</a><p/>\n";
 
 /*
 // Make the page ready for output
