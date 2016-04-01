@@ -35,7 +35,7 @@ $systems = array(
 	"79" => "Nintendo 3DS (DLC)",
 );
 
-// Copy these from generate.php
+// Copied these from generate.php
 $version = date("YmdHis");
 $datname = $systems[$system].' Scene Releases ('.$version.')';
 $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
@@ -120,7 +120,7 @@ elseif ($system == "79")
 	}
 }
 
-for ($i = $start; $i < $start + 10 && $i < sizeof($vals); $i++)
+for ($i = $start; $i < $start + 50 && $i < sizeof($vals); $i++)
 {
 	$id = $vals[$i];
 	
@@ -128,7 +128,6 @@ for ($i = $start; $i < $start + 10 && $i < sizeof($vals); $i++)
 	echo "Waiting 10 seconds...\n";
 	ob_flush(); flush();
 	sleep(10);
-	
 	
 	echo ("Retrieving file information for ".$id."\n");
 	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id;
@@ -207,7 +206,7 @@ for ($i = $start; $i < $start + 10 && $i < sizeof($vals); $i++)
 	ob_flush(); flush();
 }
 
-echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".($start+10)."'>Next</a><p/>\n";
+echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".($start+50)."'>Next</a><p/>\n";
 
 /*
 // Make the page ready for output
