@@ -120,7 +120,7 @@ elseif ($system == "79")
 	}
 }
 
-for ($i = $start; $i < $start + 10 || $i < sizeof($vals); $i++)
+for ($i = $start; $i < $start + 10 && $i < sizeof($vals); $i++)
 {
 	$id = $vals[$i];
 	
@@ -281,7 +281,7 @@ WHERE game='".$directory."'
 	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
 		$query = "INSERT INTO releases (game, system, name, released, crc, md5)
-	VALUES ('".$directory."', ".$system.", '".$name."', '".$released."', '".$crc."', '".$md5."'";
+	VALUES ('".$directory."', ".$system.", '".$name."', '".$released."', '".$crc."', '".$md5."')";
 		$result = mysqli_query($link, $query);
 		if (gettype($result) == "boolean" && $result)
 		{
