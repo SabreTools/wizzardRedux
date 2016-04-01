@@ -11,9 +11,18 @@ that No-Intro puts on a given IP
 
 ini_set('max_execution_time', -1); // Set the execution time higher because DATs can be big
 
+$system = (isset($_GET["system"]) ? $_GET["system"] : "28");
+
+// System ID to Name mapping
+$systems = array(
+	"28" => "Nintendo DS",
+	"54" => "Nintendo DSi",
+	"53" => "Nintendo DSi (DLC)",
+);
+
 // Copy these from generate.php
 $version = date("YmdHis");
-$datname = 'Nintendo DS Scene Releases ('.$version.')';
+$datname = $systems[$system].' Scene Releases ('.$version.')';
 $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 	<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">
 
@@ -29,32 +38,60 @@ $header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 		</header>\n";
 $footer = "</datafile>";
 
+// Make the page ready for output
+ob_end_clean();
+header('content-type: application/x-gzip');
+header('Content-Disposition: attachment; filename="'.$datname.'.xml.gz"');
+echo gzencode($header, 9);
+
 // Game, Name, CRC, MD5
 $roms = array();
 $vals = array();
 
 // Populate vals
-for ($i = 0; $i <= 6603; $i++)
+if ($system == "28")
 {
-	$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
+	for ($i = 0; $i <= 6603; $i++)
+	{
+		$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
+	}
+	for ($i = 1; $i <= 165; $i++)
+	{
+		$vals[] = "z".str_pad($i, 3, "0", STR_PAD_LEFT);
+	}
+	for ($i = 1; $i <= 3; $i++)
+	{
+		$vals[] = "xB".str_pad($i, 2, "0", STR_PAD_LEFT);
+	}
+	for ($i = 1; $i <= 197; $i++)
+	{
+		$vals[] = "x".str_pad($i, 3, "0", STR_PAD_LEFT);
+	}
 }
-for ($i = 1; $i <= 165; $i++)
+elseif ($system == "54")
 {
-	$vals[] = "z".str_pad($i, 3, "0", STR_PAD_LEFT);
+	for ($i = 1; $i <= 9; $i++)
+	{
+		$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
+	}
+	for ($i = 1; $i <= 1; $i++)
+	{
+		$vals[] = "z".str_pad($i, 3, "0", STR_PAD_LEFT);
+	}
 }
-for ($i = 1; $i <= 3; $i++)
+elseif ($system == "53")
 {
-	$vals[] = "xB".str_pad($i, 2, "0", STR_PAD_LEFT);
+	for ($i = 1; $i <= 393; $i++)
+	{
+		$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
+	}
 }
-for ($i = 1; $i <= 197; $i++)
-{
-	$vals[] = "x".str_pad($i, 3, "0", STR_PAD_LEFT);
-}
+
 
 foreach ($vals as $id)
 {
-	echo ("Retrieving file information for ".$id."<br/>\n");
-	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=28&n=".$id;
+	//echo ("Retrieving file information for ".$id."<br/>\n");
+	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id;
 	$query = implode("", file($filename));
 	
 	// Get leading edge of the scene releases
@@ -118,11 +155,6 @@ foreach ($vals as $id)
 }
 
 // Now output the roms
-ob_end_clean();
-header('content-type: application/x-gzip');
-header('Content-Disposition: attachment; filename="'.$datname.'.xml.gz"');
-
-echo gzencode($header, 9);
 foreach ($roms as &$rom)
 {
 	// Check for blank CRC and MD5
