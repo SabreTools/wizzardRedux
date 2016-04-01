@@ -7,6 +7,9 @@ Original code by Matt Nadareski (darksabre76)
 Note: Because it needs to include sleep(5), this will always take
 a couple of hours. It's unfortunate, but necessary because of limitations
 that No-Intro puts on a given IP
+Note: This still times out every once in a while. Only about half of the
+pages are parsed correctly. If it reaches an error page, have it wait and
+try again?
 ------------------------------------------------------------------------------------ */
 
 ini_set('max_execution_time', -1); // Set the execution time higher because DATs can be big
