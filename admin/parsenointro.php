@@ -204,6 +204,7 @@ for ($i = $start; /*$i < $start + 50 &&*/ $i < sizeof($vals); $i++)
 	
 	// Make sure everything prints to screen
 	ob_flush(); flush();
+	echo "<script>window.scrollTo(0,document.body.scrollHeight)</script>";
 }
 
 echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".$start."'>Next</a><p/>\n";
