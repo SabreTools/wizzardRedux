@@ -253,7 +253,7 @@ elseif ($system != "")
 		ob_flush(); flush();
 		echo "<script>window.scrollTo(0,document.body.scrollHeight)</script>";
 	}
-echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".$start."'>Next</a><p/>\n";
+echo "</pre>\n<a href='?page=scene&system=".$system."&start=".$start."'>Next</a><p/>\n";
 }
 
 // If we don't have either, then show a selection screen
@@ -263,7 +263,7 @@ else
 	
 	// First the import form
 	echo "<form action='' method='get'>
-	<input type='hidden' name='page' value='parsenointro'/>
+	<input type='hidden' name='page' value='scene'/>
 	<input type='hidden' name='gen' value='0'/>
 	<select name='system'>\n";
 	foreach ($systems as $id => $name)
@@ -276,7 +276,7 @@ else
 	
 	// Then the generate form
 	echo "<form action='' method='get'>
-	<input type='hidden' name='page' value='parsenointro'/>
+	<input type='hidden' name='page' value='scene'/>
 	<input type='hidden' name='gen' value='1'/>
 	<select name='system'>\n";
 	foreach ($systems as $id => $name)
