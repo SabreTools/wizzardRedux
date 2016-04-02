@@ -39,14 +39,14 @@ if ($gen == "1")
 {
 	// Copied these from generate.php
 	$version = date("YmdHis");
-	$datname = $systems[$system].' Scene Releases ('.$version.')';
+	$datname = $systems[$system].' Scene Releases';
 	$header = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 		<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">
 	
 		<datafile>
 			<header>
 				<name>".htmlspecialchars($datname)."</name>
-				<description>".htmlspecialchars($datname)."</description>
+				<description>".htmlspecialchars($datname)." (".$version.")</description>
 				<category>The Wizard of DATz</category>
 				<version>".$version."</version>
 				<date>".$version."</date>
