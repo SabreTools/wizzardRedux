@@ -129,7 +129,7 @@ for ($i = $start; /*$i < $start + 50 &&*/ $i < sizeof($vals); $i++)
 	ob_flush(); flush();
 	sleep(10);
 	
-	echo ("Retrieving file information for ".$id."\n");
+	echo ($i.": Retrieving file information for ".$id."\n");
 	$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id;
 	$query = implode("", file($filename));
 	
