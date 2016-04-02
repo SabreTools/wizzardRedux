@@ -522,6 +522,7 @@ function add_rom_helper ($machinename, $romtype, $gameid, $name, $date, $size, $
 			if (gettype($result)=="boolean" && $result)
 			{
 				echo "<tr><td>".$machinename."</td><td>".$name."</td><td>".$size."</td><td>".$crc."</td><td>".$md5."</td><td>".$sha1."</td></tr>\n";
+				ob_flush(); flush();
 			}
 			else
 			{
