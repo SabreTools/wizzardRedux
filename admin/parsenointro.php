@@ -259,6 +259,8 @@ echo "</pre>\n<a href='?page=parsenointro&system=".$system."&start=".$start."'>N
 // If we don't have either, then show a selection screen
 else
 {
+	echo "<h2>Scene Release Info</h2>\n";
+	
 	// First the import form
 	echo "<form action='' method='get'>
 	<input type='hidden' name='page' value='parsenointro'/>
