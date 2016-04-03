@@ -2,19 +2,6 @@
 
 // Original code: Matt Nadareski (darksabre76)
 
-/*
-TODO: Add source to the sources table (web/desktop)
-	OpenHandhelds	http://www.openhandhelds.org/index.php?
-TODO: Add new systems for ones not already included:
-	OpenPandora - Pandora
-	GamePark - GP2X Caanoo
-	GamePark - Dingoo A-320
-	GamePark - GP2X Wiz
-	GamePark - GP2X
-	Tapwave - Zodiac
-	GamePark - GP32
-*/
-
 $pages = array(
 	"http://dl.openhandhelds.org/cgi-bin/pandora.cgi", // Pandora
 	"http://dl.openhandhelds.org/cgi-bin/caanoo.cgi", // Caanoo
