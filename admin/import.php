@@ -159,6 +159,11 @@ function import_dat ($filename)
 			$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
 			break;
 		case "tosec":
+			// If it's a special case, try to see if it's one of the odd TOSEC's
+			if (!isset($mapping_tosec[$fileinfo[1]]))
+			{
+				preg_match("/^(.*? - .*? - .*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/", $filename, $fileinfo);
+			}
 			preg_match("/^(.*) - (.*)$/", $mapping_tosec[$fileinfo[1]], $name);
 			$manufacturer = $name[1];
 			$system = $name[2];
