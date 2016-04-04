@@ -1,15 +1,11 @@
 <?php
 
 /* ------------------------------------------------------------------------------------
-Internal test to see if the No-Intro pages can be traversed reasonably
+Import unpacked scene data from No-Intro by page traversal
 Original code by Matt Nadareski (darksabre76)
 
-Note: Because it needs to include sleep(5), this will always take
-a couple of hours. It's unfortunate, but necessary because of limitations
-that No-Intro puts on a given IP
-Note: This still times out every once in a while. Only about half of the
-pages are parsed correctly. If it reaches an error page, have it wait and
-try again?
+Note: The complete import process for a large number of items can get exceedingly
+	long because of site restrictions. Fair is fair.
 ------------------------------------------------------------------------------------ */
 
 ini_set('max_execution_time', -1); // Set the execution time higher because DATs can be big
@@ -22,7 +18,7 @@ if (!$link)
 }
 
 $system = (isset($_GET["system"]) ? $_GET["system"] : "");
-$start = (isset($_GET["start"]) ? $_GET["start"] : 0);
+$start = (isset($_GET["start"]) ? $_GET["start"] : "0");
 $gen = (isset($_GET["gen"]) ? $_GET["gen"] : "0");
 
 // System ID to Name mapping
@@ -58,7 +54,7 @@ if ($gen == "1")
 	// Make the page ready for output
 	ob_end_clean();
 	header('content-type: application/x-gzip');
-	header('Content-Disposition: attachment; filename="'.$datname.'.xml.gz"');
+	header('Content-Disposition: attachment; filename="'.$datname.' ('.$version.').xml.gz"');
 	echo gzencode($header, 9);
 	
 	// Retrieve all of the games, sorted by release date and name
@@ -172,19 +168,21 @@ elseif ($system != "")
 		$id = $vals[$i];
 		
 		// Don't anger the No-Intro admins..
-		echo "Waiting 10 seconds...\n";
+		echo "Waiting 30 seconds...\n";
 		ob_flush(); flush();
-		sleep(10);
+		sleep(30);
 		
 		echo ($i.": Retrieving file information for ".$id."\n");
 		$filename = "http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id;
 		$query = implode("", file($filename));
+		//$query = get_data($filename);
 		
 		// If we're in an error state, break
 		if (strpos($query, "I am too busy for this") !== FALSE)
 		{
-			echo "\tError page found, breaking at ".$id."\n";
-			$start = $id;
+			echo "\tError page found, breaking at http://datomatic.no-intro.org/index.php?page=show_record&s=".$system."&n=".$id."\n";
+			$start = $i;
+			echo "</pre>\n<a href='?page=scene&system=".$system."&start=".$start."'>Next</a><p/>\n";
 			break;
 		}
 		
@@ -253,7 +251,6 @@ elseif ($system != "")
 		ob_flush(); flush();
 		echo "<script>window.scrollTo(0,document.body.scrollHeight)</script>";
 	}
-echo "</pre>\n<a href='?page=scene&system=".$system."&start=".$start."'>Next</a><p/>\n";
 }
 
 // If we don't have either, then show a selection screen
