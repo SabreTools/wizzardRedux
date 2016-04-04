@@ -13,7 +13,6 @@ TODO: Figure out if some systems need to have their data removed before importin
 		e.g. TOSEC, Redump, TruRip
 TODO: RomCenter format? http://www.logiqx.com/DatFAQs/RomCenter.php
 	Seems based on INI format; see PHP reference http://php.net/manual/en/function.parse-ini-file.php
-TODO: Check import and parsing of No-Intro DATs; don't seem to be working
 ------------------------------------------------------------------------------------ */
 
 echo "<h2>Import From Datfile</h2>";
@@ -220,162 +219,139 @@ function import_dat ($filename)
 	$srcid = mysqli_fetch_assoc($result);
 	$srcid = $srcid["id"];
 	
-	// Then, parse the file and read in the information. Echo it out for safekeeping for now.
-	$handle = fopen($importroot.$filename, "r");
-	if ($handle)
+	// Try to open the file as XML
+	$superdat = false;
+	$xmlr = new XmlReader;
+	
+	// If the file doesn't start with the right thing, convert it
+	$file = file($importroot.$filename);
+	if (strpos($file[0], "<") !== 0)
 	{
-		$format = "";
-		$machinefound = false;
-		$machinename = "";
-		$description = "";
-		$gameid = 0;
-		$comment = false;
-		
-		echo "<h3>Roms Added:</h3>
-	<table border='1'>
-		<tr><th>Machine</th><th>Rom</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>\n";
-		while (($line = fgets($handle)) !== false)
-		{
-			// If a machine or game tag is found, check to see if it's in the database
-			// If it's not, add it to the database and then save the gameID
-			
-			// Normalize the whole line, just in case
-			$line = strtr($line, $normalize_chars);
-			
-			// If the input style hasn't been set, set it according to the header
-			if ($format == "")
-			{
-				if (strpos($line, "<?xml version=\"1.0\" encoding=\"utf-8\"?>") !== false)
-				{
-					$format = "logiqx";
-				}
-				elseif (strpos($line, "clrmamepro (") !== false || strpos($line, "romvault (") !== false)
-				{
-					$format = "romvault";
-				}
-			}
-			elseif (strpos($line, "<!DOCTYPE softwarelist") !== false)
-			{
-				$format = "softwarelist";
-			}
-			
-			// If there's an XML-style comment, stop the presses and skip until it's over
-			elseif (strpos($line, "-->") !== false)
-			{
-				$comment = false;
-			}
-			elseif (strpos($line, "<!--") !== false)
-			{
-				$comment = true;
-			}
-			
-			// Process Logiqx XML-derived DATs
-			elseif ($format == "logiqx" && !$comment)
-			{
-				if ((strpos($line, "<machine") !== false || strpos($line, "<game") !== false))
-				{
-					$machinefound = true;
-					$xml = simplexml_load_string($line.(strpos($line, "<machine")?"</machine>":"</game>"));
-					$machinename = $xml->attributes()["name"];
-					$gameid = add_game($sysid, $machinename, $srcid);
-				}
-				elseif (strpos($line, "<rom") !== false && $machinefound)
-				{
-					add_rom($line, $machinename, "rom", $gameid, $date);
-				}
-				elseif (strpos($line, "<disk") !== false && $machinefound)
-				{
-					add_rom($line, $machinename, "disk", $gameid, $date);
-				}
-				elseif ((strpos($line, "</machine>") !== false || strpos($line, "</game>") !== false))
-				{
-					$machinefound = false;
-					$machinename = "";
-					$description = "";
-					$gameid = 0;
-				}
-			}
-			
-			// Process SoftwareList XML-derived DATs
-			elseif ($format == "softwarelist" && !$comment)
-			{
-				if (strpos($line, "<software ") !== false)
-				{
-					$machinefound = true;
-					$xml = simplexml_load_string($line."</software>");
-					$machinename = $xml->attributes()["name"];
-					$gameid = add_game($sysid, $machinename, $srcid);
-				}
-				elseif (strpos($line, "<rom") !== false)
-				{
-					add_rom($line, $machinename, "rom", $gameid, $date);
-				}
-				elseif (strpos($line, "<disk") !== false)
-				{
-					add_rom($line, $machinename, "disk", $gameid, $date);
-				}
-				elseif (strpos($line, "</software>") !== false)
-				{
-					$machinefound = false;
-					$machinename = "";
-					$description = "";
-					$gameid = 0;
-				}
-			}
-			
-			// Process original style RomVault DATs
-			elseif ($format == "romvault")
-			{
-				if (strpos($line, "game (") !== false && !$machinefound)
-				{
-					$machinefound = true;
-				}
-				elseif (strpos($line, "rom (") !== false && $machinefound)
-				{
-					add_rom_old($line, $machinename, "rom", $gameid, $date);
-				}
-				elseif (strpos($line, "disk (") !== false && $machinefound)
-				{
-					add_rom_old($line, $machinename, "disk", $gameid, $date);
-				}
-				elseif (strpos($line, "name \"") !== false && $machinefound)
-				{
-					preg_match("/^\s*name \"(.*)\"/", $line, $machinename);
-					$machinename = $machinename[1];
-					$gameid = add_game($sysid, $machinename, $srcid);
-				}
-				elseif (strpos($line, "description \"") !== false && $machinefound)
-				{
-					// Placeholder unused
-				}
-				elseif (strpos($line, ")") !== false)
-				{
-					$machinefound = false;
-					$machinename = "";
-					$description = "";
-					$gameid = 0;
-				}
-			}
-		}
-		echo "</table><br/>\n";
-		die();
-		fclose($handle);
-		
-		// Add the imported file to the zip and delete
-		$extfilename = $importroot.$filename;
-		$zip = new ZipArchive();
-		$zip->open("../temp/imported".($type != "" ? "-".$type : "").".zip", ZIPARCHIVE::CREATE);
-		$zip->addFile($extfilename, $filename);
-		$zip->close();
-		unlink($extfilename);
-		
-		return;
+		$xmlr->XML(rv2xml($file));
 	}
 	else
 	{
-		echo("Could not open file ".$filename."<br/>");
-		return;
+		$result = $xmlr->open($importroot.$filename);
+	
+		// If it can't be opened, then it doesn't exist
+		if (!$result)
+		{
+			echo "The file was not valid!<p/>\n";
+			die();
+		}
 	}
+	
+	// Read until we find the main body
+	while ($xmlr->name !== "datafile" && $xmlr->name !== "softwarelist")
+	{
+		$xmlr->read();
+	}
+	
+	// Now find the header inside of that
+	while ($xmlr->name !== "header")
+	{
+		$xmlr->read();
+	}
+	
+	// Check for SuperDAT mode by finding the name
+	while ($xmlr->name !== "name")
+	{
+		$xmlr->read();
+	}
+	if (strpos($xmlr->readString(), " - SuperDAT") !== false)
+	{
+		$superdat = true;
+	}
+	
+	// Now seek to the end of the header
+	while (!($xmlr->name === "header" && $xmlr->nodeType === XMLReader::END_ELEMENT))
+	{
+		$xmlr->read();
+	}
+	
+	// Now loop over the main body
+	echo "<h3>Roms Added:</h3>
+	<table border='1'>
+		<tr><th>Machine</th><th>Rom</th><th>Size</th><th>CRC32</th><th>MD5</th><th>SHA1</th></tr>\n";
+	while ($xmlr->read())
+	{
+		//var_dump($xmlr->name, $xmlr->nodeType, $xmlr->depth, $xmlr->readString(), "<br/>\n");
+	
+		// For each game, find all of the roms inside of it
+		if ($xmlr->nodeType === XMLReader::ELEMENT && ($xmlr->name == "machine" || $xmlr->name == "game" || $xmlr->name == "software"))
+		{
+			$gameid = 0;
+			$tempname = "";
+			if ($xmlr->name == "software")
+			{
+				while ($xmlr->name != "description")
+				{
+					$xmlr->read();
+				}
+				$tempname = $xmlr->readString();
+			}
+			else
+			{
+				$tempname = $xmlr->getAttribute("name");
+			}
+	
+			// If we're in SuperDAT mode, strip the folder out
+			if ($superdat)
+			{
+				preg_match("/.*?\\(.*)/", $tempname, $tempname);
+				$tempname = $tempname[1];
+			}
+	
+			$gameid = add_game($sysid, $tempname, $srcid);
+	
+			// For each of the roms in the machine
+			$delim = $xmlr->name;
+			while ($xmlr->read() && $xmlr->name != $delim)
+			{
+				// If we find a rom or disk, add it
+				if ($xmlr->nodeType === XMLReader::ELEMENT && ($xmlr->name == "rom" || $xmlr->name == "disk"))
+				{
+					// If there's no name, skip it because it can't be added
+					$name = "";
+					if ($xmlr->getAttribute("name") === null)
+					{
+						continue;
+					}
+	
+					// Take care of hex-sized files
+					$size = -1;
+					if ($xmlr->getAttribute("size") !== null && strpos($xmlr->getAttribute("size"), "0x") !== false)
+					{
+						$size = hexdec($xmlr->getAttribute("size"));
+					}
+					elseif ($xmlr->getAttribute("size") !== null)
+					{
+						$size = (real)$xmlr->getAttribute("size");
+					}
+	
+					add_rom($tempname,
+							$xmlr->name,
+							$gameid,
+							$xmlr->getAttribute("name"),
+							$date,
+							$size,
+							($xmlr->getAttribute("crc") !== null ? trim($xmlr->getAttribute("crc")) : ""),
+							($xmlr->getAttribute("md5") !== null ? trim($xmlr->getAttribute("md5")) : ""),
+							($xmlr->getAttribute("sha1") !== null ? trim($xmlr->getAttribute("sha1")) : "")
+							);
+				}
+			}
+		}
+	}
+	$xmlr->close();
+	
+	// Add the imported file to the zip and delete
+	$extfilename = $importroot.$filename;
+	$zip = new ZipArchive();
+	$zip->open("../temp/imported".($type != "" ? "-".$type : "").".zip", ZIPARCHIVE::CREATE);
+	$zip->addFile($extfilename, $filename);
+	$zip->close();
+	unlink($extfilename);
 }
 
 function add_game ($sysid, $machinename, $srcid)
@@ -421,48 +397,8 @@ function add_game ($sysid, $machinename, $srcid)
 	
 	return $gameid;
 }
-
-function add_rom ($line, $machinename, $romtype, $gameid, $date)
-{
-	$xml = simplexml_load_string($line);
-	add_rom_helper($machinename, $romtype, $gameid, $xml->attributes()["name"], $date, 
-			$xml->attributes()["size"], $xml->attributes()["crc"], $xml->attributes()["md5"],
-			$xml->attributes()["sha1"]);
-}
 	
-function add_rom_old ($line, $machinename, $romtype, $gameid, $date)
-{
-	preg_match("/name \"(.*)\"/", $line, $name);
-	
-	$name = $name[1];
-	$rominfo = explode(" ", $line);
-	$size = ""; $crc = ""; $md5 = ""; $sha1 = ""; 
-	
-	$next = "";
-	foreach ($rominfo as $info)
-	{
-		if ($info == "size" || $info == "crc" || $info == "md5" || $info == "sha1")
-		{
-			$next = $info;
-		}
-		elseif ($next != "")
-		{
-			switch ($next)
-			{
-				case "size": $size = $info; break;
-				case "crc": $crc = $info; break;
-				case "md5": $md5 = $info; break;
-				case "sha1": $sha1 = $info; break;
-				default: break;
-			}
-			$next = "";
-		}
-	}
-	
-	add_rom_helper($machinename, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1);
-}
-	
-function add_rom_helper ($machinename, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1)
+function add_rom ($machinename, $romtype, $gameid, $name, $date, $size, $crc, $md5, $sha1)
 {
 	global $link, $normalize_chars, $search_pattern;
 	

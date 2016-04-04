@@ -43,7 +43,7 @@ function get_data($url)
 // Convert an old-style DAT to XML
 function rv2xml ($file)
 {
-	ob_end_clean();
+	//ob_end_clean();
 	ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
 	
 	// Set the complex regex patterns
@@ -59,8 +59,7 @@ function rv2xml ($file)
 	$xmlw->startDocument();
 	$xmlw->startElement("datafile");
 
-	$block = false;
-	$parent = false;
+	$block = false; $header = false;
 	for ($k = 0; $k < sizeof($file); $k++)
 	{
 		$line = trim($file[$k]);
@@ -71,7 +70,7 @@ function rv2xml ($file)
 			if ($matches[1] == "clrmamepro" || $matches[1] == "romvault")
 			{
 				$xmlw->startElement("header");
-				$parent = true;
+				$header = true;
 			}
 			else
 			{
@@ -153,7 +152,7 @@ function rv2xml ($file)
 		{
 			$matches[2] = str_replace("\"", "", $matches[2]);
 			
-			if ($matches[1] == "name" && $parent)
+			if ($matches[1] == "name" && !$header)
 			{
 				$xmlw->writeAttribute($matches[1], $matches[2]);
 				$xmlw->writeElement("description", $matches[2]);
@@ -169,6 +168,7 @@ function rv2xml ($file)
 		{
 			$block = false;
 			$xmlw->endElement();
+			$header = false;
 		}
 		
 		// Somehow didn't match anything
