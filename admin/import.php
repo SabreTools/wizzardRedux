@@ -217,8 +217,8 @@ function import_dat ($filename)
 		return;
 	}
 	
-	$sourceid = mysqli_fetch_assoc($result);
-	$sourceid = $sourceid["id"];
+	$srcid = mysqli_fetch_assoc($result);
+	$srcid = $srcid["id"];
 	
 	// Then, parse the file and read in the information. Echo it out for safekeeping for now.
 	$handle = fopen($importroot.$filename, "r");
@@ -277,7 +277,7 @@ function import_dat ($filename)
 					$machinefound = true;
 					$xml = simplexml_load_string($line.(strpos($line, "<machine")?"</machine>":"</game>"));
 					$machinename = $xml->attributes()["name"];
-					$gameid = add_game($sysid, $machinename, $sourceid);
+					$gameid = add_game($sysid, $machinename, $srcid);
 				}
 				elseif (strpos($line, "<rom") !== false && $machinefound)
 				{
@@ -304,7 +304,7 @@ function import_dat ($filename)
 					$machinefound = true;
 					$xml = simplexml_load_string($line."</software>");
 					$machinename = $xml->attributes()["name"];
-					$gameid = add_game($sysid, $machinename, $sourceid);
+					$gameid = add_game($sysid, $machinename, $srcid);
 				}
 				elseif (strpos($line, "<rom") !== false)
 				{
@@ -342,7 +342,7 @@ function import_dat ($filename)
 				{
 					preg_match("/^\s*name \"(.*)\"/", $line, $machinename);
 					$machinename = $machinename[1];
-					$gameid = add_game($sysid, $machinename, $sourceid);
+					$gameid = add_game($sysid, $machinename, $srcid);
 				}
 				elseif (strpos($line, "description \"") !== false && $machinefound)
 				{
@@ -378,7 +378,7 @@ function import_dat ($filename)
 	}
 }
 
-function add_game ($sysid, $machinename, $sourceid)
+function add_game ($sysid, $machinename, $srcid)
 {
 	global $link, $normalize_chars, $search_pattern;
 	
@@ -403,13 +403,13 @@ function add_game ($sysid, $machinename, $sourceid)
 			FROM games
 			WHERE system=".$sysid."
 			AND name='".addslashes($machinename)."'
-			AND source=".$sourceid;
+			AND source=".$srcid;
 	
 	$result = mysqli_query($link, $query);
 	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
 	{
 		$query = "INSERT INTO games (system, name, source)
-					VALUES (".$sysid.", '".addslashes($machinename)."', ".$sourceid.")";		
+					VALUES (".$sysid.", '".addslashes($machinename)."', ".$srcid.")";		
 		$result = mysqli_query($link, $query);
 		$gameid = mysqli_insert_id($link);
 	}
