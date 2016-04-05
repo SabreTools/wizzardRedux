@@ -41,7 +41,7 @@ function get_data($url)
 }
 
 // Convert an old-style DAT to XML
-function rv2xml ($file)
+function rv2xml ($filename)
 {
 	//ob_end_clean();
 	ini_set('max_execution_time', 0); // Set the execution time to infinite. This is a bad idea in production.
@@ -50,6 +50,15 @@ function rv2xml ($file)
 	$headerPattern = @"/(.*?) \($/m";
 	$itemPattern = @"/^(.*?) (.*)/";
 	$endPattern = @"/^\)\s*$/";
+	
+	// Get the file open for reading
+	$file = fopen($filename, "r");
+	
+	// If there's an error, return null
+	if ($file === false)
+	{
+		return null;
+	}
 	
 	// Create the XMLWriter
 	$xmlw = new XMLWriter;
@@ -60,9 +69,9 @@ function rv2xml ($file)
 	$xmlw->startElement("datafile");
 
 	$block = false; $header = false;
-	for ($k = 0; $k < sizeof($file); $k++)
+	while (($line = fgets($file)) !== false)
 	{
-		$line = trim($file[$k]);
+		$line = trim($line);
 		
 		// If the line is the header or a game
 		if (preg_match($headerPattern, $line, $matches) !== 0)
@@ -179,6 +188,7 @@ function rv2xml ($file)
 	}
 	$xmlw->endElement();
 	$xmlw->endDocument();
+	fclose($file);
 	
 	return $xmlw->outputMemory();
 }

@@ -224,10 +224,19 @@ function import_dat ($filename)
 	$xmlr = new XmlReader;
 	
 	// If the file doesn't start with the right thing, convert it
-	$file = file($importroot.$filename);
-	if (strpos($file[0], "<") !== 0)
+	$handle = fopen($importroot.$filename, "r");
+	if ($handle === false)
 	{
-		$xmlr->XML(rv2xml($file));
+		echo "The file was not valid!<p/>\n";
+		return;
+	}
+	
+	$file = fgets($handle);
+	fclose($handle);
+	if (strpos($file, "<") !== 0)
+	{
+		$xmlr->XML(rv2xml($importroot.$filename));
+		
 	}
 	else
 	{
@@ -237,7 +246,7 @@ function import_dat ($filename)
 		if (!$result)
 		{
 			echo "The file was not valid!<p/>\n";
-			die();
+			return;
 		}
 	}
 	
