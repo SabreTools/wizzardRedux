@@ -523,7 +523,7 @@ $mapping_nointro = array (
 
 // Redump DAT name base mapping
 $mapping_redump = array (
-		"Apple - Machintosh" => "Apple - Macintosh",
+		"Apple - Macintosh" => "Apple - Macintosh",
 		"Arcade - Namco - Sega - Nintendo - Triforce" => "Namco - Triforce",
 		"Arcade - Sega - Chihiro" => "Sega - Chihiro",
 		"Arcade - Sega - Lindbergh" => "Sega - Lindbergh",
@@ -567,7 +567,7 @@ $mapping_redump = array (
 
 // TOSEC DAT name base mapping
 $mapping_tosec = array (
-				"3DO 3DO Interactive Multiplayer" => "Panasonic - 3DO Interactive Multiplayer",
+		"3DO 3DO Interactive Multiplayer" => "Panasonic - 3DO Interactive Multiplayer",
 		"APF Imagination Machine" => "APF - M-1000",
 		"Acorn Archimedes" => "Acorn - Archimedes",
 		"Acorn BBC" => "Acorn BBC, Electron",
@@ -873,7 +873,7 @@ $mapping_tosec = array (
 
 // TruRip DAT name base mapping
 $mapping_trurip = array (
-				"Acorn Archimedes" => "Acorn - Archimedes",
+		"Acorn Archimedes" => "Acorn - Archimedes",
 		"Acorn Archimedes CD" => "Acorn - Archimedes",
 		"Acorn BBC Microcomputer System" => "Acorn - BBC, Electron",
 		"American Laser Games American Laser Games (Arcade)" => "American Laser Games - CD-ROM System",
@@ -884,16 +884,18 @@ $mapping_trurip = array (
 		"Atari 7800" => "Atari - 7800",
 		"Atari Jaguar CD" => "Atari - Jaguar CD",
 		"Atari Lynx" => "Atari - Lynx",
-		"Bandai Pippin @World &amp; Atmark" => "Bandai Pippin",
+		"Bandai Pippin @World &amp; Atmark" => "Bandai - Pippin",
 		"Bandai Playdia" => "Bandai - Playdia",
 		"Bandai WonderSwan Color (SwanCrystal)" => "Bandai - WonderSwan Color",
 		"Bandai WonderSwan" => "Bandai - WonderSwan",
 		"Capcom CP SYSTEM III" => "Capcom - CPS III",
+		"Capcom CP SYSTEM III (CPS3)" => "Capcom - CPS III",
 		"Commodore Amiga CD" => "Commodore - Amiga",
 		"Commodore Amiga CD32" => "Commodore - Amiga",
 		"Commodore Amiga CDTV" => "Commodore - Amiga",
 		"Fairchild Channel F (Video Entertainment System)" => "Fairchild - Channel F",
 		"Fujitsu FM Towns (Marty)" => "Fujitsu - FM Towns",
+		"IBM Compatible IBM PC compatible" => "IBM - PC Compatibles",
 		"IBM PC Compatible IBM PC compatible" => "IBM - PC Compatibles",
 		"Incredible Technologies IT Eagle" => "Incredible Technologies - Eagle",
 		"Incredible Technologies IT PC" => "Incredible Technologies - PC",
