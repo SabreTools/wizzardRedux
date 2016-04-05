@@ -353,6 +353,7 @@ function import_dat ($filename)
 		}
 	}
 	$xmlr->close();
+	echo "</table><p/>\n";
 	
 	// Add the imported file to the zip and delete
 	$extfilename = $importroot.$filename;
@@ -473,6 +474,7 @@ function add_rom ($machinename, $romtype, $gameid, $name, $date, $size, $crc, $m
 			{
 				echo "<tr><td>".$machinename."</td><td>".$name."</td><td>".$size."</td><td>".$crc."</td><td>".$md5."</td><td>".$sha1."</td></tr>\n";
 				ob_flush(); flush();
+				echo "<script>window.scrollTo(0,document.body.scrollHeight)</script>";
 			}
 			else
 			{
