@@ -102,7 +102,22 @@ function import_dat ($filename)
 	{
 		$type = "nointro";
 	}
+	// For numbered DATs only
+	elseif (preg_match("/(.*? - .*?) \(.*?_CM\).dat/", $filename, $fileinfo))
+	{
+		$type = "nointro";
+	}
+	// For N-Gage and Gizmondo only
+	elseif (preg_match("/(.*? - .*?) \((\d{8})\)\.dat/", $filename, $fileinfo))
+	{
+		$type = "nointro";
+	}
 	elseif (preg_match("/^(.*?) \((\d{8} \d{2}-\d{2}-\d{2})\)\.dat$/", $filename, $fileinfo))
+	{
+		$type = "redump";
+	}
+	// For special BIOSes only
+	elseif (preg_match("/^(.*?) \(\d+\) \((\d{4}-\d{2}-\d{2})\)\.dat$/", $filename, $fileinfo))
 	{
 		$type = "redump";
 	}
@@ -110,7 +125,7 @@ function import_dat ($filename)
 	{
 		$type = "tosec";
 	}
-	elseif (preg_match("/^(.*?) - .* \(trurip_XML\)\.dat$/", $filename, $fileinfo))
+	elseif (preg_match("/^(.*) - .* \(trurip_XML\)\.dat$/", $filename, $fileinfo))
 	{
 		$type = "trurip";
 	}
@@ -144,11 +159,40 @@ function import_dat ($filename)
 			$manufacturer = $name[1];
 			$system = $name[2];
 			$source = "no-Intro";
+			
+			if (fileinfo.Count < 2)
+			{
+				$date = date("Y-m-d H:i:s", filemtime($importroot.$filename));
+			}
+			else if (Regex.IsMatch(fileinfo[2].Value, _noIntroDatePattern))
+			{
+				$datestring = $fileinfo[2];
+				preg_match("/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/", $datestring, $date);
+				$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
+			}
+			else
+			{
+				$datestring = $fileinfo[2];
+				preg_match("/(\d{4})(\d{2})(\d{2})/", $datestring, $date);
+				$date = $date[1]."-".$date[2]."-".$date[3]." 00:00:00";
+			}
+			
 			$datestring = $fileinfo[2];
 			preg_match("/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/", $datestring, $date);
 			$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
 			break;
 		case "redump":
+			if (!isset($mapping_redump[$fileinfo[1]]))
+			{
+				// Handle special case mappings found only in Redump
+				preg_match("/^(.*?) \(\d+\) \((\d{4}-\d{2}-\d{2})\)\.dat$/", $filename, $fileinfo);
+				
+				if (!isset($mapping_redump[$fileinfo[1]]))
+				{
+					echo "The filename ".$fileinfo[1]." could not be mapped! Please check the mappings and try again";
+					return false;
+				}
+			}
 			preg_match("/^(.*) - (.*)$/", $mapping_redump[$fileinfo[1]], $name);
 			$manufacturer = $name[1];
 			$system = $name[2];
@@ -162,6 +206,11 @@ function import_dat ($filename)
 			if (!isset($mapping_tosec[$fileinfo[1]]))
 			{
 				preg_match("/^(.*? - .*? - .*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/", $filename, $fileinfo);
+				if (!isset($mapping_tosec[$fileinfo[1]]))
+				{
+					echo "The filename ".$fileinfo[1]." could not be mapped! Please check the mappings and try again";
+					return false;
+				}
 			}
 			preg_match("/^(.*) - (.*)$/", $mapping_tosec[$fileinfo[1]], $name);
 			$manufacturer = $name[1];
