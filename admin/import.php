@@ -83,6 +83,27 @@ function import_dat ($filename)
 	global $link, $normalize_chars, $search_pattern, $importroot,
 		$mapping_mame, $mapping_nointro, $mapping_redump, $mapping_tosec, $mapping_trurip;
 	
+	$_defaultPattern = @"/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/";
+	$_mamePattern = @"/^(.*)\.xml$/";
+	$_noIntroPattern = @"/^(.*?) \((\d{8}-\d{6})_CM\)\.dat$/";
+	$_noIntroNumberedPattern = @"/(.*? - .*?) \(.*?_CM\).dat/";
+	$_noIntroSpecialPattern = @"/(.*? - .*?) \((\d{8})\)\.dat/";
+	$_redumpPattern = @"/^(.*?) \((\d{8} \d{2}-\d{2}-\d{2})\)\.dat$/";
+	$_redumpBiosPattern = @"/^(.*?) \(\d+\) \((\d{4}-\d{2}-\d{2})\)\.dat$/";
+	$_tosecPattern = @"/^(.*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/";
+	$_tosecSpecialPattern = @"/^(.*? - .*? - .*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/";
+	$_truripPattern = @"/^(.*) - .* \(trurip_XML\)\.dat$/";
+
+	// Regex Mapped Name Patterns
+	$_remappedPattern = @"/^(.*) - (.*)$/";
+
+	// Regex Date Patterns
+	$_defaultDatePattern = @"/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/";
+	$_noIntroDatePattern = @"/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/";
+	$_noIntroSpecialDatePattern = @"/(\d{4})(\d{2})(\d{2})/";
+	$_redumpDatePattern = @"/(\d{4})(\d{2})(\d{2}) (\d{2})-(\d{2})-(\d{2})/";
+	$_tosecDatePattern = @"/(\d{4})-(\d{2})-(\d{2})/";
+		
 	// Check the file is valid
 	if (!file_exists($importroot.$filename))
 	{
@@ -94,42 +115,42 @@ function import_dat ($filename)
 	
 	// Then determine the type of the DAT
 	$type = "";
-	if (preg_match("/^(.*)\.xml$/", $filename, $fileinfo))
+	if (preg_match($_mamePattern, $filename, $fileinfo))
 	{
 		$type = "mame";
 	}
-	elseif (preg_match("/^(.*?) \((\d{8}-\d{6})_CM\)\.dat$/", $filename, $fileinfo))
+	elseif (preg_match($_noIntroPattern, $filename, $fileinfo))
 	{
 		$type = "nointro";
 	}
 	// For numbered DATs only
-	elseif (preg_match("/(.*? - .*?) \(.*?_CM\).dat/", $filename, $fileinfo))
+	elseif (preg_match($_noIntroNumberedPattern, $filename, $fileinfo))
 	{
 		$type = "nointro";
 	}
 	// For N-Gage and Gizmondo only
-	elseif (preg_match("/(.*? - .*?) \((\d{8})\)\.dat/", $filename, $fileinfo))
+	elseif (preg_match($_noIntroSpecialPattern, $filename, $fileinfo))
 	{
 		$type = "nointro";
 	}
-	elseif (preg_match("/^(.*?) \((\d{8} \d{2}-\d{2}-\d{2})\)\.dat$/", $filename, $fileinfo))
+	elseif (preg_match($_redumpPattern, $filename, $fileinfo))
 	{
 		$type = "redump";
 	}
 	// For special BIOSes only
-	elseif (preg_match("/^(.*?) \(\d+\) \((\d{4}-\d{2}-\d{2})\)\.dat$/", $filename, $fileinfo))
+	elseif (preg_match($_redumpBiosPattern, $filename, $fileinfo))
 	{
 		$type = "redump";
 	}
-	elseif (preg_match("/^(.*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/", $filename, $fileinfo))
+	elseif (preg_match($_tosecPattern, $filename, $fileinfo))
 	{
 		$type = "tosec";
 	}
-	elseif (preg_match("/^(.*) - .* \(trurip_XML\)\.dat$/", $filename, $fileinfo))
+	elseif (preg_match($_truripPattern, $filename, $fileinfo))
 	{
 		$type = "trurip";
 	}
-	elseif (preg_match("/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/", $filename, $fileinfo))
+	elseif (preg_match($_defaultPattern, $filename, $fileinfo))
 	{
 		$type = "custom";
 	}
@@ -147,7 +168,7 @@ function import_dat ($filename)
 	switch ($type)
 	{
 		case "mame":
-			preg_match("/^(.*) - (.*)$/", $mapping_mame[$fileinfo[1]], $name);
+			preg_match($_remappedPattern, $mapping_mame[$fileinfo[1]], $name);
 			$manufacturer = $name[1];
 			$system = $name[2];
 			$source = "MAME";
@@ -155,7 +176,7 @@ function import_dat ($filename)
 			$date = date("Y-m-d G:i:s", $datestring);
 			break;
 		case "nointro":
-			preg_match("/^(.*) - (.*)$/", $mapping_nointro[$fileinfo[1]], $name);
+			preg_match($_remappedPattern, $mapping_nointro[$fileinfo[1]], $name);
 			$manufacturer = $name[1];
 			$system = $name[2];
 			$source = "no-Intro";
@@ -164,28 +185,24 @@ function import_dat ($filename)
 			{
 				$date = date("Y-m-d H:i:s", filemtime($importroot.$filename));
 			}
-			else if (Regex.IsMatch(fileinfo[2].Value, _noIntroDatePattern))
+			elseif (preg_match($_noIntroDatePattern, $fileinfo[2]))
 			{
 				$datestring = $fileinfo[2];
-				preg_match("/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/", $datestring, $date);
+				preg_match($_noIntroDatePattern, $datestring, $date);
 				$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
 			}
 			else
 			{
 				$datestring = $fileinfo[2];
-				preg_match("/(\d{4})(\d{2})(\d{2})/", $datestring, $date);
+				preg_match($_noIntroSpecialDatePattern, $datestring, $date);
 				$date = $date[1]."-".$date[2]."-".$date[3]." 00:00:00";
 			}
-			
-			$datestring = $fileinfo[2];
-			preg_match("/(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})/", $datestring, $date);
-			$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
 			break;
 		case "redump":
 			if (!isset($mapping_redump[$fileinfo[1]]))
 			{
 				// Handle special case mappings found only in Redump
-				preg_match("/^(.*?) \(\d+\) \((\d{4}-\d{2}-\d{2})\)\.dat$/", $filename, $fileinfo);
+				preg_match($_redumpBiosPattern, $filename, $fileinfo);
 				
 				if (!isset($mapping_redump[$fileinfo[1]]))
 				{
@@ -193,35 +210,35 @@ function import_dat ($filename)
 					return false;
 				}
 			}
-			preg_match("/^(.*) - (.*)$/", $mapping_redump[$fileinfo[1]], $name);
+			preg_match($_remappedPattern, $mapping_redump[$fileinfo[1]], $name);
 			$manufacturer = $name[1];
 			$system = $name[2];
 			$source = "Redump";
 			$datestring = $fileinfo[2];
-			preg_match("/(\d{4})(\d{2})(\d{2}) (\d{2})-(\d{2})-(\d{2})/", $datestring, $date);
+			preg_match($_redumpDatePattern, $datestring, $date);
 			$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
 			break;
 		case "tosec":
 			// If it's a special case, try to see if it's one of the odd TOSEC's
 			if (!isset($mapping_tosec[$fileinfo[1]]))
 			{
-				preg_match("/^(.*? - .*? - .*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/", $filename, $fileinfo);
+				preg_match($_tosecSpecialPattern, $filename, $fileinfo);
 				if (!isset($mapping_tosec[$fileinfo[1]]))
 				{
 					echo "The filename ".$fileinfo[1]." could not be mapped! Please check the mappings and try again";
 					return false;
 				}
 			}
-			preg_match("/^(.*) - (.*)$/", $mapping_tosec[$fileinfo[1]], $name);
+			preg_match($_remappedPattern, $mapping_tosec[$fileinfo[1]], $name);
 			$manufacturer = $name[1];
 			$system = $name[2];
 			$source = "TOSEC";
 			$datestring = $fileinfo[2];
-			preg_match("/(\d{4})-(\d{2})-(\d{2}))/", $datestring, $date);
+			preg_match($_tosecDatePattern, $datestring, $date);
 			$date = $date[1]."-".$date[2]."-".$date[3]." 00:00:00";
 			break;
 		case "trurip":
-			preg_match("/^(.*) - (.*)$/", $mapping_trurip[$fileinfo[1]], $name);
+			preg_match($_remappedPattern, $mapping_trurip[$fileinfo[1]], $name);
 			$manufacturer = $name[1];
 			$system = $name[2];
 			$source = "trurip";
@@ -234,7 +251,7 @@ function import_dat ($filename)
 			$system = $fileinfo[2];
 			$source = $fileinfo[3];
 			$datestring = $fileinfo[4];
-			preg_match("/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/", $datestring, $date);
+			preg_match($_defaultDatePattern, $datestring, $date);
 			$date = $date[1]."-".$date[2]."-".$date[3]." ".$date[4].":".$date[5].":".$date[6];
 			break;
 	}
