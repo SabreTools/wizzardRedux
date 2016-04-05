@@ -86,7 +86,7 @@ function import_dat ($filename)
 	$_defaultPattern = @"/^(.+?) - (.+?) \((.*) (.*)\)\.dat$/";
 	$_mamePattern = @"/^(.*)\.xml$/";
 	$_noIntroPattern = @"/^(.*?) \((\d{8}-\d{6})_CM\)\.dat$/";
-	$_noIntroNumberedPattern = @"/(.*? - .*?) \(.*?_CM\).dat/";
+	$_noIntroNumberedPattern = @"/(.*? - .*?) \(\d.*?_CM\).dat/";
 	$_noIntroSpecialPattern = @"/(.*? - .*?) \((\d{8})\)\.dat/";
 	$_redumpPattern = @"/^(.*?) \((\d{8} \d{2}-\d{2}-\d{2})\)\.dat$/";
 	$_redumpBiosPattern = @"/^(.*?) \(\d+\) \((\d{4}-\d{2}-\d{2})\)\.dat$/";
