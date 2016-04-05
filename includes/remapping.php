@@ -2,7 +2,7 @@
 
 /*------------------------------------------------------------------------------------
  Map all known external sets to "Manufacturer - System" combos
- Original code by Matt Nadareski (darksabre76)
+ Original code by Matt Nadareski (darksabre76), @tractivo
  -----------------------------------------------------------------------------------*/
 
 // MAME softlist mapping
