@@ -603,9 +603,6 @@ ORDER BY ".
 	($merged ? "checksums.size, checksums.crc, checksums.md5, checksums.sha1"
 			: "systems.id, sources.id, games.name, files.name");
 	$result = mysqli_query($link, $query);
-
-	var_dump($query, $result);
-	die();
 	
 	// If there are no games for this set of parameters, tell the user
 	if (gettype($result) == "boolean" || mysqli_num_rows($result) == 0)
