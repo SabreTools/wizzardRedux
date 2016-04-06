@@ -91,7 +91,8 @@ function import_dat ($filename)
 	$_redumpPattern = @"/^(.*?) \((\d{8} \d{2}-\d{2}-\d{2})\)\.dat$/";
 	$_redumpBiosPattern = @"/^(.*?) \(\d+\) \((\d{4}-\d{2}-\d{2})\)\.dat$/";
 	$_tosecPattern = @"/^(.*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/";
-	$_tosecSpecialPattern = @"/^(.*? - .*? - .*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/";
+	$_tosecSpecialPatternA = @"/^(.*? - .*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/";
+	$_tosecSpecialPatternB = @"/^(.*? - .*? - .*?) - .* \(TOSEC-v(\d{4}-\d{2}-\d{2})_CM\)\.dat$/";
 	$_truripPattern = @"/^(.*) - .* \(trurip_XML\)\.dat$/";
 
 	// Regex Mapped Name Patterns
@@ -222,11 +223,15 @@ function import_dat ($filename)
 			// If it's a special case, try to see if it's one of the odd TOSEC's
 			if (!isset($mapping_tosec[$fileinfo[1]]))
 			{
-				preg_match($_tosecSpecialPattern, $filename, $fileinfo);
+				preg_match($_tosecSpecialPatternA, $filename, $fileinfo);
 				if (!isset($mapping_tosec[$fileinfo[1]]))
 				{
-					echo "The filename ".$fileinfo[1]." could not be mapped! Please check the mappings and try again";
-					return false;
+					preg_match($_tosecSpecialPatternB, $filename, $fileinfo);
+					if (!isset($mapping_tosec[$fileinfo[1]]))
+					{
+						echo "The filename ".$fileinfo[1]." could not be mapped! Please check the mappings and try again";
+						return false;
+					}
 				}
 			}
 			preg_match($_remappedPattern, $mapping_tosec[$fileinfo[1]], $name);
