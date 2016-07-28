@@ -6,6 +6,7 @@ print "<pre>";
 print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=full>full</a>\n";
 print "load <a href=?page=onlinecheck&source=".$_GET["source"]."&type=updates>updates</a>\n";
 
+/*
 if ($_GET["type"] == "updates")
 {
 	$full_query = implode('', file("../sites/".$source."_full.txt"));
@@ -23,7 +24,8 @@ if ($_GET["type"] == "updates")
 		$old = 0;
 
 		print "load :".$fullURL."\n";
-		$query = get_data($fullURL);
+		$query = get_data("http://www.cpc-power.com".$fullURL);
+		
 		$query = explode('<img src="images/download.gif" />&nbsp; &nbsp;<a href="', $query);
 		$query[0] = null;
 
@@ -49,6 +51,7 @@ if ($_GET["type"] == "updates")
 	
 	sleep(1);
 }
+*/
 
 if ($_GET["type"] == "updates")
 {
@@ -114,8 +117,6 @@ if ($u_query)
 			$name = explode(';return false;">', $row);
 			$name = explode('<', $name[1]);
 			$name = $name[0];
-			
-			print "found ".$crc." # ".$name." # ".$url."\n";
 
 			if (!$r_query[$crc])
 			{
@@ -125,6 +126,7 @@ if ($u_query)
 				}
 				else
 				{
+					print "found ".$crc." # ".$name." # ".$url."\n";
 					$found[] = array($url, $name, $crc);
 					$r_query[$crc] = true;
 					$new++;

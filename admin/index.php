@@ -25,7 +25,6 @@
 <?php
 
 include_once("../css/style.php");
-include_once("../includes/remapping.php");
 include_once("../includes/functions.php");
 
 // Connect to the database so it doesn't have to be done in every page
@@ -46,14 +45,8 @@ else
 	echo "<p>
 Administrative Functions Homepage
 <ol>
-	<li><a href='?page=edit'>Add/Edit/Remove a system/source/game/file</a></li>
-	<li><a href='parenting/index.php'>Add/Edit/Remove a parent</a></li>
-	<li><a href='?page=import'>Bulk add from DAT</a></li>
-	<li><a href='../?page=generate&auto=1'>Create all available DATs</a></li>
 	<li><a href='?page=onlinecheck'>Check for new files online</a></li>
- 	<li><a href='?page=deheader'>Deheader files in a local (server) folder</a></li>
 	<li><a href='?page=scene'>Import or generate scene release information</a></li>
-	<li><a href='?page=clean'>Clean the database of dupes and orphans (CAUTION! CANNOT BE UNDONE!)</a></li>
 </ol>";
 }
 

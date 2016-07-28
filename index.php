@@ -14,7 +14,6 @@ ob_start();
 <?php
 
 include_once("css/style.php");
-include_once("includes/remapping.php");
 include_once("includes/functions.php");
 
 // Connect to the database so it doesn't have to be done in every page
@@ -35,14 +34,6 @@ else
 	echo "<p>
 Welcome to the WoD Revival homepage!
 
-<ul>
-	<li><a href='?page=view'>Viewing system, source, and game data</a></li>
-	<li><a href='?page=generate'>Creating and downloading DATs</a><ul>
-		<li>Merged dats based on multiple sources</li>
-		<li>Custom dats based on a single source</li>
-	</ul></li>
-</ul>
-</p>
 <p><a href='admin/'>Access administrative functions (admin/admin)</a></p>";
 }
 
