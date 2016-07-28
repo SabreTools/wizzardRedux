@@ -97,7 +97,7 @@ elseif ($system != "")
 	// Populate vals
 	if ($system == "28")
 	{
-		for ($i = 0; $i <= 6603; $i++)
+		for ($i = 0; $i <= 6623; $i++)
 		{
 			$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
 		}
@@ -134,15 +134,15 @@ elseif ($system != "")
 	}
 	elseif ($system == "64")
 	{
-		for ($i = 0; $i <= 1470; $i++)
+		for ($i = 0; $i <= 1552; $i++)
 		{
 			$vals[] = str_pad($i, 4, "0", STR_PAD_LEFT);
 		}
-		for ($i = 1; $i <= 10; $i++)
+		for ($i = 1; $i <= 11; $i++)
 		{
 			$vals[] = "z".str_pad($i, 3, "0", STR_PAD_LEFT);
 		}
-		for ($i = 1; $i <= 44; $i++)
+		for ($i = 1; $i <= 48; $i++)
 		{
 			$vals[] = "x".str_pad($i, 3, "0", STR_PAD_LEFT);
 		}
