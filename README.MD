@@ -2,7 +2,7 @@
 
 <h3>Introduction</h3>
 
-This project is the continuation of the work done by RomShepherd board member Wizard of DATz to create a series of custom DAT files for various websites and systems, and to create merged DATs that remove redundant ROMs from similar DATs. There is also an ongoing desktop port called SabreTools that can be found <a href="https://github.com/mnadareski/wizzardDesktop">here</a>.
+This project is the continuation of the work done by RomShepherd board member Wizard of DATz to create a series of custom DAT files for various websites and systems, and to create merged DATs that remove redundant ROMs from similar DATs. There is also an ongoing desktop port called SabreTools that can be found <a href="https://github.com/SabreTools/SabreTools">here</a>.
 
 <h3>Features</h3>
 
